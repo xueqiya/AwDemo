@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="headline_size_large">23.0sp</dimen>
+    <dimen name="headline_size_medium">20.0sp</dimen>
+    <dimen name="text_size_large">16.0sp</dimen>
+    <dimen name="text_size_medium">14.0sp</dimen>
+    <dimen name="text_size_medium_dense">13.0sp</dimen>
+    <dimen name="text_size_small">12.0sp</dimen>
+    <dimen name="dropdown_item_height">50.0dip</dimen>
+    <dimen name="dropdown_item_divider_height">1.0px</dimen>
+    <dimen name="dropdown_item_label_margin">10.0dip</dimen>
+    <dimen name="dropdown_icon_margin">8.0dip</dimen>
+    <dimen name="config_min_scaling_span">12.0mm</dimen>
+    <dimen name="link_preview_overlay_radius">7.0dip</dimen>
+    <dimen name="text_edit_suggestion_item_layout_height">48.0dip</dimen>
+    <dimen name="text_suggestion_popup_elevation">2.0dip</dimen>
+    <dimen name="text_suggestion_popup_vertical_margin">20.0dip</dimen>
+    <dimen name="color_picker_gradient_margin">14.5dip</dimen>
+    <dimen name="color_button_height">60.0dip</dimen>
+    <dimen name="keyboard_accessory_chip_height">32.0dip</dimen>
+    <dimen name="keyboard_accessory_half_padding">4.0dip</dimen>
+    <dimen name="keyboard_accessory_height">48.0dip</dimen>
+    <dimen name="keyboard_accessory_padding">8.0dip</dimen>
+    <dimen name="keyboard_accessory_text_size">14.0sp</dimen>
+    <dimen name="keyboard_accessory_start_animation_translation">100.0dip</dimen>
+    <dimen name="dropdown_item_larger_sublabel_font_size">18.0sp</dimen>
+    <dimen name="dropdown_large_icon_size">24.0dip</dimen>
+    <dimen name="dropdown_large_icon_margin">10.0dip</dimen>
+</resources>

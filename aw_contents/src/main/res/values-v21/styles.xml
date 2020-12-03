@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ButtonCompat" parent="@style/ButtonCompatBase">
+        <item name="android:background">@drawable/button_compat</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+    <style name="ButtonCompatBorderless" parent="@style/ButtonCompat">
+        <item name="android:background">@drawable/button_borderless_compat</item>
+    </style>
+    <style name="RobotoMediumStyle">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+</resources>

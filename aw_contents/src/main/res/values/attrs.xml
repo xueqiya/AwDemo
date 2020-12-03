@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="select_dialog_multichoice" format="reference" />
+    <attr name="select_dialog_singlechoice" format="reference" />
+    <declare-styleable name="ButtonCompat">
+        <attr name="buttonColor" format="reference|color"/>
+        <attr name="buttonRaised" format="boolean"/>
+    </declare-styleable>
+    <declare-styleable name="TextViewWithLeading">
+        <attr name="leading" format="reference|dimension"/>
+    </declare-styleable>
+</resources>

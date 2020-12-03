@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="DropdownPopupWindow" parent="@android:style/Widget.ListPopupWindow">
+        <item name="android:popupBackground">@drawable/dropdown_popup_background</item>
+    </style>
+    <style name="ButtonCompatOverlay">
+        <item name="android:buttonStyle">@style/ButtonCompat</item>
+    </style>
+    <style name="ButtonCompatBorderlessOverlay">
+        <item name="android:buttonStyle">@style/ButtonCompatBorderless</item>
+    </style>
+    <style name="ButtonCompatBase">
+        <item name="android:textSize">14.0sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">20.0dip</item>
+        <item name="android:paddingTop">5.0dip</item>
+        <item name="android:paddingRight">20.0dip</item>
+        <item name="android:paddingBottom">5.0dip</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:minWidth">88.0dip</item>
+        <item name="android:minHeight">36.0dip</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+    <style name="ButtonCompat" parent="@style/ButtonCompatBase">
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/button_compat_shape</item>
+    </style>
+    <style name="ButtonCompatBorderless" parent="@style/ButtonCompat">
+        <item name="android:background">?android:selectableItemBackground</item>
+    </style>
+    <style name="RobotoMediumStyle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+    <style name="BlackHeadline1">
+        <item name="android:textSize">@dimen/headline_size_large</item>
+        <item name="android:textColor">@color/black_alpha_87</item>
+    </style>
+    <style name="BlackHeadline2" parent="@style/RobotoMediumStyle">
+        <item name="android:textSize">@dimen/headline_size_medium</item>
+        <item name="android:textColor">@color/black_alpha_87</item>
+    </style>
+    <style name="BlackTitle1">
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:textColor">@color/black_alpha_87</item>
+    </style>
+    <style name="BlackTitle2" parent="@style/RobotoMediumStyle">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@color/black_alpha_87</item>
+    </style>
+    <style name="BlackHint1">
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:textColor">@color/black_alpha_54</item>
+    </style>
+    <style name="BlackHint2">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@color/black_alpha_54</item>
+    </style>
+    <style name="BlackDisabledText1">
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:textColor">@color/black_alpha_38</item>
+    </style>
+    <style name="BlackDisabledText2">
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:textColor">@color/black_alpha_38</item>
+    </style>
+    <style name="BlackBodyDefault">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@color/black_alpha_87</item>
+    </style>
+    <style name="BlackBody">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@color/black_alpha_54</item>
+    </style>
+    <style name="BlackCaptionDefault">
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:textColor">@color/black_alpha_87</item>
+    </style>
+    <style name="BlackCaption">
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:textColor">@color/black_alpha_54</item>
+    </style>
+    <style name="BlackDenseListText1">
+        <item name="android:textSize">@dimen/text_size_medium_dense</item>
+        <item name="android:textColor">@color/black_alpha_87</item>
+    </style>
+    <style name="BlackDenseListText2">
+        <item name="android:textSize">@dimen/text_size_medium_dense</item>
+        <item name="android:textColor">@color/black_alpha_54</item>
+    </style>
+    <style name="BlackButtonText" parent="@style/RobotoMediumStyle">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@color/black_alpha_54</item>
+    </style>
+    <style name="BlackLink">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/black_alpha_54</item>
+    </style>
+    <style name="WhiteHeadline1">
+        <item name="android:textSize">@dimen/headline_size_large</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    <style name="WhiteHeadline2" parent="@style/RobotoMediumStyle">
+        <item name="android:textSize">@dimen/headline_size_medium</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    <style name="WhiteBodyIncognito">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@color/white_alpha_70</item>
+    </style>
+    <style name="WhiteBody">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    <style name="WhiteTitle2" parent="@style/RobotoMediumStyle">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    <style name="WhiteLink">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    <style name="BlueButtonText1" parent="@style/RobotoMediumStyle">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@color/google_blue_300</item>
+    </style>
+    <style name="BlueButtonText2" parent="@style/RobotoMediumStyle">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@color/google_blue_500</item>
+    </style>
+    <style name="BlueLink1">
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:textColor">@color/google_blue_700</item>
+    </style>
+    <style name="BlueLink2">
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:textColor">@color/google_blue_700</item>
+    </style>
+    <style name="SelectPopupDialog">
+        <item name="select_dialog_multichoice">@android:layout/select_dialog_multichoice</item>
+        <item name="select_dialog_singlechoice">@android:layout/select_dialog_singlechoice</item>
+    </style>
+    <style name="SelectActionMenuShare">
+        <item name="android:icon">@drawable/ic_menu_share_holo_light</item>
+    </style>
+    <style name="SelectActionMenuWebSearch">
+        <item name="android:icon">@drawable/ic_search</item>
+    </style>
+    <style name="TextSuggestionButton" parent="@style/RobotoMediumStyle">
+        <item name="android:textSize">14.0sp</item>
+        <item name="android:textColor">@color/google_blue_500</item>
+        <item name="android:gravity">start|center</item>
+        <item name="android:layout_gravity">start|center</item>
+        <item name="android:paddingLeft">16.0dip</item>
+        <item name="android:paddingTop">8.0dip</item>
+        <item name="android:paddingRight">16.0dip</item>
+        <item name="android:paddingBottom">8.0dip</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">48.0dip</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:drawablePadding">8.0dip</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+</resources>
