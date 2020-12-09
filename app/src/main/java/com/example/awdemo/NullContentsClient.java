@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-package org.chromium.android_webview.test;
+package com.example.awdemo;
 
 import android.graphics.Bitmap;
 import android.graphics.Picture;
@@ -53,7 +53,7 @@ public class NullContentsClient extends AwContentsClient {
     }
 
     @Override
-    public boolean shouldOverrideUrlLoading(AwContentsClient.AwWebResourceRequest request) {
+    public boolean shouldOverrideUrlLoading(AwWebResourceRequest request) {
         return false;
     }
 
@@ -75,7 +75,7 @@ public class NullContentsClient extends AwContentsClient {
 
     @Override
     public AwWebResourceResponse shouldInterceptRequest(
-            AwContentsClient.AwWebResourceRequest request) {
+            AwWebResourceRequest request) {
         return null;
     }
 
@@ -117,12 +117,12 @@ public class NullContentsClient extends AwContentsClient {
 
     @Override
     public void showFileChooser(ValueCallback<String[]> uploadFilePathsCallback,
-            FileChooserParamsImpl fileChooserParams) {
+                                FileChooserParamsImpl fileChooserParams) {
     }
 
     @Override
     public void onGeolocationPermissionsShowPrompt(String origin,
-            GeolocationPermissions.Callback callback) {
+                                                   GeolocationPermissions.Callback callback) {
     }
 
     @Override
@@ -156,7 +156,7 @@ public class NullContentsClient extends AwContentsClient {
 
     @Override
     public void onFindResultReceived(int activeMatchOrdinal, int numberOfMatches,
-            boolean isDoneCounting) {
+                                     boolean isDoneCounting) {
     }
 
     @Override
@@ -185,7 +185,7 @@ public class NullContentsClient extends AwContentsClient {
 
     @Override
     public void onSafeBrowsingHit(AwWebResourceRequest request, int threatType,
-            ValueCallback<AwSafeBrowsingResponse> callback) {
+                                  ValueCallback<AwSafeBrowsingResponse> callback) {
         callback.onReceiveValue(new AwSafeBrowsingResponse(SafeBrowsingAction.SHOW_INTERSTITIAL,
                 /* reporting */ true));
     }

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-package org.chromium.android_webview.shell;
+package com.example.awdemo;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,7 +13,6 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -25,15 +24,14 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import com.example.awdemo.widget.AwContainerView;
+
 import org.chromium.android_webview.AwBrowserContext;
 import org.chromium.android_webview.AwBrowserProcess;
 import org.chromium.android_webview.AwContents;
 import org.chromium.android_webview.AwContentsClient;
 import org.chromium.android_webview.AwDevToolsServer;
 import org.chromium.android_webview.AwSettings;
-import org.chromium.android_webview.R;
-import org.chromium.android_webview.test.AwTestContainerView;
-import org.chromium.android_webview.test.NullContentsClient;
 import org.chromium.base.BaseSwitches;
 import org.chromium.base.CommandLine;
 import org.chromium.base.ContextUtils;
@@ -50,13 +48,13 @@ import java.net.URISyntaxException;
 /**
  * This is a lightweight activity for tests that only require WebView functionality.
  */
-public class AwShellActivity extends Activity {
+public class MainActivity extends Activity {
     private static final String TAG = "cr.AwShellActivity";
     private static final String PREFERENCES_NAME = "AwShellPrefs";
     private static final String INITIAL_URL = ContentUrlConstants.ABOUT_BLANK_DISPLAY_URL;
     private AwBrowserContext mBrowserContext;
     private AwDevToolsServer mDevToolsServer;
-    private AwTestContainerView mAwTestContainerView;
+    private AwContainerView mAwContainerView;
     private WebContents mWebContents;
     private NavigationController mNavigationController;
     private EditText mUrlTextView;
@@ -67,7 +65,7 @@ public class AwShellActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        AwShellResourceProvider.registerResources(this);
+        AwResourceProvider.registerResources(this);
 
         ContentApplication.initCommandLine(this);
         waitForDebuggerIfNeeded();
@@ -75,22 +73,22 @@ public class AwShellActivity extends Activity {
         ContextUtils.initApplicationContext(getApplicationContext());
         AwBrowserProcess.loadLibrary();
 
-        if (CommandLine.getInstance().hasSwitch(AwShellSwitches.ENABLE_ATRACE)) {
+        if (CommandLine.getInstance().hasSwitch(AwSwitches.ENABLE_ATRACE)) {
             Log.e(TAG, "Enabling Android trace.");
             TraceEvent.setATraceEnabled(true);
         }
 
-        setContentView(R.layout.testshell_activity);
+        setContentView(R.layout.activity_main);
 
-        mAwTestContainerView = createAwTestContainerView();
+        mAwContainerView = createAwContainerView();
 
-        mWebContents = mAwTestContainerView.getContentViewCore().getWebContents();
+        mWebContents = mAwContainerView.getContentViewCore().getWebContents();
         mNavigationController = mWebContents.getNavigationController();
         LinearLayout contentContainer = (LinearLayout) findViewById(R.id.content_container);
-        mAwTestContainerView.setLayoutParams(new LinearLayout.LayoutParams(
+        mAwContainerView.setLayoutParams(new LinearLayout.LayoutParams(
                 LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1f));
-        contentContainer.addView(mAwTestContainerView);
-        mAwTestContainerView.requestFocus();
+        contentContainer.addView(mAwContainerView);
+        mAwContainerView.requestFocus();
 
         initializeUrlField();
         initializeNavigationButtons();
@@ -100,7 +98,7 @@ public class AwShellActivity extends Activity {
             startupUrl = INITIAL_URL;
         }
 
-        mAwTestContainerView.getAwContents().loadUrl(startupUrl);
+        mAwContainerView.getAwContents().loadUrl(startupUrl);
         AwContents.setShouldDownloadFavicons();
         mUrlTextView.setText(startupUrl);
     }
@@ -114,9 +112,9 @@ public class AwShellActivity extends Activity {
         super.onDestroy();
     }
 
-    private AwTestContainerView createAwTestContainerView() {
+    private AwContainerView createAwContainerView() {
         AwBrowserProcess.start();
-        AwTestContainerView testContainerView = new AwTestContainerView(this, true);
+        AwContainerView testContainerView = new AwContainerView(this, true);
         AwContentsClient awContentsClient = new NullContentsClient() {
             private View mCustomView;
 
@@ -135,8 +133,8 @@ public class AwShellActivity extends Activity {
 
                 getWindow().addContentView(view,
                         new FrameLayout.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.MATCH_PARENT,
+                                LayoutParams.MATCH_PARENT,
+                                LayoutParams.MATCH_PARENT,
                                 Gravity.CENTER));
                 mCustomView = view;
             }
@@ -159,7 +157,7 @@ public class AwShellActivity extends Activity {
 
             @Override
             public void onGeolocationPermissionsShowPrompt(String origin,
-                    GeolocationPermissions.Callback callback) {
+                                                           GeolocationPermissions.Callback callback) {
                 callback.invoke(origin, false, false);
             }
         };
@@ -228,10 +226,10 @@ public class AwShellActivity extends Activity {
             } catch (URISyntaxException e) {
                 // Ignore syntax errors.
             }
-            mAwTestContainerView.getAwContents().loadUrl(url);
+            mAwContainerView.getAwContents().loadUrl(url);
             mUrlTextView.clearFocus();
             setKeyboardVisibilityForUrl(false);
-            mAwTestContainerView.requestFocus();
+            mAwContainerView.requestFocus();
             return true;
         });
         mUrlTextView.setOnFocusChangeListener((v, hasFocus) -> {

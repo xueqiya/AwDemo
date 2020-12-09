@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-package org.chromium.android_webview.test;
+package com.example.awdemo.widget;
 
 import android.content.Context;
 import android.content.Intent;
@@ -30,10 +30,10 @@ import javax.microedition.khronos.opengles.GL10;
 
 /**
  * A View used for testing the AwContents internals.
- *
+ * <p>
  * This class takes the place android.webkit.WebView would have in the production configuration.
  */
-public class AwTestContainerView extends FrameLayout {
+public class AwContainerView extends FrameLayout {
     private AwContents mAwContents;
     private AwContents.InternalAccessDelegate mInternalAccessDelegate;
 
@@ -233,22 +233,23 @@ public class AwTestContainerView extends FrameLayout {
     }
 
     private static boolean sCreatedOnce;
+
     private HardwareView createHardwareViewOnlyOnce(Context context) {
         if (sCreatedOnce) return null;
         sCreatedOnce = true;
         return new HardwareView(context);
     }
 
-    public AwTestContainerView(Context context, boolean allowHardwareAcceleration) {
+    public AwContainerView(Context context, boolean allowHardwareAcceleration) {
         super(context);
         if (allowHardwareAcceleration) {
             mHardwareView = createHardwareViewOnlyOnce(context);
         }
         if (isBackedByHardwareView()) {
             addView(mHardwareView,
-                    new FrameLayout.LayoutParams(
-                        FrameLayout.LayoutParams.MATCH_PARENT,
-                        FrameLayout.LayoutParams.MATCH_PARENT));
+                    new LayoutParams(
+                            LayoutParams.MATCH_PARENT,
+                            LayoutParams.MATCH_PARENT));
         } else {
             setLayerType(LAYER_TYPE_SOFTWARE, null);
         }
@@ -444,9 +445,11 @@ public class AwTestContainerView extends FrameLayout {
 
     private static final class NativeDrawGLFunctorDestroyRunnable implements Runnable {
         public long mContext;
+
         NativeDrawGLFunctorDestroyRunnable(long context) {
             mContext = context;
         }
+
         @Override
         public void run() {
             mContext = 0;
@@ -497,28 +500,28 @@ public class AwTestContainerView extends FrameLayout {
 
         @Override
         public boolean super_onKeyUp(int keyCode, KeyEvent event) {
-            return AwTestContainerView.super.onKeyUp(keyCode, event);
+            return AwContainerView.super.onKeyUp(keyCode, event);
         }
 
         @Override
         public boolean super_dispatchKeyEvent(KeyEvent event) {
-            return AwTestContainerView.super.dispatchKeyEvent(event);
+            return AwContainerView.super.dispatchKeyEvent(event);
         }
 
         @Override
         public boolean super_onGenericMotionEvent(MotionEvent event) {
-            return AwTestContainerView.super.onGenericMotionEvent(event);
+            return AwContainerView.super.onGenericMotionEvent(event);
         }
 
         @Override
         public void super_onConfigurationChanged(Configuration newConfig) {
-            AwTestContainerView.super.onConfigurationChanged(newConfig);
+            AwContainerView.super.onConfigurationChanged(newConfig);
         }
 
         @Override
         public void super_scrollTo(int scrollX, int scrollY) {
             // We're intentionally not calling super.scrollTo here to make testing easier.
-            AwTestContainerView.this.scrollTo(scrollX, scrollY);
+            AwContainerView.this.scrollTo(scrollX, scrollY);
             if (isBackedByHardwareView()) {
                 // Undo the scroll that will be applied because of mHardwareView
                 // being a child of |this|.
@@ -529,41 +532,42 @@ public class AwTestContainerView extends FrameLayout {
 
         @Override
         public void overScrollBy(int deltaX, int deltaY,
-                int scrollX, int scrollY,
-                int scrollRangeX, int scrollRangeY,
-                int maxOverScrollX, int maxOverScrollY,
-                boolean isTouchEvent) {
+                                 int scrollX, int scrollY,
+                                 int scrollRangeX, int scrollRangeY,
+                                 int maxOverScrollX, int maxOverScrollY,
+                                 boolean isTouchEvent) {
             // We're intentionally not calling super.scrollTo here to make testing easier.
-            AwTestContainerView.this.overScrollBy(deltaX, deltaY, scrollX, scrollY,
-                     scrollRangeX, scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent);
+            AwContainerView.this.overScrollBy(deltaX, deltaY, scrollX, scrollY,
+                    scrollRangeX, scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent);
         }
 
         @Override
         public void onScrollChanged(int l, int t, int oldl, int oldt) {
-            AwTestContainerView.super.onScrollChanged(l, t, oldl, oldt);
+            AwContainerView.super.onScrollChanged(l, t, oldl, oldt);
         }
 
         @Override
         public boolean awakenScrollBars() {
-            return AwTestContainerView.super.awakenScrollBars();
+            return AwContainerView.super.awakenScrollBars();
         }
 
         @Override
         public boolean super_awakenScrollBars(int startDelay, boolean invalidate) {
-            return AwTestContainerView.super.awakenScrollBars(startDelay, invalidate);
+            return AwContainerView.super.awakenScrollBars(startDelay, invalidate);
         }
 
         @Override
         public void setMeasuredDimension(int measuredWidth, int measuredHeight) {
-            AwTestContainerView.super.setMeasuredDimension(measuredWidth, measuredHeight);
+            AwContainerView.super.setMeasuredDimension(measuredWidth, measuredHeight);
         }
 
         @Override
         public int super_getScrollBarStyle() {
-            return AwTestContainerView.super.getScrollBarStyle();
+            return AwContainerView.super.getScrollBarStyle();
         }
 
         @Override
-        public void super_startActivityForResult(Intent intent, int requestCode) {}
+        public void super_startActivityForResult(Intent intent, int requestCode) {
+        }
     }
 }
