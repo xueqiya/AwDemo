@@ -478,4 +478,5 @@ class WebViewChromium implements WebViewProvider {
     public ScrollDelegate getScrollDelegate() {
         return null;
     }
+
 }
