@@ -23,7 +23,7 @@ public class WebView extends FrameLayout {
     public WebView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mProvider = new WebViewChromium();
-        mProvider.init(null);
+        mProvider.init(this);
     }
 
     @Override

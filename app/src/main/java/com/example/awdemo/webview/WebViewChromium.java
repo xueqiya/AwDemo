@@ -20,7 +20,7 @@ import java.util.Map;
 class WebViewChromium implements WebViewProvider {
 
     @Override
-    public void init(Map<String, Object> javaScriptInterfaces, boolean privateBrowsing) {
+    public void init(WebView webView) {
 
     }
 
