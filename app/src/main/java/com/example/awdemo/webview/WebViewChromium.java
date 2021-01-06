@@ -1,32 +1,58 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 package com.example.awdemo.webview;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Picture;
 import android.net.http.SslCertificate;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
 import android.print.PrintDocumentAdapter;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+
+import org.chromium.android_webview.AwBrowserContext;
+import org.chromium.android_webview.AwBrowserProcess;
+import org.chromium.android_webview.AwContents;
+import org.chromium.android_webview.AwContentsClient;
+import org.chromium.android_webview.AwSettings;
+import org.chromium.android_webview.gfx.AwDrawFnImpl;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.Map;
 
 class WebViewChromium implements WebViewProvider {
+    private AwContents awContents;
+    private WebView webView;
+    private WebView.PrivateAccess privateAccess;
+
+    public WebViewChromium(WebView webView, WebView.PrivateAccess privateAccess) {
+        this.webView = webView;
+        this.privateAccess = privateAccess;
+    }
 
     @Override
-    public void init(WebView webView) {
-
+    public void init() {
+        AwBrowserProcess.start();
+        AwBrowserContext awBrowserContext = AwBrowserContext.getDefault();
+        Context context = webView.getContext();
+        InternalAccessAdapter internalAccessAdapter = new InternalAccessAdapter();
+        WebViewNativeDrawFunctorFactory webViewNativeDrawFunctorFactory = new WebViewNativeDrawFunctorFactory();
+        AwContentsClient awContentsClient = new NullContentsClient();
+        AwSettings awSettings = new AwSettings(context, false, false, false, true, false);
+        awContents = new AwContents(awBrowserContext, webView, context,
+                internalAccessAdapter, webViewNativeDrawFunctorFactory, awContentsClient, awSettings);
     }
 
     @Override
     public void onDraw(Canvas canvas) {
-
+        awContents.onDraw(canvas);
     }
 
     @Override
@@ -479,4 +505,94 @@ class WebViewChromium implements WebViewProvider {
         return null;
     }
 
+
+    // AwContents.InternalAccessDelegate implementation --------------------------------------
+    private class InternalAccessAdapter implements AwContents.InternalAccessDelegate {
+        @Override
+        public boolean super_onKeyUp(int arg0, KeyEvent arg1) {
+            // Intentional no-op
+            return false;
+        }
+
+        @Override
+        public boolean super_dispatchKeyEvent(KeyEvent event) {
+            return privateAccess.super_dispatchKeyEvent(event);
+        }
+
+        @Override
+        public boolean super_onGenericMotionEvent(MotionEvent arg0) {
+            return privateAccess.super_onGenericMotionEvent(arg0);
+        }
+
+        @Override
+        public void super_onConfigurationChanged(Configuration arg0) {
+            // Intentional no-op
+        }
+
+        @Override
+        public int super_getScrollBarStyle() {
+            return privateAccess.super_getScrollBarStyle();
+        }
+
+        @Override
+        public void super_startActivityForResult(Intent intent, int requestCode) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                GlueApiHelperForN.super_startActivityForResult(
+//                        privateAccess, intent, requestCode);
+            } else {
+                try {
+                    Method startActivityForResultMethod =
+                            View.class.getMethod("startActivityForResult", Intent.class, int.class);
+                    startActivityForResultMethod.invoke(webView, intent, requestCode);
+                } catch (Exception e) {
+                    throw new RuntimeException("Invalid reflection", e);
+                }
+            }
+        }
+
+        @Override
+        public void onScrollChanged(int l, int t, int oldl, int oldt) {
+            // Intentional no-op.
+            // Chromium calls this directly to trigger accessibility events. That isn't needed
+            // for WebView since super_scrollTo invokes onScrollChanged for us.
+        }
+
+        @Override
+        public void overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX,
+                                 int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
+            privateAccess.overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX,
+                    scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent);
+        }
+
+        @Override
+        public void super_scrollTo(int scrollX, int scrollY) {
+            privateAccess.super_scrollTo(scrollX, scrollY);
+        }
+
+        @Override
+        public void setMeasuredDimension(int measuredWidth, int measuredHeight) {
+            privateAccess.setMeasuredDimension(measuredWidth, measuredHeight);
+        }
+
+        // @Override
+        public boolean super_onHoverEvent(MotionEvent event) {
+            return privateAccess.super_onHoverEvent(event);
+        }
+    }
+
+    // AwContents.NativeDrawFunctorFactory implementation ----------------------------------
+    private class WebViewNativeDrawFunctorFactory implements AwContents.NativeDrawFunctorFactory {
+        @Override
+        public AwContents.NativeDrawGLFunctor createGLFunctor(long context) {
+            return new DrawGLFunctor(context, webView);
+        }
+
+        @Override
+        public AwDrawFnImpl.DrawFnAccess getDrawFnAccess() {
+//            if (BuildInfo.isAtLeastQ()) {
+//                return mFactory.getWebViewDelegate();
+//            }
+            return null;
+        }
+    }
 }

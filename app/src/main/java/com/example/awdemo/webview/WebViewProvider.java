@@ -14,7 +14,7 @@ import java.io.File;
 import java.util.Map;
 
 public interface WebViewProvider {
-    public void init(WebView webView);
+    public void init();
 
     public void onDraw(Canvas canvas);
 

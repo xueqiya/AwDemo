@@ -17,5 +17,6 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout content_container = findViewById(R.id.content_container);
         WebView webView = new WebView(this);
         content_container.addView(webView);
+        webView.loadUrl("http://www.bing.com");
     }
 }
