@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-package org.chromium.android_webview.test;
+package com.example.awdemo.webview;
 
 import android.graphics.Bitmap;
 import android.graphics.Picture;
@@ -31,19 +31,15 @@ import org.chromium.base.ThreadUtils;
 
 import java.security.Principal;
 
-/**
- * As a convience for tests that only care about specefic callbacks, this class provides
- * empty implementations of all abstract methods.
- */
-public class NullContentsClient extends AwContentsClient {
+public class ContentsClient extends AwContentsClient {
 
     private static final String TAG = "NullContentsClient";
 
-    public NullContentsClient() {
+    public ContentsClient() {
         this(ThreadUtils.getUiThreadLooper());
     }
 
-    public NullContentsClient(Looper looper) {
+    public ContentsClient(Looper looper) {
         super(looper);  // "...beams are gonna blind me".
     }
 
@@ -53,7 +49,7 @@ public class NullContentsClient extends AwContentsClient {
     }
 
     @Override
-    public boolean shouldOverrideUrlLoading(AwContentsClient.AwWebResourceRequest request) {
+    public boolean shouldOverrideUrlLoading(AwWebResourceRequest request) {
         return false;
     }
 
@@ -74,7 +70,7 @@ public class NullContentsClient extends AwContentsClient {
 
     @Override
     public AwWebResourceResponse shouldInterceptRequest(
-            AwContentsClient.AwWebResourceRequest request) {
+            AwWebResourceRequest request) {
         return null;
     }
 
@@ -230,7 +226,7 @@ public class NullContentsClient extends AwContentsClient {
     }
 
     @Override
-    public void onShowCustomView(View view, AwContentsClient.CustomViewCallback callback) {}
+    public void onShowCustomView(View view, CustomViewCallback callback) {}
 
     @Override
     public void onHideCustomView() {
