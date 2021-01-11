@@ -6,6 +6,8 @@ import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.view.SurfaceHolder;
 
+import com.example.awdemo.BuildConfig;
+
 import org.chromium.android_webview.shell.DrawFn;
 import org.chromium.base.Callback;
 
@@ -84,7 +86,9 @@ class HardwareView extends GLSurfaceView {
     }
 
     public void setReadyToRenderCallback(Runnable runner) {
-        assert !isReadyToRender() || runner == null;
+        if (BuildConfig.DEBUG && !(!isReadyToRender() || runner == null)) {
+            throw new AssertionError("Assertion failed");
+        }
         mReadyToRenderCallback = runner;
     }
 
@@ -122,7 +126,9 @@ class HardwareView extends GLSurfaceView {
     public void awContentsDetached() {
         synchronized (mSyncLock) {
             super.requestRender();
-            assert !mPendingDestroy;
+            if (BuildConfig.DEBUG && mPendingDestroy) {
+                throw new AssertionError("Assertion failed");
+            }
             mPendingDestroy = true;
             try {
                 while (!mPendingDestroy) {
@@ -137,7 +143,9 @@ class HardwareView extends GLSurfaceView {
     public void drawWebViewFunctor(int functor) {
         synchronized (mSyncLock) {
             super.requestRender();
-            assert mFunctor == 0;
+            if (BuildConfig.DEBUG && mFunctor != 0) {
+                throw new AssertionError("Assertion failed");
+            }
             mFunctor = functor;
             mSyncDone = false;
             try {
@@ -159,7 +167,9 @@ class HardwareView extends GLSurfaceView {
             scrollY = mLastScrollY;
 
             if (mFunctor != 0) {
-                assert !mSyncDone;
+                if (BuildConfig.DEBUG && mSyncDone) {
+                    throw new AssertionError("Assertion failed");
+                }
                 functor = mFunctor;
                 mLastDrawnFunctor = mFunctor;
                 mFunctor = 0;
@@ -188,7 +198,7 @@ class HardwareView extends GLSurfaceView {
                 }
             }
             if (quadrantReadbackCallback != null) {
-                int quadrantColors[] = new int[4];
+                int[] quadrantColors = new int[4];
                 int quarterWidth = width / 4;
                 int quarterHeight = height / 4;
                 ByteBuffer buffer = ByteBuffer.allocate(4);

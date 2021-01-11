@@ -1476,12 +1476,10 @@ public class AwContents implements SmartClipProvider {
         return mIsDestroyed || destroyRunnableHasRun || weakRefsCleared;
     }
 
-    @VisibleForTesting
     public WebContents getWebContents() {
         return mWebContents;
     }
 
-    @VisibleForTesting
     public NavigationController getNavigationController() {
         return mNavigationController;
     }

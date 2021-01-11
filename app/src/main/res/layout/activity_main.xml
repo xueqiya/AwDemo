@@ -1,48 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@id/testshell_activity"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@id/toolbar"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
 
-        <EditText
-            android:id="@id/url"
-            android:layout_width="0.0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            android:gravity="bottom"
-            android:imeOptions="actionGo"
-            android:inputType="textUri"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:textSize="18.0sp" />
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <ImageButton
-            android:id="@id/prev"
-            android:layout_width="38.0dip"
-            android:layout_height="38.0dip"
-            android:contentDescription="@null"
-            android:scaleType="center"
-            android:src="@android:drawable/ic_media_previous" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@id/next"
-            android:layout_width="38.0dip"
-            android:layout_height="38.0dip"
-            android:contentDescription="@null"
-            android:scaleType="center"
-            android:src="@android:drawable/ic_media_next" />
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/progress_tv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@android:color/white" />
 
-    <LinearLayout
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="http://"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/url"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/go"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="go" />
+            </LinearLayout>
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <FrameLayout
         android:id="@id/content_container"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="horizontal" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>

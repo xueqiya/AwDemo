@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/add"
+        android:title="添加普通页"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/add_incognito"
+        android:title="添加隐私页"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/dele"
+        android:title="删除"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/getInfo"
+        android:title="信息"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/back"
+        android:title="back"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/forward"
+        android:title="forward"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/reload"
+        android:title="reload"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/home"
+        android:title="home"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/tab0"
+        android:title="tab0"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/tab1"
+        android:title="tab1"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/tab2"
+        android:title="tab2"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/tab3"
+        android:title="tab3"
+        app:showAsAction="never" />
+</menu>

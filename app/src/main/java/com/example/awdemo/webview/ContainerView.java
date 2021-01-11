@@ -1,29 +1,21 @@
-// Copyright 2012 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 package com.example.awdemo.webview;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.PixelFormat;
 import android.graphics.Rect;
-import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.DragEvent;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.accessibility.AccessibilityNodeProvider;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.widget.FrameLayout;
+
+import com.example.awdemo.BuildConfig;
 
 import org.chromium.android_webview.AwContents;
 import org.chromium.android_webview.gfx.AwDrawFnImpl;
@@ -31,11 +23,7 @@ import org.chromium.android_webview.shell.DrawFn;
 import org.chromium.base.Callback;
 import org.chromium.content_public.browser.WebContents;
 
-import java.nio.ByteBuffer;
-
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
-
+@SuppressLint("ViewConstructor")
 public class ContainerView extends FrameLayout {
     private AwContents mAwContents;
     private final AwContents.InternalAccessDelegate mInternalAccessDelegate;
@@ -46,12 +34,6 @@ public class ContainerView extends FrameLayout {
     private Rect mWindowVisibleDisplayFrameOverride;
 
     private static boolean sCreatedOnce;
-
-    private HardwareView createHardwareViewOnlyOnce(Context context) {
-        if (sCreatedOnce) return null;
-        sCreatedOnce = true;
-        return new HardwareView(context);
-    }
 
     public ContainerView(Context context, boolean allowHardwareAcceleration) {
         super(context);
@@ -70,6 +52,12 @@ public class ContainerView extends FrameLayout {
         setOverScrollMode(View.OVER_SCROLL_ALWAYS);
         setFocusable(true);
         setFocusableInTouchMode(true);
+    }
+
+    private HardwareView createHardwareViewOnlyOnce(Context context) {
+        if (sCreatedOnce) return null;
+        sCreatedOnce = true;
+        return new HardwareView(context);
     }
 
     public void initialize(AwContents awContents) {
@@ -100,7 +88,9 @@ public class ContainerView extends FrameLayout {
      * Use glReadPixels to get 4 pixels from center of 4 quadrants. Result is in row-major order.
      */
     public void readbackQuadrantColors(Callback<int[]> callback) {
-        assert isBackedByHardwareView();
+        if (BuildConfig.DEBUG && !isBackedByHardwareView()) {
+            throw new AssertionError("Assertion failed");
+        }
         mHardwareView.readbackQuadrantColors(callback);
     }
 
@@ -120,7 +110,17 @@ public class ContainerView extends FrameLayout {
         return mInternalAccessDelegate;
     }
 
-    public void destroy() {
+    public void onResume() {
+        mAwContents.onResume();
+//        mHardwareView.onResume();
+    }
+
+    public void onPause() {
+        mAwContents.onPause();
+//        mHardwareView.onPause();
+    }
+
+    public void onDestroy() {
         mAwContents.destroy();
     }
 
