@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
     private fun init() {
         AwShellResourceProvider.registerResources(this)
         AwBrowserProcess.loadLibrary(null)
+        AwBrowserProcess.start()
         if (CommandLine.getInstance().hasSwitch(AwShellSwitches.ENABLE_ATRACE)) {
             Log.e(TAG, "Enabling Android trace.")
             TraceEvent.setATraceEnabled(true)
@@ -114,7 +115,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createAwTestContainerView(): ContainerView {
-        AwBrowserProcess.start()
         val testContainerView = ContainerView(this, false)
         val awContentsClient: AwContentsClient = object : ContentsClient() {
             private var mCustomView: View? = null
