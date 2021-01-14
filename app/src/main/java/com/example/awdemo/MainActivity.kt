@@ -1,8 +1,10 @@
 package com.example.awdemo
 
 import android.graphics.PixelFormat
+import android.os.Build
 import android.os.Bundle
 import android.view.*
+import android.webkit.WebSettings
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -141,11 +143,29 @@ class MainActivity : AppCompatActivity() {
         )
         awSettings.mediaPlaybackRequiresUserGesture = false
         awSettings.builtInZoomControls = true
-        awSettings.displayZoomControls = false
-        awSettings.useWideViewPort = true
         awSettings.loadWithOverviewMode = true
         awSettings.layoutAlgorithm = AwSettings.LAYOUT_ALGORITHM_TEXT_AUTOSIZING
         awSettings.javaScriptEnabled = true
+        awSettings.userAgentString = "Mozilla/5.0 (Linux; U; Android 4.0.4; en-US; MK16i Build/4.1.B.0.587) AppleWebKit/528.5+ (KHTML, like Gecko) Version/3.1.2 Mobile Safari/525.20.1 UCBrowser/8.9.2.373 Mobile"
+        awSettings.setSupportMultipleWindows(false)
+        awSettings.useWideViewPort = true
+        awSettings.setSupportZoom(true)
+        awSettings.displayZoomControls = false
+        awSettings.allowContentAccess = true
+        awSettings.allowFileAccess = true
+        awSettings.databaseEnabled = true
+        awSettings.setGeolocationEnabled(true)
+        awSettings.javaScriptCanOpenWindowsAutomatically = true
+        awSettings.allowFileAccessFromFileURLs = false
+        awSettings.allowUniversalAccessFromFileURLs = false
+        awSettings.saveFormData = true
+        awSettings.domStorageEnabled = true
+        awSettings.setAppCacheEnabled(true)
+        awSettings.databaseEnabled = true
+        awSettings.cacheMode = WebSettings.LOAD_DEFAULT
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            awSettings.mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
+        }
 
         containerView.awContents = AwContents(
             browserContext, containerView,
