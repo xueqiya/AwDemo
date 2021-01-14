@@ -14,8 +14,8 @@ class InternalAccessAdapter implements AwContents.InternalAccessDelegate {
 
     public InternalAccessAdapter(ContainerView containerView, AwContents awContents, HardwareView hardwareView) {
         this.containerView = containerView;
-        this.awContents=awContents;
-        this.hardwareView=hardwareView;
+        this.awContents = awContents;
+        this.hardwareView = hardwareView;
     }
 
     @Override
@@ -42,12 +42,10 @@ class InternalAccessAdapter implements AwContents.InternalAccessDelegate {
     public void super_scrollTo(int scrollX, int scrollY) {
         // We're intentionally not calling super.scrollTo here to make testing easier.
         containerView.scrollTo(scrollX, scrollY);
-        if (containerView.isBackedByHardwareView()) {
-            // Undo the scroll that will be applied because of mHardwareView
-            // being a child of |this|.
-            hardwareView.setTranslationX(scrollX);
-            hardwareView.setTranslationY(scrollY);
-        }
+        // Undo the scroll that will be applied because of mHardwareView
+        // being a child of |this|.
+        hardwareView.setTranslationX(scrollX);
+        hardwareView.setTranslationY(scrollY);
     }
 
     @Override

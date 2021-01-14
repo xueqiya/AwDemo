@@ -15,12 +15,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.widget.FrameLayout;
 
-import com.example.awdemo.BuildConfig;
-
 import org.chromium.android_webview.AwContents;
-import org.chromium.android_webview.gfx.AwDrawFnImpl;
-import org.chromium.android_webview.shell.DrawFn;
-import org.chromium.base.Callback;
 import org.chromium.content_public.browser.WebContents;
 
 @SuppressLint("ViewConstructor")
@@ -28,77 +23,31 @@ public class ContainerView extends FrameLayout {
     private AwContents mAwContents;
     private final AwContents.InternalAccessDelegate mInternalAccessDelegate;
 
-    private HardwareView mHardwareView;
-    private boolean mAttachedContents;
+    private final HardwareView mHardwareView;
 
-    private Rect mWindowVisibleDisplayFrameOverride;
-
-    private static boolean sCreatedOnce;
-
-    public ContainerView(Context context, boolean allowHardwareAcceleration) {
+    public ContainerView(Context context) {
         super(context);
-        if (allowHardwareAcceleration) {
-            mHardwareView = createHardwareViewOnlyOnce(context);
-        }
-        if (isBackedByHardwareView()) {
-            addView(mHardwareView,
-                    new LayoutParams(
-                            LayoutParams.MATCH_PARENT,
-                            LayoutParams.MATCH_PARENT));
-        } else {
-            setLayerType(LAYER_TYPE_SOFTWARE, null);
-        }
+        mHardwareView = new HardwareView(context);
+        LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        addView(mHardwareView, layoutParams);
         mInternalAccessDelegate = new InternalAccessAdapter(this, mAwContents, mHardwareView);
         setOverScrollMode(View.OVER_SCROLL_ALWAYS);
         setFocusable(true);
         setFocusableInTouchMode(true);
     }
 
-    private HardwareView createHardwareViewOnlyOnce(Context context) {
-        if (sCreatedOnce) return null;
-        sCreatedOnce = true;
-        return new HardwareView(context);
-    }
-
-    public void initialize(AwContents awContents) {
+    public void setAwContents(AwContents awContents) {
         mAwContents = awContents;
-        if (isBackedByHardwareView()) {
-            AwDrawFnImpl.setDrawFnFunctionTable(DrawFn.getDrawFnFunctionTable());
-        }
-    }
-
-    public void setWindowVisibleDisplayFrameOverride(Rect rect) {
-        mWindowVisibleDisplayFrameOverride = rect;
-    }
-
-    @Override
-    public void getWindowVisibleDisplayFrame(Rect outRect) {
-        if (mWindowVisibleDisplayFrameOverride != null) {
-            outRect.set(mWindowVisibleDisplayFrameOverride);
-        } else {
-            super.getWindowVisibleDisplayFrame(outRect);
-        }
-    }
-
-    public boolean isBackedByHardwareView() {
-        return mHardwareView != null;
-    }
-
-    /**
-     * Use glReadPixels to get 4 pixels from center of 4 quadrants. Result is in row-major order.
-     */
-    public void readbackQuadrantColors(Callback<int[]> callback) {
-        if (BuildConfig.DEBUG && !isBackedByHardwareView()) {
-            throw new AssertionError("Assertion failed");
-        }
-        mHardwareView.readbackQuadrantColors(callback);
+        mHardwareView.setReadyToRenderCallback(() -> mAwContents.onAttachedToWindow());
     }
 
     public WebContents getWebContents() {
+        if (mAwContents == null) return null;
         return mAwContents.getWebContents();
     }
 
     public AwContents getAwContents() {
+        if (mAwContents == null) return null;
         return mAwContents;
     }
 
@@ -111,64 +60,37 @@ public class ContainerView extends FrameLayout {
     }
 
     public void onResume() {
+        if (mAwContents == null) return;
         mAwContents.onResume();
-//        mHardwareView.onResume();
+        mHardwareView.onResume();
     }
 
     public void onPause() {
+        if (mAwContents == null) return;
         mAwContents.onPause();
-//        mHardwareView.onPause();
+        mHardwareView.onPause();
     }
 
     public void onDestroy() {
+        if (mAwContents == null) return;
         mAwContents.destroy();
     }
 
-    private void attachedContentsInternal() {
-        assert !mAttachedContents;
-        mAwContents.onAttachedToWindow();
-        mAttachedContents = true;
-    }
-
-    private void detachedContentsInternal() {
-        assert mAttachedContents;
-        mAwContents.onDetachedFromWindow();
-        mAttachedContents = false;
-        if (mHardwareView != null) {
-            mHardwareView.awContentsDetached();
-        }
-    }
-
-    @Override
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        if (mHardwareView == null || mHardwareView.isReadyToRender()) {
-            attachedContentsInternal();
-        } else {
-            mHardwareView.setReadyToRenderCallback(() -> attachedContentsInternal());
-        }
-
-        if (mHardwareView != null) {
-            mHardwareView.setReadyToDetachCallback(() -> detachedContentsInternal());
-        }
-    }
-
-    @Override
-    public void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        if (mHardwareView == null || mHardwareView.isReadyToRender()) {
-            detachedContentsInternal();
-
-            if (mHardwareView != null) {
-                mHardwareView.setReadyToRenderCallback(null);
-                mHardwareView.setReadyToDetachCallback(null);
-            }
-        }
-    }
+//    private void detachedContentsInternal() {
+//        if (BuildConfig.DEBUG && !mAttachedContents) {
+//            throw new AssertionError("Assertion failed");
+//        }
+//        mAwContents.onDetachedFromWindow();
+//        mAttachedContents = false;
+//        if (mHardwareView != null) {
+//            mHardwareView.awContentsDetached();
+//        }
+//    }
 
     @Override
     public void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
         super.onFocusChanged(focused, direction, previouslyFocusedRect);
+        if (mAwContents == null) return;
         mAwContents.onFocusChanged(focused, direction, previouslyFocusedRect);
     }
 
@@ -180,17 +102,20 @@ public class ContainerView extends FrameLayout {
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        if (mAwContents == null) return;
         mAwContents.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     @Override
     public void onSizeChanged(int w, int h, int ow, int oh) {
         super.onSizeChanged(w, h, ow, oh);
+        if (mAwContents == null) return;
         mAwContents.onSizeChanged(w, h, ow, oh);
     }
 
     @Override
     public void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY) {
+        if (mAwContents == null) return;
         mAwContents.onContainerViewOverScrolled(scrollX, scrollY, clampedX, clampedY);
     }
 
@@ -202,9 +127,8 @@ public class ContainerView extends FrameLayout {
     @Override
     public void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
-        if (mAwContents != null) {
-            mAwContents.onContainerViewScrollChanged(l, t, oldl, oldt);
-        }
+        if (mAwContents == null) return;
+        mAwContents.onContainerViewScrollChanged(l, t, oldl, oldt);
     }
 
     public void setMeasuredDimension2(int measuredWidth, int measuredHeight) {
@@ -213,44 +137,49 @@ public class ContainerView extends FrameLayout {
 
     @Override
     public void computeScroll() {
+        if (mAwContents == null) return;
         mAwContents.computeScroll();
     }
 
     @Override
     public void onVisibilityChanged(View changedView, int visibility) {
         super.onVisibilityChanged(changedView, visibility);
+        if (mAwContents == null) return;
         mAwContents.onVisibilityChanged(changedView, visibility);
     }
 
     @Override
     public void onWindowVisibilityChanged(int visibility) {
         super.onWindowVisibilityChanged(visibility);
+        if (mAwContents == null) return;
         mAwContents.onWindowVisibilityChanged(visibility);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         super.onTouchEvent(ev);
+        if (mAwContents == null) return false;
         return mAwContents.onTouchEvent(ev);
     }
 
     @Override
     public boolean onHoverEvent(MotionEvent ev) {
         super.onHoverEvent(ev);
+        if (mAwContents == null) return false;
         return mAwContents.onHoverEvent(ev);
     }
 
     @Override
     public void onDraw(Canvas canvas) {
-        if (isBackedByHardwareView()) {
-            mHardwareView.updateScroll(getScrollX(), getScrollY());
-        }
+        if (mAwContents == null) return;
+        mHardwareView.updateScroll(getScrollX(), getScrollY());
         mAwContents.onDraw(canvas);
         super.onDraw(canvas);
     }
 
     @Override
     public AccessibilityNodeProvider getAccessibilityNodeProvider() {
+        if (mAwContents == null) return null;
         AccessibilityNodeProvider provider =
                 mAwContents.getAccessibilityNodeProvider();
         return provider == null ? super.getAccessibilityNodeProvider() : provider;
@@ -264,6 +193,7 @@ public class ContainerView extends FrameLayout {
     @Override
     @TargetApi(Build.VERSION_CODES.N)
     public boolean onDragEvent(DragEvent event) {
+        if (mAwContents == null) return false;
         return mAwContents.onDragEvent(event);
     }
 

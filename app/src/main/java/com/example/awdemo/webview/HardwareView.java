@@ -16,7 +16,7 @@ import java.nio.ByteBuffer;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-class HardwareView extends GLSurfaceView {
+public class HardwareView extends GLSurfaceView {
     private static final int MODE_DRAW = 0;
     private static final int MODE_PROCESS = 1;
     private static final int MODE_PROCESS_NO_CONTEXT = 2;
@@ -86,9 +86,6 @@ class HardwareView extends GLSurfaceView {
     }
 
     public void setReadyToRenderCallback(Runnable runner) {
-        if (BuildConfig.DEBUG && !(!isReadyToRender() || runner == null)) {
-            throw new AssertionError("Assertion failed");
-        }
         mReadyToRenderCallback = runner;
     }
 
