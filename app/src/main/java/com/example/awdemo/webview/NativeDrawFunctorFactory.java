@@ -4,10 +4,10 @@ import org.chromium.android_webview.AwContents;
 import org.chromium.android_webview.gfx.AwDrawFnImpl;
 
 class NativeDrawFunctorFactory implements AwContents.NativeDrawFunctorFactory {
-    private ContainerView containerView;
+    private WebView webView;
 
-    public NativeDrawFunctorFactory(ContainerView containerView) {
-        this.containerView = containerView;
+    public NativeDrawFunctorFactory(WebView webView) {
+        this.webView = webView;
     }
 
     @Override
@@ -17,6 +17,6 @@ class NativeDrawFunctorFactory implements AwContents.NativeDrawFunctorFactory {
 
     @Override
     public AwDrawFnImpl.DrawFnAccess getDrawFnAccess() {
-        return new DrawFnAccess(containerView);
+        return new DrawFnAccess(webView);
     }
 }

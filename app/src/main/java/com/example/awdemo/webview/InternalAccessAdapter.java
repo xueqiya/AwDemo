@@ -8,12 +8,12 @@ import android.view.MotionEvent;
 import org.chromium.android_webview.AwContents;
 
 class InternalAccessAdapter implements AwContents.InternalAccessDelegate {
-    private final ContainerView containerView;
+    private final WebView webView;
     private final AwContents awContents;
     private final HardwareView hardwareView;
 
-    public InternalAccessAdapter(ContainerView containerView, AwContents awContents, HardwareView hardwareView) {
-        this.containerView = containerView;
+    public InternalAccessAdapter(WebView webView, AwContents awContents, HardwareView hardwareView) {
+        this.webView = webView;
         this.awContents = awContents;
         this.hardwareView = hardwareView;
     }
@@ -41,7 +41,7 @@ class InternalAccessAdapter implements AwContents.InternalAccessDelegate {
     @Override
     public void super_scrollTo(int scrollX, int scrollY) {
         // We're intentionally not calling super.scrollTo here to make testing easier.
-        containerView.scrollTo(scrollX, scrollY);
+        webView.scrollTo(scrollX, scrollY);
         // Undo the scroll that will be applied because of mHardwareView
         // being a child of |this|.
         hardwareView.setTranslationX(scrollX);
@@ -55,23 +55,23 @@ class InternalAccessAdapter implements AwContents.InternalAccessDelegate {
                              int maxOverScrollX, int maxOverScrollY,
                              boolean isTouchEvent) {
         // We're intentionally not calling super.scrollTo here to make testing easier.
-        containerView.overScrollBy(deltaX, deltaY, scrollX, scrollY,
+        webView.overScrollBy(deltaX, deltaY, scrollX, scrollY,
                 scrollRangeX, scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent);
     }
 
     @Override
     public void onScrollChanged(int l, int t, int oldl, int oldt) {
-        containerView.onScrollChanged(l, t, oldl, oldt);
+        webView.onScrollChanged(l, t, oldl, oldt);
     }
 
     @Override
     public void setMeasuredDimension(int measuredWidth, int measuredHeight) {
-        containerView.setMeasuredDimension2(measuredWidth, measuredHeight);
+        webView.setMeasuredDimension2(measuredWidth, measuredHeight);
     }
 
     @Override
     public int super_getScrollBarStyle() {
-        return containerView.getScrollBarStyle();
+        return webView.getScrollBarStyle();
     }
 
     @Override

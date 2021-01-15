@@ -14,7 +14,7 @@ import java.net.URL
 
 class MyContentsClient(
     private val activity: Activity,
-    private val containerView: ContainerView
+    private val webView: WebView
 ) : ContentsClient() {
     private var mCustomView: View? = null
     override fun handleJsConfirm(url: String, message: String, receiver: JsResultReceiver) {
@@ -28,7 +28,7 @@ class MyContentsClient(
         } catch (e: MalformedURLException) {
             title += url
         }
-        AlertDialog.Builder(containerView.context)
+        AlertDialog.Builder(webView.context)
             .setTitle(title)
             .setMessage(message)
             .setPositiveButton(
@@ -42,7 +42,7 @@ class MyContentsClient(
     }
 
     override fun handleJsAlert(url: String?, message: String?, receiver: JsResultReceiver?) {
-        AlertDialog.Builder(containerView.context)
+        AlertDialog.Builder(webView.context)
             .setTitle(url)
             .setMessage(message)
             .setPositiveButton(
@@ -61,7 +61,7 @@ class MyContentsClient(
         defaultValue: String?,
         receiver: JsPromptResultReceiver?
     ) {
-        AlertDialog.Builder(containerView.context)
+        AlertDialog.Builder(webView.context)
             .setTitle(url)
             .setMessage(message)
             .setPositiveButton(
@@ -88,7 +88,7 @@ class MyContentsClient(
     override fun shouldOverrideUrlLoading(request: AwWebResourceRequest?): Boolean {
         val url = request?.url!!
         return if (url.startsWith("http://") || url.startsWith("https://")) {
-            containerView.awContents.loadUrl(url)
+            webView.awContents.loadUrl(url)
             true
         } else {
             false

@@ -5,14 +5,14 @@ import android.graphics.Canvas;
 import org.chromium.android_webview.gfx.AwDrawFnImpl;
 
 class DrawFnAccess implements AwDrawFnImpl.DrawFnAccess {
-    private final ContainerView containerView;
+    private final WebView webView;
 
-    public DrawFnAccess(ContainerView containerView) {
-        this.containerView = containerView;
+    public DrawFnAccess(WebView webView) {
+        this.webView = webView;
     }
 
     @Override
     public void drawWebViewFunctor(Canvas canvas, int functor) {
-        containerView.getHardmHardwareView().drawWebViewFunctor(functor);
+        webView.getHardmHardwareView().drawWebViewFunctor(functor);
     }
 }

@@ -19,13 +19,13 @@ import org.chromium.android_webview.AwContents;
 import org.chromium.content_public.browser.WebContents;
 
 @SuppressLint("ViewConstructor")
-public class ContainerView extends FrameLayout {
+public class WebView extends FrameLayout {
     private AwContents mAwContents;
     private final AwContents.InternalAccessDelegate mInternalAccessDelegate;
 
     private final HardwareView mHardwareView;
 
-    public ContainerView(Context context) {
+    public WebView(Context context) {
         super(context);
         mHardwareView = new HardwareView(context);
         LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
@@ -132,7 +132,7 @@ public class ContainerView extends FrameLayout {
     }
 
     public void setMeasuredDimension2(int measuredWidth, int measuredHeight) {
-        ContainerView.super.setMeasuredDimension(measuredWidth, measuredHeight);
+        WebView.super.setMeasuredDimension(measuredWidth, measuredHeight);
     }
 
     @Override

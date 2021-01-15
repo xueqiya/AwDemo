@@ -10,7 +10,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.example.awdemo.utils.LogUtils
-import com.example.awdemo.webview.ContainerView
+import com.example.awdemo.webview.WebView
 import com.example.awdemo.webview.MyContentsClient
 import org.chromium.android_webview.*
 import org.chromium.android_webview.gfx.AwDrawFnImpl
@@ -24,7 +24,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 class MainActivity : AppCompatActivity() {
     private var mDevToolsServer: AwDevToolsServer? = null
-    private lateinit var containerView: ContainerView
+    private lateinit var webView: WebView
     private val mPageList = CopyOnWriteArrayList<AwContents>()
 
     companion object {
@@ -58,11 +58,11 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolBar)
 
         val contentContainer = findViewById<FrameLayout>(R.id.content_container)
-        containerView = ContainerView(this)
-        containerView.layoutParams = LinearLayout.LayoutParams(
+        webView = WebView(this)
+        webView.layoutParams = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f
         )
-        contentContainer.addView(containerView)
+        contentContainer.addView(webView)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -73,16 +73,16 @@ class MainActivity : AppCompatActivity() {
                 mPageList.add(awContents)
             }
             R.id.back -> {
-                containerView.awContents?.goBack()
+                webView.awContents?.goBack()
             }
             R.id.forward -> {
-                containerView.awContents?.goForward()
+                webView.awContents?.goForward()
             }
             R.id.reload -> {
-                containerView.awContents?.reload()
+                webView.awContents?.reload()
             }
             R.id.home -> {
-                containerView.awContents?.loadUrl(HOME_URL)
+                webView.awContents?.loadUrl(HOME_URL)
             }
             R.id.tab0 -> {
                 tab(0)
@@ -106,22 +106,22 @@ class MainActivity : AppCompatActivity() {
             return
         }
         val awContents = mPageList[index]
-        containerView.awContents = awContents
-        containerView.invalidate()
+        webView.awContents = awContents
+        webView.invalidate()
     }
 
     override fun onPause() {
         super.onPause()
-        containerView.onPause()
+        webView.onPause()
     }
 
     override fun onResume() {
         super.onResume()
-        containerView.onResume()
+        webView.onResume()
     }
 
     private fun createAwContents(): AwContents {
-        val awContentsClient: AwContentsClient = MyContentsClient(this, containerView)
+        val awContentsClient: AwContentsClient = MyContentsClient(this, webView)
 
         val sharedPreferences = getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE)
         val browserContext =
@@ -161,17 +161,17 @@ class MainActivity : AppCompatActivity() {
             awSettings.mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
         }
 
-        containerView.awContents = AwContents(
-            browserContext, containerView,
-            containerView.context, containerView.internalAccessDelegate,
-            containerView.nativeDrawFunctorFactory, awContentsClient, awSettings
+        webView.awContents = AwContents(
+            browserContext, webView,
+            webView.context, webView.internalAccessDelegate,
+            webView.nativeDrawFunctorFactory, awContentsClient, awSettings
         )
 
         if (mDevToolsServer == null) {
             mDevToolsServer = AwDevToolsServer()
             mDevToolsServer!!.setRemoteDebuggingEnabled(true)
         }
-        return containerView.awContents
+        return webView.awContents
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
