@@ -72,12 +72,6 @@ class MainActivity : AppCompatActivity() {
                 awContents.loadUrl(HOME_URL)
                 mPageList.add(awContents)
             }
-            R.id.dele -> {
-
-            }
-            R.id.getInfo -> {
-
-            }
             R.id.back -> {
                 containerView.awContents?.goBack()
             }

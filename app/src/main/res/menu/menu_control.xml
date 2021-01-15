@@ -6,18 +6,6 @@
         android:title="添加普通页"
         app:showAsAction="never" />
     <item
-        android:id="@+id/add_incognito"
-        android:title="添加隐私页"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/dele"
-        android:title="删除"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/getInfo"
-        android:title="信息"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/back"
         android:title="back"
         app:showAsAction="never" />
