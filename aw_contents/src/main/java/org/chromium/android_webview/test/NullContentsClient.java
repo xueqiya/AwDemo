@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-package com.example.awdemo.webview;
+package org.chromium.android_webview.test;
 
 import android.graphics.Bitmap;
 import android.graphics.Picture;
@@ -31,15 +31,19 @@ import org.chromium.base.ThreadUtils;
 
 import java.security.Principal;
 
-public class ContentsClient extends AwContentsClient {
+/**
+ * As a convience for tests that only care about specefic callbacks, this class provides
+ * empty implementations of all abstract methods.
+ */
+public class NullContentsClient extends AwContentsClient {
 
     private static final String TAG = "NullContentsClient";
 
-    public ContentsClient() {
+    public NullContentsClient() {
         this(ThreadUtils.getUiThreadLooper());
     }
 
-    public ContentsClient(Looper looper) {
+    public NullContentsClient(Looper looper) {
         super(looper);  // "...beams are gonna blind me".
     }
 
@@ -49,7 +53,7 @@ public class ContentsClient extends AwContentsClient {
     }
 
     @Override
-    public boolean shouldOverrideUrlLoading(AwWebResourceRequest request) {
+    public boolean shouldOverrideUrlLoading(AwContentsClient.AwWebResourceRequest request) {
         return false;
     }
 
@@ -70,7 +74,7 @@ public class ContentsClient extends AwContentsClient {
 
     @Override
     public AwWebResourceResponse shouldInterceptRequest(
-            AwWebResourceRequest request) {
+            AwContentsClient.AwWebResourceRequest request) {
         return null;
     }
 
@@ -149,7 +153,7 @@ public class ContentsClient extends AwContentsClient {
 
     @Override
     public void onFindResultReceived(int activeMatchOrdinal, int numberOfMatches,
-            boolean isDoneCounting) {
+                                     boolean isDoneCounting) {
     }
 
     @Override
@@ -178,7 +182,7 @@ public class ContentsClient extends AwContentsClient {
 
     @Override
     public void onSafeBrowsingHit(AwWebResourceRequest request, int threatType,
-            Callback<AwSafeBrowsingResponse> callback) {
+                                  Callback<AwSafeBrowsingResponse> callback) {
         callback.onResult(new AwSafeBrowsingResponse(SafeBrowsingAction.SHOW_INTERSTITIAL,
                 /* reporting */ true));
     }
