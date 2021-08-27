@@ -22,24 +22,26 @@ class MainActivity : AppCompatActivity() {
             currentWebView = webView1
             webView2.onPause()
             webViewContainer.removeView(webView2)
-            webViewContainer.addView(currentWebView)
-            webView1.onResume()
+            val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            webViewContainer.addView(currentWebView, params)
+            currentWebView.onResume()
         }
         findViewById<Button>(R.id.tab2).setOnClickListener {
             currentWebView = webView2
             webView1.onPause()
             webViewContainer.removeView(webView1)
-            webViewContainer.addView(currentWebView)
-            webView2.onResume()
+            val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            webViewContainer.addView(currentWebView, params)
+            currentWebView.onResume()
         }
     }
 
     private fun initView() {
         webViewContainer = findViewById(R.id.web_view_container)
         webView1 = WebView(this)
-        webView1.loadUrl("https://www.bing.com")
+        webView1.loadUrl("https://www.google.com")
         webView2 = WebView(this)
-        webView2.loadUrl("https://www.bing.com")
+        webView2.loadUrl("https://www.google.com")
 
         val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         currentWebView = webView1
