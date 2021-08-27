@@ -1,6 +1,7 @@
 package com.example.awdemo
 
 import android.app.Application
+import com.apkmatrix.components.webview.WebView
 
 /**
  * @Author xueqi

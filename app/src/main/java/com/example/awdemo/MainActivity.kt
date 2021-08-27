@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
+import com.apkmatrix.components.webview.WebView
 
 class MainActivity : AppCompatActivity() {
+    private val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
     private lateinit var webViewContainer: FrameLayout
     private lateinit var currentWebView: WebView
     private lateinit var webView1: WebView
@@ -19,18 +21,18 @@ class MainActivity : AppCompatActivity() {
         initView()
 
         findViewById<Button>(R.id.tab1).setOnClickListener {
-            currentWebView = webView1
+            if (currentWebView == webView1) return@setOnClickListener
             webView2.onPause()
             webViewContainer.removeView(webView2)
-            val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            currentWebView = webView1
             webViewContainer.addView(currentWebView, params)
             currentWebView.onResume()
         }
         findViewById<Button>(R.id.tab2).setOnClickListener {
-            currentWebView = webView2
+            if (currentWebView == webView2) return@setOnClickListener
             webView1.onPause()
             webViewContainer.removeView(webView1)
-            val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            currentWebView = webView2
             webViewContainer.addView(currentWebView, params)
             currentWebView.onResume()
         }
@@ -43,7 +45,6 @@ class MainActivity : AppCompatActivity() {
         webView2 = WebView(this)
         webView2.loadUrl("https://www.google.com")
 
-        val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         currentWebView = webView1
         webViewContainer.addView(currentWebView, params)
     }

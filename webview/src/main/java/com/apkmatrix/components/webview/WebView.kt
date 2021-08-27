@@ -1,14 +1,12 @@
-package com.example.awdemo
+package com.apkmatrix.components.webview
 
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
-import android.os.Build
 import android.util.Size
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import androidx.annotation.RequiresApi
 import org.chromium.android_webview.AwBrowserContext
 import org.chromium.android_webview.AwBrowserProcess
 import org.chromium.android_webview.AwContents
