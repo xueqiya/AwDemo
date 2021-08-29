@@ -13,6 +13,8 @@
 
 package org.chromium.device.mojom;
 
+import androidx.annotation.IntDef;
+
 
 class HidManager_Internal {
 
@@ -26,7 +28,7 @@ class HidManager_Internal {
 
         @Override
         public int getVersion() {
-          return 0;
+          return 1;
         }
 
         @Override
@@ -52,6 +54,8 @@ class HidManager_Internal {
     private static final int GET_DEVICES_ORDINAL = 1;
 
     private static final int CONNECT_ORDINAL = 2;
+
+    private static final int ADD_RECEIVER_ORDINAL = 3;
 
 
     static final class Proxy extends org.chromium.mojo.bindings.Interface.AbstractProxy implements HidManager.Proxy {
@@ -106,7 +110,7 @@ GetDevicesResponse callback) {
 
         @Override
         public void connect(
-String deviceGuid, HidConnectionClient connectionClient, HidConnectionWatcher watcher, 
+String deviceGuid, HidConnectionClient connectionClient, HidConnectionWatcher watcher, boolean allowProtectedReports, 
 ConnectResponse callback) {
 
             HidManagerConnectParams _message = new HidManagerConnectParams();
@@ -117,6 +121,8 @@ ConnectResponse callback) {
 
             _message.watcher = watcher;
 
+            _message.allowProtectedReports = allowProtectedReports;
+
 
             getProxyHandler().getMessageReceiver().acceptWithResponder(
                     _message.serializeWithHeader(
@@ -126,6 +132,23 @@ ConnectResponse callback) {
                                     org.chromium.mojo.bindings.MessageHeader.MESSAGE_EXPECTS_RESPONSE_FLAG,
                                     0)),
                     new HidManagerConnectResponseParamsForwardToCallback(callback));
+
+        }
+
+
+        @Override
+        public void addReceiver(
+org.chromium.mojo.bindings.InterfaceRequest<HidManager> receiver) {
+
+            HidManagerAddReceiverParams _message = new HidManagerAddReceiverParams();
+
+            _message.receiver = receiver;
+
+
+            getProxyHandler().getMessageReceiver().accept(
+                    _message.serializeWithHeader(
+                            getProxyHandler().getCore(),
+                            new org.chromium.mojo.bindings.MessageHeader(ADD_RECEIVER_ORDINAL)));
 
         }
 
@@ -144,7 +167,11 @@ ConnectResponse callback) {
                 org.chromium.mojo.bindings.ServiceMessage messageWithHeader =
                         message.asServiceMessage();
                 org.chromium.mojo.bindings.MessageHeader header = messageWithHeader.getHeader();
-                if (!header.validateHeader(org.chromium.mojo.bindings.MessageHeader.NO_FLAG)) {
+                int flags = org.chromium.mojo.bindings.MessageHeader.NO_FLAG;
+                if (header.hasFlag(org.chromium.mojo.bindings.MessageHeader.MESSAGE_IS_SYNC_FLAG)) {
+                    flags = flags | org.chromium.mojo.bindings.MessageHeader.MESSAGE_IS_SYNC_FLAG;
+                }
+                if (!header.validateHeader(flags)) {
                     return false;
                 }
                 switch(header.getType()) {
@@ -158,6 +185,19 @@ ConnectResponse callback) {
 
 
 
+
+
+
+
+
+                    case ADD_RECEIVER_ORDINAL: {
+
+                        HidManagerAddReceiverParams data =
+                                HidManagerAddReceiverParams.deserialize(messageWithHeader.getPayload());
+
+                        getImpl().addReceiver(data.receiver);
+                        return true;
+                    }
 
 
                     default:
@@ -175,7 +215,11 @@ ConnectResponse callback) {
                 org.chromium.mojo.bindings.ServiceMessage messageWithHeader =
                         message.asServiceMessage();
                 org.chromium.mojo.bindings.MessageHeader header = messageWithHeader.getHeader();
-                if (!header.validateHeader(org.chromium.mojo.bindings.MessageHeader.MESSAGE_EXPECTS_RESPONSE_FLAG)) {
+                int flags = org.chromium.mojo.bindings.MessageHeader.MESSAGE_EXPECTS_RESPONSE_FLAG;
+                if (header.hasFlag(org.chromium.mojo.bindings.MessageHeader.MESSAGE_IS_SYNC_FLAG)) {
+                    flags = flags | org.chromium.mojo.bindings.MessageHeader.MESSAGE_IS_SYNC_FLAG;
+                }
+                if (!header.validateHeader(flags)) {
                     return false;
                 }
                 switch(header.getType()) {
@@ -224,9 +268,11 @@ ConnectResponse callback) {
                         HidManagerConnectParams data =
                                 HidManagerConnectParams.deserialize(messageWithHeader.getPayload());
 
-                        getImpl().connect(data.deviceGuid, data.connectionClient, data.watcher, new HidManagerConnectResponseParamsProxyToResponder(getCore(), receiver, header.getRequestId()));
+                        getImpl().connect(data.deviceGuid, data.connectionClient, data.watcher, data.allowProtectedReports, new HidManagerConnectResponseParamsProxyToResponder(getCore(), receiver, header.getRequestId()));
                         return true;
                     }
+
+
 
 
                     default:
@@ -644,19 +690,20 @@ ConnectResponse callback) {
     
     static final class HidManagerConnectParams extends org.chromium.mojo.bindings.Struct {
 
-        private static final int STRUCT_SIZE = 32;
-        private static final org.chromium.mojo.bindings.DataHeader[] VERSION_ARRAY = new org.chromium.mojo.bindings.DataHeader[] {new org.chromium.mojo.bindings.DataHeader(32, 0)};
-        private static final org.chromium.mojo.bindings.DataHeader DEFAULT_STRUCT_INFO = VERSION_ARRAY[0];
+        private static final int STRUCT_SIZE = 40;
+        private static final org.chromium.mojo.bindings.DataHeader[] VERSION_ARRAY = new org.chromium.mojo.bindings.DataHeader[] {new org.chromium.mojo.bindings.DataHeader(32, 0),new org.chromium.mojo.bindings.DataHeader(40, 1)};
+        private static final org.chromium.mojo.bindings.DataHeader DEFAULT_STRUCT_INFO = VERSION_ARRAY[1];
         public String deviceGuid;
         public HidConnectionClient connectionClient;
         public HidConnectionWatcher watcher;
+        public boolean allowProtectedReports;
 
         private HidManagerConnectParams(int version) {
             super(STRUCT_SIZE, version);
         }
 
         public HidManagerConnectParams() {
-            this(0);
+            this(1);
         }
 
         public static HidManagerConnectParams deserialize(org.chromium.mojo.bindings.Message message) {
@@ -696,6 +743,12 @@ ConnectResponse callback) {
                         
                     result.watcher = decoder0.readServiceInterface(24, true, HidConnectionWatcher.MANAGER);
                     }
+                if (elementsOrVersion >= 1) {
+                    {
+                        
+                    result.allowProtectedReports = decoder0.readBoolean(32, 0);
+                    }
+                }
 
             } finally {
                 decoder0.decreaseStackDepth();
@@ -713,6 +766,8 @@ ConnectResponse callback) {
             encoder0.encode(this.connectionClient, 16, true, HidConnectionClient.MANAGER);
             
             encoder0.encode(this.watcher, 24, true, HidConnectionWatcher.MANAGER);
+            
+            encoder0.encode(this.allowProtectedReports, 32, 0);
         }
     }
 
@@ -837,6 +892,69 @@ ConnectResponse callback) {
                                     org.chromium.mojo.bindings.MessageHeader.MESSAGE_IS_RESPONSE_FLAG,
                                     mRequestId));
             mMessageReceiver.accept(_message);
+        }
+    }
+
+
+
+    
+    static final class HidManagerAddReceiverParams extends org.chromium.mojo.bindings.Struct {
+
+        private static final int STRUCT_SIZE = 16;
+        private static final org.chromium.mojo.bindings.DataHeader[] VERSION_ARRAY = new org.chromium.mojo.bindings.DataHeader[] {new org.chromium.mojo.bindings.DataHeader(16, 0)};
+        private static final org.chromium.mojo.bindings.DataHeader DEFAULT_STRUCT_INFO = VERSION_ARRAY[0];
+        public org.chromium.mojo.bindings.InterfaceRequest<HidManager> receiver;
+
+        private HidManagerAddReceiverParams(int version) {
+            super(STRUCT_SIZE, version);
+        }
+
+        public HidManagerAddReceiverParams() {
+            this(0);
+        }
+
+        public static HidManagerAddReceiverParams deserialize(org.chromium.mojo.bindings.Message message) {
+            return decode(new org.chromium.mojo.bindings.Decoder(message));
+        }
+
+        /**
+         * Similar to the method above, but deserializes from a |ByteBuffer| instance.
+         *
+         * @throws org.chromium.mojo.bindings.DeserializationException on deserialization failure.
+         */
+        public static HidManagerAddReceiverParams deserialize(java.nio.ByteBuffer data) {
+            return deserialize(new org.chromium.mojo.bindings.Message(
+                    data, new java.util.ArrayList<org.chromium.mojo.system.Handle>()));
+        }
+
+        @SuppressWarnings("unchecked")
+        public static HidManagerAddReceiverParams decode(org.chromium.mojo.bindings.Decoder decoder0) {
+            if (decoder0 == null) {
+                return null;
+            }
+            decoder0.increaseStackDepth();
+            HidManagerAddReceiverParams result;
+            try {
+                org.chromium.mojo.bindings.DataHeader mainDataHeader = decoder0.readAndValidateDataHeader(VERSION_ARRAY);
+                final int elementsOrVersion = mainDataHeader.elementsOrVersion;
+                result = new HidManagerAddReceiverParams(elementsOrVersion);
+                    {
+                        
+                    result.receiver = decoder0.readInterfaceRequest(8, false);
+                    }
+
+            } finally {
+                decoder0.decreaseStackDepth();
+            }
+            return result;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected final void encode(org.chromium.mojo.bindings.Encoder encoder) {
+            org.chromium.mojo.bindings.Encoder encoder0 = encoder.getEncoderAtDataOffset(DEFAULT_STRUCT_INFO);
+            
+            encoder0.encode(this.receiver, 8, false);
         }
     }
 

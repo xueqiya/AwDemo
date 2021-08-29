@@ -13,13 +13,24 @@
 
 package org.chromium.device.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class SerialParityBit {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        SerialParityBit.NONE,
+        SerialParityBit.NO_PARITY,
+        SerialParityBit.ODD,
+        SerialParityBit.EVEN})
+    public @interface EnumType {}
 
     public static final int NONE = 0;
-    public static final int NO_PARITY = 1; // NONE + 1
-    public static final int ODD = 2; // NO_PARITY + 1
-    public static final int EVEN = 3; // ODD + 1
+    public static final int NO_PARITY = 1;
+    public static final int ODD = 2;
+    public static final int EVEN = 3;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 3;
 
     public static boolean isKnownValue(int value) {
         return value >= 0 && value <= 3;
@@ -28,6 +39,10 @@ public final class SerialParityBit {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private SerialParityBit() {}

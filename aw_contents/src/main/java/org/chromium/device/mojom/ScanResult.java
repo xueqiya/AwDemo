@@ -13,8 +13,20 @@
 
 package org.chromium.device.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class ScanResult {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        ScanResult.SUCCESS,
+        ScanResult.PARTIAL,
+        ScanResult.INSUFFICIENT,
+        ScanResult.SENSOR_DIRTY,
+        ScanResult.TOO_SLOW,
+        ScanResult.TOO_FAST,
+        ScanResult.IMMOBILE})
+    public @interface EnumType {}
 
     public static final int SUCCESS = 0;
     public static final int PARTIAL = 1;
@@ -23,6 +35,8 @@ public final class ScanResult {
     public static final int TOO_SLOW = 4;
     public static final int TOO_FAST = 5;
     public static final int IMMOBILE = 6;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 6;
 
     public static boolean isKnownValue(int value) {
         return value >= 0 && value <= 6;
@@ -31,6 +45,10 @@ public final class ScanResult {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private ScanResult() {}

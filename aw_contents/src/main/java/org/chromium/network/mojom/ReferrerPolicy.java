@@ -13,19 +13,34 @@
 
 package org.chromium.network.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class ReferrerPolicy {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        ReferrerPolicy.ALWAYS,
+        ReferrerPolicy.DEFAULT,
+        ReferrerPolicy.NO_REFERRER_WHEN_DOWNGRADE,
+        ReferrerPolicy.NEVER,
+        ReferrerPolicy.ORIGIN,
+        ReferrerPolicy.ORIGIN_WHEN_CROSS_ORIGIN,
+        ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN,
+        ReferrerPolicy.SAME_ORIGIN,
+        ReferrerPolicy.STRICT_ORIGIN})
+    public @interface EnumType {}
 
     public static final int ALWAYS = 0;
-    public static final int DEFAULT = 1; // ALWAYS + 1
-    public static final int NO_REFERRER_WHEN_DOWNGRADE = 2; // DEFAULT + 1
-    public static final int NEVER = 3; // NO_REFERRER_WHEN_DOWNGRADE + 1
-    public static final int ORIGIN = 4; // NEVER + 1
-    public static final int ORIGIN_WHEN_CROSS_ORIGIN = 5; // ORIGIN + 1
-    public static final int NO_REFERRER_WHEN_DOWNGRADE_ORIGIN_WHEN_CROSS_ORIGIN = 6; // ORIGIN_WHEN_CROSS_ORIGIN + 1
-    public static final int SAME_ORIGIN = 7; // NO_REFERRER_WHEN_DOWNGRADE_ORIGIN_WHEN_CROSS_ORIGIN + 1
-    public static final int STRICT_ORIGIN = 8; // SAME_ORIGIN + 1
-    public static final int LAST = ReferrerPolicy.STRICT_ORIGIN;
+    public static final int DEFAULT = 1;
+    public static final int NO_REFERRER_WHEN_DOWNGRADE = 2;
+    public static final int NEVER = 3;
+    public static final int ORIGIN = 4;
+    public static final int ORIGIN_WHEN_CROSS_ORIGIN = 5;
+    public static final int STRICT_ORIGIN_WHEN_CROSS_ORIGIN = 6;
+    public static final int SAME_ORIGIN = 7;
+    public static final int STRICT_ORIGIN = 8;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 8;
 
     public static boolean isKnownValue(int value) {
         return value >= 0 && value <= 8;
@@ -34,6 +49,10 @@ public final class ReferrerPolicy {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private ReferrerPolicy() {}

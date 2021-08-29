@@ -13,6 +13,8 @@
 
 package org.chromium.device.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public final class Geoposition extends org.chromium.mojo.bindings.Struct {
 
@@ -22,12 +24,22 @@ public final class Geoposition extends org.chromium.mojo.bindings.Struct {
 
     public static final class ErrorCode {
         private static final boolean IS_EXTENSIBLE = false;
+        @IntDef({
+
+            ErrorCode.NONE,
+            ErrorCode.PERMISSION_DENIED,
+            ErrorCode.POSITION_UNAVAILABLE,
+            ErrorCode.TIMEOUT,
+            ErrorCode.LAST})
+        public @interface EnumType {}
 
         public static final int NONE = 0;
         public static final int PERMISSION_DENIED = 1;
         public static final int POSITION_UNAVAILABLE = 2;
         public static final int TIMEOUT = 3;
-        public static final int LAST = Geoposition.ErrorCode.TIMEOUT;
+        public static final int LAST = 3;
+        public static final int MIN_VALUE = 0;
+        public static final int MAX_VALUE = 3;
 
         public static boolean isKnownValue(int value) {
             return value >= 0 && value <= 3;
@@ -36,6 +48,10 @@ public final class Geoposition extends org.chromium.mojo.bindings.Struct {
         public static void validate(int value) {
             if (IS_EXTENSIBLE || isKnownValue(value)) return;
             throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+        }
+
+        public static int toKnownValue(int value) {
+          return value;
         }
 
         private ErrorCode() {}
@@ -101,6 +117,7 @@ public final class Geoposition extends org.chromium.mojo.bindings.Struct {
                     
                 result.errorCode = decoder0.readInt(12);
                     Geoposition.ErrorCode.validate(result.errorCode);
+                    result.errorCode = Geoposition.ErrorCode.toKnownValue(result.errorCode);
                 }
                 {
                     

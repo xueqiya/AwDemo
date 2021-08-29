@@ -13,6 +13,8 @@
 
 package org.chromium.mojo.native_types;
 
+import androidx.annotation.IntDef;
+
 
 public final class SerializedHandle extends org.chromium.mojo.bindings.Struct {
 
@@ -64,6 +66,7 @@ public final class SerializedHandle extends org.chromium.mojo.bindings.Struct {
                     
                 result.type = decoder0.readInt(12);
                     SerializedHandleType.validate(result.type);
+                    result.type = SerializedHandleType.toKnownValue(result.type);
                 }
 
         } finally {

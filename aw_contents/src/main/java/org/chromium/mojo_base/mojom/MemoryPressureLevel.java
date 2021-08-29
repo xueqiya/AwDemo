@@ -13,12 +13,22 @@
 
 package org.chromium.mojo_base.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class MemoryPressureLevel {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        MemoryPressureLevel.NONE,
+        MemoryPressureLevel.MODERATE,
+        MemoryPressureLevel.CRITICAL})
+    public @interface EnumType {}
 
     public static final int NONE = 0;
-    public static final int MODERATE = 1; // NONE + 1
-    public static final int CRITICAL = 2; // MODERATE + 1
+    public static final int MODERATE = 1;
+    public static final int CRITICAL = 2;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 2;
 
     public static boolean isKnownValue(int value) {
         return value >= 0 && value <= 2;
@@ -27,6 +37,10 @@ public final class MemoryPressureLevel {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private MemoryPressureLevel() {}

@@ -13,6 +13,8 @@
 
 package org.chromium.device.mojom;
 
+import androidx.annotation.IntDef;
+
 
 class BluetoothSystem_Internal {
 
@@ -204,7 +206,11 @@ GetAvailableDevicesResponse callback) {
                 org.chromium.mojo.bindings.ServiceMessage messageWithHeader =
                         message.asServiceMessage();
                 org.chromium.mojo.bindings.MessageHeader header = messageWithHeader.getHeader();
-                if (!header.validateHeader(org.chromium.mojo.bindings.MessageHeader.NO_FLAG)) {
+                int flags = org.chromium.mojo.bindings.MessageHeader.NO_FLAG;
+                if (header.hasFlag(org.chromium.mojo.bindings.MessageHeader.MESSAGE_IS_SYNC_FLAG)) {
+                    flags = flags | org.chromium.mojo.bindings.MessageHeader.MESSAGE_IS_SYNC_FLAG;
+                }
+                if (!header.validateHeader(flags)) {
                     return false;
                 }
                 switch(header.getType()) {
@@ -241,7 +247,11 @@ GetAvailableDevicesResponse callback) {
                 org.chromium.mojo.bindings.ServiceMessage messageWithHeader =
                         message.asServiceMessage();
                 org.chromium.mojo.bindings.MessageHeader header = messageWithHeader.getHeader();
-                if (!header.validateHeader(org.chromium.mojo.bindings.MessageHeader.MESSAGE_EXPECTS_RESPONSE_FLAG)) {
+                int flags = org.chromium.mojo.bindings.MessageHeader.MESSAGE_EXPECTS_RESPONSE_FLAG;
+                if (header.hasFlag(org.chromium.mojo.bindings.MessageHeader.MESSAGE_IS_SYNC_FLAG)) {
+                    flags = flags | org.chromium.mojo.bindings.MessageHeader.MESSAGE_IS_SYNC_FLAG;
+                }
+                if (!header.validateHeader(flags)) {
                     return false;
                 }
                 switch(header.getType()) {
@@ -448,6 +458,7 @@ GetAvailableDevicesResponse callback) {
                         
                     result.state = decoder0.readInt(8);
                         BluetoothSystem.State.validate(result.state);
+                        result.state = BluetoothSystem.State.toKnownValue(result.state);
                     }
 
             } finally {
@@ -636,6 +647,7 @@ GetAvailableDevicesResponse callback) {
                         
                     result.result = decoder0.readInt(8);
                         BluetoothSystem.SetPoweredResult.validate(result.result);
+                        result.result = BluetoothSystem.SetPoweredResult.toKnownValue(result.result);
                     }
 
             } finally {
@@ -817,6 +829,7 @@ GetAvailableDevicesResponse callback) {
                         
                     result.scanState = decoder0.readInt(8);
                         BluetoothSystem.ScanState.validate(result.scanState);
+                        result.scanState = BluetoothSystem.ScanState.toKnownValue(result.scanState);
                     }
 
             } finally {
@@ -998,6 +1011,7 @@ GetAvailableDevicesResponse callback) {
                         
                     result.result = decoder0.readInt(8);
                         BluetoothSystem.StartScanResult.validate(result.result);
+                        result.result = BluetoothSystem.StartScanResult.toKnownValue(result.result);
                     }
 
             } finally {
@@ -1179,6 +1193,7 @@ GetAvailableDevicesResponse callback) {
                         
                     result.result = decoder0.readInt(8);
                         BluetoothSystem.StopScanResult.validate(result.result);
+                        result.result = BluetoothSystem.StopScanResult.toKnownValue(result.result);
                     }
 
             } finally {

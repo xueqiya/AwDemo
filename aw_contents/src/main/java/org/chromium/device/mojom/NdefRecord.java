@@ -13,6 +13,8 @@
 
 package org.chromium.device.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public final class NdefRecord extends org.chromium.mojo.bindings.Struct {
 
@@ -65,6 +67,7 @@ public final class NdefRecord extends org.chromium.mojo.bindings.Struct {
                     
                 result.category = decoder0.readInt(8);
                     NdefRecordTypeCategory.validate(result.category);
+                    result.category = NdefRecordTypeCategory.toKnownValue(result.category);
                 }
                 {
                     

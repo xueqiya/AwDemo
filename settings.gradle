@@ -1,4 +1,0 @@
-rootProject.name = "AwDemo"
-include ':app'
-include ':webview'
-include ':aw_contents'

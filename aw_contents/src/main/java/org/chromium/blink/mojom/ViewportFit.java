@@ -13,13 +13,24 @@
 
 package org.chromium.blink.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class ViewportFit {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        ViewportFit.AUTO,
+        ViewportFit.CONTAIN,
+        ViewportFit.COVER,
+        ViewportFit.COVER_FORCED_BY_USER_AGENT})
+    public @interface EnumType {}
 
     public static final int AUTO = 0;
-    public static final int CONTAIN = 1; // AUTO + 1
-    public static final int COVER = 2; // CONTAIN + 1
-    public static final int COVER_FORCED_BY_USER_AGENT = 3; // COVER + 1
+    public static final int CONTAIN = 1;
+    public static final int COVER = 2;
+    public static final int COVER_FORCED_BY_USER_AGENT = 3;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 3;
 
     public static boolean isKnownValue(int value) {
         return value >= 0 && value <= 3;
@@ -28,6 +39,10 @@ public final class ViewportFit {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private ViewportFit() {}

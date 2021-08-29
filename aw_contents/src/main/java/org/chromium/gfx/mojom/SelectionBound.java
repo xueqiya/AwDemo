@@ -13,6 +13,8 @@
 
 package org.chromium.gfx.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public final class SelectionBound extends org.chromium.mojo.bindings.Struct {
 
@@ -63,6 +65,7 @@ public final class SelectionBound extends org.chromium.mojo.bindings.Struct {
                     
                 result.type = decoder0.readInt(8);
                     SelectionBoundType.validate(result.type);
+                    result.type = SelectionBoundType.toKnownValue(result.type);
                 }
                 {
                     

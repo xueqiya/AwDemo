@@ -13,6 +13,8 @@
 
 package org.chromium.blink.mojom;
 
+import androidx.annotation.IntDef;
+
 
 class RemoteObjectHost_Internal {
 
@@ -49,7 +51,9 @@ class RemoteObjectHost_Internal {
 
     private static final int GET_OBJECT_ORDINAL = 0;
 
-    private static final int RELEASE_OBJECT_ORDINAL = 1;
+    private static final int ACQUIRE_OBJECT_ORDINAL = 1;
+
+    private static final int RELEASE_OBJECT_ORDINAL = 2;
 
 
     static final class Proxy extends org.chromium.mojo.bindings.Interface.AbstractProxy implements RemoteObjectHost.Proxy {
@@ -75,6 +79,23 @@ int objectId, org.chromium.mojo.bindings.InterfaceRequest<RemoteObject> receiver
                     _message.serializeWithHeader(
                             getProxyHandler().getCore(),
                             new org.chromium.mojo.bindings.MessageHeader(GET_OBJECT_ORDINAL)));
+
+        }
+
+
+        @Override
+        public void acquireObject(
+int objectId) {
+
+            RemoteObjectHostAcquireObjectParams _message = new RemoteObjectHostAcquireObjectParams();
+
+            _message.objectId = objectId;
+
+
+            getProxyHandler().getMessageReceiver().accept(
+                    _message.serializeWithHeader(
+                            getProxyHandler().getCore(),
+                            new org.chromium.mojo.bindings.MessageHeader(ACQUIRE_OBJECT_ORDINAL)));
 
         }
 
@@ -110,7 +131,11 @@ int objectId) {
                 org.chromium.mojo.bindings.ServiceMessage messageWithHeader =
                         message.asServiceMessage();
                 org.chromium.mojo.bindings.MessageHeader header = messageWithHeader.getHeader();
-                if (!header.validateHeader(org.chromium.mojo.bindings.MessageHeader.NO_FLAG)) {
+                int flags = org.chromium.mojo.bindings.MessageHeader.NO_FLAG;
+                if (header.hasFlag(org.chromium.mojo.bindings.MessageHeader.MESSAGE_IS_SYNC_FLAG)) {
+                    flags = flags | org.chromium.mojo.bindings.MessageHeader.MESSAGE_IS_SYNC_FLAG;
+                }
+                if (!header.validateHeader(flags)) {
                     return false;
                 }
                 switch(header.getType()) {
@@ -129,6 +154,19 @@ int objectId) {
                                 RemoteObjectHostGetObjectParams.deserialize(messageWithHeader.getPayload());
 
                         getImpl().getObject(data.objectId, data.receiver);
+                        return true;
+                    }
+
+
+
+
+
+                    case ACQUIRE_OBJECT_ORDINAL: {
+
+                        RemoteObjectHostAcquireObjectParams data =
+                                RemoteObjectHostAcquireObjectParams.deserialize(messageWithHeader.getPayload());
+
+                        getImpl().acquireObject(data.objectId);
                         return true;
                     }
 
@@ -161,7 +199,11 @@ int objectId) {
                 org.chromium.mojo.bindings.ServiceMessage messageWithHeader =
                         message.asServiceMessage();
                 org.chromium.mojo.bindings.MessageHeader header = messageWithHeader.getHeader();
-                if (!header.validateHeader(org.chromium.mojo.bindings.MessageHeader.MESSAGE_EXPECTS_RESPONSE_FLAG)) {
+                int flags = org.chromium.mojo.bindings.MessageHeader.MESSAGE_EXPECTS_RESPONSE_FLAG;
+                if (header.hasFlag(org.chromium.mojo.bindings.MessageHeader.MESSAGE_IS_SYNC_FLAG)) {
+                    flags = flags | org.chromium.mojo.bindings.MessageHeader.MESSAGE_IS_SYNC_FLAG;
+                }
+                if (!header.validateHeader(flags)) {
                     return false;
                 }
                 switch(header.getType()) {
@@ -169,6 +211,8 @@ int objectId) {
                     case org.chromium.mojo.bindings.interfacecontrol.InterfaceControlMessagesConstants.RUN_MESSAGE_ID:
                         return org.chromium.mojo.bindings.InterfaceControlMessagesHelper.handleRun(
                                 getCore(), RemoteObjectHost_Internal.MANAGER, messageWithHeader, receiver);
+
+
 
 
 
@@ -251,6 +295,69 @@ int objectId) {
             encoder0.encode(this.objectId, 8);
             
             encoder0.encode(this.receiver, 12, false);
+        }
+    }
+
+
+
+    
+    static final class RemoteObjectHostAcquireObjectParams extends org.chromium.mojo.bindings.Struct {
+
+        private static final int STRUCT_SIZE = 16;
+        private static final org.chromium.mojo.bindings.DataHeader[] VERSION_ARRAY = new org.chromium.mojo.bindings.DataHeader[] {new org.chromium.mojo.bindings.DataHeader(16, 0)};
+        private static final org.chromium.mojo.bindings.DataHeader DEFAULT_STRUCT_INFO = VERSION_ARRAY[0];
+        public int objectId;
+
+        private RemoteObjectHostAcquireObjectParams(int version) {
+            super(STRUCT_SIZE, version);
+        }
+
+        public RemoteObjectHostAcquireObjectParams() {
+            this(0);
+        }
+
+        public static RemoteObjectHostAcquireObjectParams deserialize(org.chromium.mojo.bindings.Message message) {
+            return decode(new org.chromium.mojo.bindings.Decoder(message));
+        }
+
+        /**
+         * Similar to the method above, but deserializes from a |ByteBuffer| instance.
+         *
+         * @throws org.chromium.mojo.bindings.DeserializationException on deserialization failure.
+         */
+        public static RemoteObjectHostAcquireObjectParams deserialize(java.nio.ByteBuffer data) {
+            return deserialize(new org.chromium.mojo.bindings.Message(
+                    data, new java.util.ArrayList<org.chromium.mojo.system.Handle>()));
+        }
+
+        @SuppressWarnings("unchecked")
+        public static RemoteObjectHostAcquireObjectParams decode(org.chromium.mojo.bindings.Decoder decoder0) {
+            if (decoder0 == null) {
+                return null;
+            }
+            decoder0.increaseStackDepth();
+            RemoteObjectHostAcquireObjectParams result;
+            try {
+                org.chromium.mojo.bindings.DataHeader mainDataHeader = decoder0.readAndValidateDataHeader(VERSION_ARRAY);
+                final int elementsOrVersion = mainDataHeader.elementsOrVersion;
+                result = new RemoteObjectHostAcquireObjectParams(elementsOrVersion);
+                    {
+                        
+                    result.objectId = decoder0.readInt(8);
+                    }
+
+            } finally {
+                decoder0.decreaseStackDepth();
+            }
+            return result;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected final void encode(org.chromium.mojo.bindings.Encoder encoder) {
+            org.chromium.mojo.bindings.Encoder encoder0 = encoder.getEncoderAtDataOffset(DEFAULT_STRUCT_INFO);
+            
+            encoder0.encode(this.objectId, 8);
         }
     }
 

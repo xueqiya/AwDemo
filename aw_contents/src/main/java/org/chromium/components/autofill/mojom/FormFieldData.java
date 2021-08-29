@@ -13,19 +13,29 @@
 
 package org.chromium.autofill.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public final class FormFieldData extends org.chromium.mojo.bindings.Struct {
 
-    private static final int STRUCT_SIZE = 168;
-    private static final org.chromium.mojo.bindings.DataHeader[] VERSION_ARRAY = new org.chromium.mojo.bindings.DataHeader[] {new org.chromium.mojo.bindings.DataHeader(168, 0)};
+    private static final int STRUCT_SIZE = 208;
+    private static final org.chromium.mojo.bindings.DataHeader[] VERSION_ARRAY = new org.chromium.mojo.bindings.DataHeader[] {new org.chromium.mojo.bindings.DataHeader(208, 0)};
     private static final org.chromium.mojo.bindings.DataHeader DEFAULT_STRUCT_INFO = VERSION_ARRAY[0];
 
     public static final class CheckStatus {
         private static final boolean IS_EXTENSIBLE = false;
+        @IntDef({
+
+            CheckStatus.NOT_CHECKABLE,
+            CheckStatus.CHECKABLE_BUT_UNCHECKED,
+            CheckStatus.CHECKED})
+        public @interface EnumType {}
 
         public static final int NOT_CHECKABLE = 0;
-        public static final int CHECKABLE_BUT_UNCHECKED = 1; // NOT_CHECKABLE + 1
-        public static final int CHECKED = 2; // CHECKABLE_BUT_UNCHECKED + 1
+        public static final int CHECKABLE_BUT_UNCHECKED = 1;
+        public static final int CHECKED = 2;
+        public static final int MIN_VALUE = 0;
+        public static final int MAX_VALUE = 2;
 
         public static boolean isKnownValue(int value) {
             return value >= 0 && value <= 2;
@@ -36,14 +46,25 @@ public final class FormFieldData extends org.chromium.mojo.bindings.Struct {
             throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
         }
 
+        public static int toKnownValue(int value) {
+          return value;
+        }
+
         private CheckStatus() {}
     }
 
     public static final class RoleAttribute {
         private static final boolean IS_EXTENSIBLE = false;
+        @IntDef({
+
+            RoleAttribute.PRESENTATION,
+            RoleAttribute.OTHER})
+        public @interface EnumType {}
 
         public static final int PRESENTATION = 0;
-        public static final int OTHER = 1; // PRESENTATION + 1
+        public static final int OTHER = 1;
+        public static final int MIN_VALUE = 0;
+        public static final int MAX_VALUE = 1;
 
         public static boolean isKnownValue(int value) {
             return value >= 0 && value <= 1;
@@ -54,23 +75,43 @@ public final class FormFieldData extends org.chromium.mojo.bindings.Struct {
             throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
         }
 
+        public static int toKnownValue(int value) {
+          return value;
+        }
+
         private RoleAttribute() {}
     }
 
     public static final class LabelSource {
         private static final boolean IS_EXTENSIBLE = false;
+        @IntDef({
+
+            LabelSource.UNKNOWN,
+            LabelSource.LABEL_TAG,
+            LabelSource.P_TAG,
+            LabelSource.DIV_TABLE,
+            LabelSource.TD_TAG,
+            LabelSource.DD_TAG,
+            LabelSource.LI_TAG,
+            LabelSource.PLACE_HOLDER,
+            LabelSource.ARIA_LABEL,
+            LabelSource.COMBINED,
+            LabelSource.VALUE})
+        public @interface EnumType {}
 
         public static final int UNKNOWN = 0;
-        public static final int LABEL_TAG = 1; // UNKNOWN + 1
-        public static final int P_TAG = 2; // LABEL_TAG + 1
-        public static final int DIV_TABLE = 3; // P_TAG + 1
-        public static final int TD_TAG = 4; // DIV_TABLE + 1
-        public static final int DD_TAG = 5; // TD_TAG + 1
-        public static final int LI_TAG = 6; // DD_TAG + 1
-        public static final int PLACE_HOLDER = 7; // LI_TAG + 1
-        public static final int ARIA_LABEL = 8; // PLACE_HOLDER + 1
-        public static final int COMBINED = 9; // ARIA_LABEL + 1
-        public static final int VALUE = 10; // COMBINED + 1
+        public static final int LABEL_TAG = 1;
+        public static final int P_TAG = 2;
+        public static final int DIV_TABLE = 3;
+        public static final int TD_TAG = 4;
+        public static final int DD_TAG = 5;
+        public static final int LI_TAG = 6;
+        public static final int PLACE_HOLDER = 7;
+        public static final int ARIA_LABEL = 8;
+        public static final int COMBINED = 9;
+        public static final int VALUE = 10;
+        public static final int MIN_VALUE = 0;
+        public static final int MAX_VALUE = 10;
 
         public static boolean isKnownValue(int value) {
             return value >= 0 && value <= 10;
@@ -79,6 +120,10 @@ public final class FormFieldData extends org.chromium.mojo.bindings.Struct {
         public static void validate(int value) {
             if (IS_EXTENSIBLE || isKnownValue(value)) return;
             throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+        }
+
+        public static int toKnownValue(int value) {
+          return value;
         }
 
         private LabelSource() {}
@@ -94,7 +139,8 @@ public final class FormFieldData extends org.chromium.mojo.bindings.Struct {
     public org.chromium.mojo_base.mojom.String16 cssClasses;
     public org.chromium.mojo_base.mojom.String16 ariaLabel;
     public org.chromium.mojo_base.mojom.String16 ariaDescription;
-    public int uniqueRendererId;
+    public LocalFrameToken hostFrame;
+    public FieldRendererId uniqueRendererId;
     public int propertiesMask;
     public int formControlAxId;
     public long maxLength;
@@ -107,10 +153,13 @@ public final class FormFieldData extends org.chromium.mojo.bindings.Struct {
     public int textDirection;
     public boolean isEnabled;
     public boolean isReadonly;
-    public org.chromium.mojo_base.mojom.String16 typedValue;
+    public org.chromium.mojo_base.mojom.String16 userInput;
     public org.chromium.mojo_base.mojom.String16[] optionValues;
     public org.chromium.mojo_base.mojom.String16[] optionContents;
     public int labelSource;
+    public org.chromium.gfx.mojom.RectF bounds;
+    public org.chromium.mojo_base.mojom.String16[] datalistValues;
+    public org.chromium.mojo_base.mojom.String16[] datalistLabels;
 
     private FormFieldData(int version) {
         super(STRUCT_SIZE, version);
@@ -200,72 +249,76 @@ public final class FormFieldData extends org.chromium.mojo.bindings.Struct {
                 }
                 {
                     
-                result.uniqueRendererId = decoder0.readInt(96);
+                org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(96, false);
+                result.hostFrame = LocalFrameToken.decode(decoder1);
                 }
                 {
                     
-                result.propertiesMask = decoder0.readInt(100);
+                org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(104, false);
+                result.uniqueRendererId = FieldRendererId.decode(decoder1);
                 }
                 {
                     
-                result.formControlAxId = decoder0.readInt(104);
+                result.propertiesMask = decoder0.readInt(112);
                 }
                 {
                     
-                result.isAutofilled = decoder0.readBoolean(108, 0);
+                result.formControlAxId = decoder0.readInt(116);
                 }
                 {
                     
-                result.isFocusable = decoder0.readBoolean(108, 1);
+                result.maxLength = decoder0.readLong(120);
                 }
                 {
                     
-                result.shouldAutocomplete = decoder0.readBoolean(108, 2);
+                result.isAutofilled = decoder0.readBoolean(128, 0);
                 }
                 {
                     
-                result.isEnabled = decoder0.readBoolean(108, 3);
+                result.isFocusable = decoder0.readBoolean(128, 1);
                 }
                 {
                     
-                result.isReadonly = decoder0.readBoolean(108, 4);
+                result.shouldAutocomplete = decoder0.readBoolean(128, 2);
                 }
                 {
                     
-                result.maxLength = decoder0.readLong(112);
+                result.isEnabled = decoder0.readBoolean(128, 3);
                 }
                 {
                     
-                result.section = decoder0.readString(120, false);
+                result.isReadonly = decoder0.readBoolean(128, 4);
                 }
                 {
                     
-                result.checkStatus = decoder0.readInt(128);
+                result.checkStatus = decoder0.readInt(132);
                     FormFieldData.CheckStatus.validate(result.checkStatus);
+                    result.checkStatus = FormFieldData.CheckStatus.toKnownValue(result.checkStatus);
                 }
                 {
                     
-                result.role = decoder0.readInt(132);
+                result.section = decoder0.readString(136, false);
+                }
+                {
+                    
+                result.role = decoder0.readInt(144);
                     FormFieldData.RoleAttribute.validate(result.role);
+                    result.role = FormFieldData.RoleAttribute.toKnownValue(result.role);
                 }
                 {
                     
-                result.textDirection = decoder0.readInt(136);
+                result.textDirection = decoder0.readInt(148);
                     org.chromium.mojo_base.mojom.TextDirection.validate(result.textDirection);
-                }
-                {
-                    
-                result.labelSource = decoder0.readInt(140);
-                    FormFieldData.LabelSource.validate(result.labelSource);
-                }
-                {
-                    
-                org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(144, false);
-                result.typedValue = org.chromium.mojo_base.mojom.String16.decode(decoder1);
+                    result.textDirection = org.chromium.mojo_base.mojom.TextDirection.toKnownValue(result.textDirection);
                 }
                 {
                     
                 org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(152, false);
+                result.userInput = org.chromium.mojo_base.mojom.String16.decode(decoder1);
+                }
+                {
+                    
+                org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(160, false);
                 {
                     org.chromium.mojo.bindings.DataHeader si1 = decoder1.readDataHeaderForPointerArray(org.chromium.mojo.bindings.BindingsHelper.UNSPECIFIED_ARRAY_LENGTH);
                     result.optionValues = new org.chromium.mojo_base.mojom.String16[si1.elementsOrVersion];
@@ -278,7 +331,7 @@ public final class FormFieldData extends org.chromium.mojo.bindings.Struct {
                 }
                 {
                     
-                org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(160, false);
+                org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(168, false);
                 {
                     org.chromium.mojo.bindings.DataHeader si1 = decoder1.readDataHeaderForPointerArray(org.chromium.mojo.bindings.BindingsHelper.UNSPECIFIED_ARRAY_LENGTH);
                     result.optionContents = new org.chromium.mojo_base.mojom.String16[si1.elementsOrVersion];
@@ -286,6 +339,43 @@ public final class FormFieldData extends org.chromium.mojo.bindings.Struct {
                         
                         org.chromium.mojo.bindings.Decoder decoder2 = decoder1.readPointer(org.chromium.mojo.bindings.DataHeader.HEADER_SIZE + org.chromium.mojo.bindings.BindingsHelper.POINTER_SIZE * i1, false);
                         result.optionContents[i1] = org.chromium.mojo_base.mojom.String16.decode(decoder2);
+                    }
+                }
+                }
+                {
+                    
+                result.labelSource = decoder0.readInt(176);
+                    FormFieldData.LabelSource.validate(result.labelSource);
+                    result.labelSource = FormFieldData.LabelSource.toKnownValue(result.labelSource);
+                }
+                {
+                    
+                org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(184, false);
+                result.bounds = org.chromium.gfx.mojom.RectF.decode(decoder1);
+                }
+                {
+                    
+                org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(192, false);
+                {
+                    org.chromium.mojo.bindings.DataHeader si1 = decoder1.readDataHeaderForPointerArray(org.chromium.mojo.bindings.BindingsHelper.UNSPECIFIED_ARRAY_LENGTH);
+                    result.datalistValues = new org.chromium.mojo_base.mojom.String16[si1.elementsOrVersion];
+                    for (int i1 = 0; i1 < si1.elementsOrVersion; ++i1) {
+                        
+                        org.chromium.mojo.bindings.Decoder decoder2 = decoder1.readPointer(org.chromium.mojo.bindings.DataHeader.HEADER_SIZE + org.chromium.mojo.bindings.BindingsHelper.POINTER_SIZE * i1, false);
+                        result.datalistValues[i1] = org.chromium.mojo_base.mojom.String16.decode(decoder2);
+                    }
+                }
+                }
+                {
+                    
+                org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(200, false);
+                {
+                    org.chromium.mojo.bindings.DataHeader si1 = decoder1.readDataHeaderForPointerArray(org.chromium.mojo.bindings.BindingsHelper.UNSPECIFIED_ARRAY_LENGTH);
+                    result.datalistLabels = new org.chromium.mojo_base.mojom.String16[si1.elementsOrVersion];
+                    for (int i1 = 0; i1 < si1.elementsOrVersion; ++i1) {
+                        
+                        org.chromium.mojo.bindings.Decoder decoder2 = decoder1.readPointer(org.chromium.mojo.bindings.DataHeader.HEADER_SIZE + org.chromium.mojo.bindings.BindingsHelper.POINTER_SIZE * i1, false);
+                        result.datalistLabels[i1] = org.chromium.mojo_base.mojom.String16.decode(decoder2);
                     }
                 }
                 }
@@ -323,40 +413,40 @@ public final class FormFieldData extends org.chromium.mojo.bindings.Struct {
         
         encoder0.encode(this.ariaDescription, 88, false);
         
-        encoder0.encode(this.uniqueRendererId, 96);
+        encoder0.encode(this.hostFrame, 96, false);
         
-        encoder0.encode(this.propertiesMask, 100);
+        encoder0.encode(this.uniqueRendererId, 104, false);
         
-        encoder0.encode(this.formControlAxId, 104);
+        encoder0.encode(this.propertiesMask, 112);
         
-        encoder0.encode(this.isAutofilled, 108, 0);
+        encoder0.encode(this.formControlAxId, 116);
         
-        encoder0.encode(this.isFocusable, 108, 1);
+        encoder0.encode(this.maxLength, 120);
         
-        encoder0.encode(this.shouldAutocomplete, 108, 2);
+        encoder0.encode(this.isAutofilled, 128, 0);
         
-        encoder0.encode(this.isEnabled, 108, 3);
+        encoder0.encode(this.isFocusable, 128, 1);
         
-        encoder0.encode(this.isReadonly, 108, 4);
+        encoder0.encode(this.shouldAutocomplete, 128, 2);
         
-        encoder0.encode(this.maxLength, 112);
+        encoder0.encode(this.isEnabled, 128, 3);
         
-        encoder0.encode(this.section, 120, false);
+        encoder0.encode(this.isReadonly, 128, 4);
         
-        encoder0.encode(this.checkStatus, 128);
+        encoder0.encode(this.checkStatus, 132);
         
-        encoder0.encode(this.role, 132);
+        encoder0.encode(this.section, 136, false);
         
-        encoder0.encode(this.textDirection, 136);
+        encoder0.encode(this.role, 144);
         
-        encoder0.encode(this.labelSource, 140);
+        encoder0.encode(this.textDirection, 148);
         
-        encoder0.encode(this.typedValue, 144, false);
+        encoder0.encode(this.userInput, 152, false);
         
         if (this.optionValues == null) {
-            encoder0.encodeNullPointer(152, false);
+            encoder0.encodeNullPointer(160, false);
         } else {
-            org.chromium.mojo.bindings.Encoder encoder1 = encoder0.encodePointerArray(this.optionValues.length, 152, org.chromium.mojo.bindings.BindingsHelper.UNSPECIFIED_ARRAY_LENGTH);
+            org.chromium.mojo.bindings.Encoder encoder1 = encoder0.encodePointerArray(this.optionValues.length, 160, org.chromium.mojo.bindings.BindingsHelper.UNSPECIFIED_ARRAY_LENGTH);
             for (int i0 = 0; i0 < this.optionValues.length; ++i0) {
                 
                 encoder1.encode(this.optionValues[i0], org.chromium.mojo.bindings.DataHeader.HEADER_SIZE + org.chromium.mojo.bindings.BindingsHelper.POINTER_SIZE * i0, false);
@@ -364,12 +454,36 @@ public final class FormFieldData extends org.chromium.mojo.bindings.Struct {
         }
         
         if (this.optionContents == null) {
-            encoder0.encodeNullPointer(160, false);
+            encoder0.encodeNullPointer(168, false);
         } else {
-            org.chromium.mojo.bindings.Encoder encoder1 = encoder0.encodePointerArray(this.optionContents.length, 160, org.chromium.mojo.bindings.BindingsHelper.UNSPECIFIED_ARRAY_LENGTH);
+            org.chromium.mojo.bindings.Encoder encoder1 = encoder0.encodePointerArray(this.optionContents.length, 168, org.chromium.mojo.bindings.BindingsHelper.UNSPECIFIED_ARRAY_LENGTH);
             for (int i0 = 0; i0 < this.optionContents.length; ++i0) {
                 
                 encoder1.encode(this.optionContents[i0], org.chromium.mojo.bindings.DataHeader.HEADER_SIZE + org.chromium.mojo.bindings.BindingsHelper.POINTER_SIZE * i0, false);
+            }
+        }
+        
+        encoder0.encode(this.labelSource, 176);
+        
+        encoder0.encode(this.bounds, 184, false);
+        
+        if (this.datalistValues == null) {
+            encoder0.encodeNullPointer(192, false);
+        } else {
+            org.chromium.mojo.bindings.Encoder encoder1 = encoder0.encodePointerArray(this.datalistValues.length, 192, org.chromium.mojo.bindings.BindingsHelper.UNSPECIFIED_ARRAY_LENGTH);
+            for (int i0 = 0; i0 < this.datalistValues.length; ++i0) {
+                
+                encoder1.encode(this.datalistValues[i0], org.chromium.mojo.bindings.DataHeader.HEADER_SIZE + org.chromium.mojo.bindings.BindingsHelper.POINTER_SIZE * i0, false);
+            }
+        }
+        
+        if (this.datalistLabels == null) {
+            encoder0.encodeNullPointer(200, false);
+        } else {
+            org.chromium.mojo.bindings.Encoder encoder1 = encoder0.encodePointerArray(this.datalistLabels.length, 200, org.chromium.mojo.bindings.BindingsHelper.UNSPECIFIED_ARRAY_LENGTH);
+            for (int i0 = 0; i0 < this.datalistLabels.length; ++i0) {
+                
+                encoder1.encode(this.datalistLabels[i0], org.chromium.mojo.bindings.DataHeader.HEADER_SIZE + org.chromium.mojo.bindings.BindingsHelper.POINTER_SIZE * i0, false);
             }
         }
     }

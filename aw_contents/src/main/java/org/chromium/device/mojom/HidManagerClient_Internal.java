@@ -13,6 +13,8 @@
 
 package org.chromium.device.mojom;
 
+import androidx.annotation.IntDef;
+
 
 class HidManagerClient_Internal {
 
@@ -26,7 +28,7 @@ class HidManagerClient_Internal {
 
         @Override
         public int getVersion() {
-          return 0;
+          return 2;
         }
 
         @Override
@@ -50,6 +52,8 @@ class HidManagerClient_Internal {
     private static final int DEVICE_ADDED_ORDINAL = 0;
 
     private static final int DEVICE_REMOVED_ORDINAL = 1;
+
+    private static final int DEVICE_CHANGED_ORDINAL = 2;
 
 
     static final class Proxy extends org.chromium.mojo.bindings.Interface.AbstractProxy implements HidManagerClient.Proxy {
@@ -94,6 +98,23 @@ HidDeviceInfo deviceInfo) {
         }
 
 
+        @Override
+        public void deviceChanged(
+HidDeviceInfo deviceInfo) {
+
+            HidManagerClientDeviceChangedParams _message = new HidManagerClientDeviceChangedParams();
+
+            _message.deviceInfo = deviceInfo;
+
+
+            getProxyHandler().getMessageReceiver().accept(
+                    _message.serializeWithHeader(
+                            getProxyHandler().getCore(),
+                            new org.chromium.mojo.bindings.MessageHeader(DEVICE_CHANGED_ORDINAL)));
+
+        }
+
+
     }
 
     static final class Stub extends org.chromium.mojo.bindings.Interface.Stub<HidManagerClient> {
@@ -108,7 +129,11 @@ HidDeviceInfo deviceInfo) {
                 org.chromium.mojo.bindings.ServiceMessage messageWithHeader =
                         message.asServiceMessage();
                 org.chromium.mojo.bindings.MessageHeader header = messageWithHeader.getHeader();
-                if (!header.validateHeader(org.chromium.mojo.bindings.MessageHeader.NO_FLAG)) {
+                int flags = org.chromium.mojo.bindings.MessageHeader.NO_FLAG;
+                if (header.hasFlag(org.chromium.mojo.bindings.MessageHeader.MESSAGE_IS_SYNC_FLAG)) {
+                    flags = flags | org.chromium.mojo.bindings.MessageHeader.MESSAGE_IS_SYNC_FLAG;
+                }
+                if (!header.validateHeader(flags)) {
                     return false;
                 }
                 switch(header.getType()) {
@@ -144,6 +169,19 @@ HidDeviceInfo deviceInfo) {
                     }
 
 
+
+
+
+                    case DEVICE_CHANGED_ORDINAL: {
+
+                        HidManagerClientDeviceChangedParams data =
+                                HidManagerClientDeviceChangedParams.deserialize(messageWithHeader.getPayload());
+
+                        getImpl().deviceChanged(data.deviceInfo);
+                        return true;
+                    }
+
+
                     default:
                         return false;
                 }
@@ -159,7 +197,11 @@ HidDeviceInfo deviceInfo) {
                 org.chromium.mojo.bindings.ServiceMessage messageWithHeader =
                         message.asServiceMessage();
                 org.chromium.mojo.bindings.MessageHeader header = messageWithHeader.getHeader();
-                if (!header.validateHeader(org.chromium.mojo.bindings.MessageHeader.MESSAGE_EXPECTS_RESPONSE_FLAG)) {
+                int flags = org.chromium.mojo.bindings.MessageHeader.MESSAGE_EXPECTS_RESPONSE_FLAG;
+                if (header.hasFlag(org.chromium.mojo.bindings.MessageHeader.MESSAGE_IS_SYNC_FLAG)) {
+                    flags = flags | org.chromium.mojo.bindings.MessageHeader.MESSAGE_IS_SYNC_FLAG;
+                }
+                if (!header.validateHeader(flags)) {
                     return false;
                 }
                 switch(header.getType()) {
@@ -167,6 +209,8 @@ HidDeviceInfo deviceInfo) {
                     case org.chromium.mojo.bindings.interfacecontrol.InterfaceControlMessagesConstants.RUN_MESSAGE_ID:
                         return org.chromium.mojo.bindings.InterfaceControlMessagesHelper.handleRun(
                                 getCore(), HidManagerClient_Internal.MANAGER, messageWithHeader, receiver);
+
+
 
 
 
@@ -289,6 +333,70 @@ HidDeviceInfo deviceInfo) {
                 org.chromium.mojo.bindings.DataHeader mainDataHeader = decoder0.readAndValidateDataHeader(VERSION_ARRAY);
                 final int elementsOrVersion = mainDataHeader.elementsOrVersion;
                 result = new HidManagerClientDeviceRemovedParams(elementsOrVersion);
+                    {
+                        
+                    org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(8, false);
+                    result.deviceInfo = HidDeviceInfo.decode(decoder1);
+                    }
+
+            } finally {
+                decoder0.decreaseStackDepth();
+            }
+            return result;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected final void encode(org.chromium.mojo.bindings.Encoder encoder) {
+            org.chromium.mojo.bindings.Encoder encoder0 = encoder.getEncoderAtDataOffset(DEFAULT_STRUCT_INFO);
+            
+            encoder0.encode(this.deviceInfo, 8, false);
+        }
+    }
+
+
+
+    
+    static final class HidManagerClientDeviceChangedParams extends org.chromium.mojo.bindings.Struct {
+
+        private static final int STRUCT_SIZE = 16;
+        private static final org.chromium.mojo.bindings.DataHeader[] VERSION_ARRAY = new org.chromium.mojo.bindings.DataHeader[] {new org.chromium.mojo.bindings.DataHeader(16, 0)};
+        private static final org.chromium.mojo.bindings.DataHeader DEFAULT_STRUCT_INFO = VERSION_ARRAY[0];
+        public HidDeviceInfo deviceInfo;
+
+        private HidManagerClientDeviceChangedParams(int version) {
+            super(STRUCT_SIZE, version);
+        }
+
+        public HidManagerClientDeviceChangedParams() {
+            this(0);
+        }
+
+        public static HidManagerClientDeviceChangedParams deserialize(org.chromium.mojo.bindings.Message message) {
+            return decode(new org.chromium.mojo.bindings.Decoder(message));
+        }
+
+        /**
+         * Similar to the method above, but deserializes from a |ByteBuffer| instance.
+         *
+         * @throws org.chromium.mojo.bindings.DeserializationException on deserialization failure.
+         */
+        public static HidManagerClientDeviceChangedParams deserialize(java.nio.ByteBuffer data) {
+            return deserialize(new org.chromium.mojo.bindings.Message(
+                    data, new java.util.ArrayList<org.chromium.mojo.system.Handle>()));
+        }
+
+        @SuppressWarnings("unchecked")
+        public static HidManagerClientDeviceChangedParams decode(org.chromium.mojo.bindings.Decoder decoder0) {
+            if (decoder0 == null) {
+                return null;
+            }
+            decoder0.increaseStackDepth();
+            HidManagerClientDeviceChangedParams result;
+            try {
+                org.chromium.mojo.bindings.DataHeader mainDataHeader = decoder0.readAndValidateDataHeader(VERSION_ARRAY);
+                final int elementsOrVersion = mainDataHeader.elementsOrVersion;
+                result = new HidManagerClientDeviceChangedParams(elementsOrVersion);
                     {
                         
                     org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(8, false);

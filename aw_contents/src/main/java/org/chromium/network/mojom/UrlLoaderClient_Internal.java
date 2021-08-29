@@ -13,6 +13,8 @@
 
 package org.chromium.network.mojom;
 
+import androidx.annotation.IntDef;
+
 
 class UrlLoaderClient_Internal {
 
@@ -47,19 +49,21 @@ class UrlLoaderClient_Internal {
     };
 
 
-    private static final int ON_RECEIVE_RESPONSE_ORDINAL = 0;
+    private static final int ON_RECEIVE_EARLY_HINTS_ORDINAL = 0;
 
-    private static final int ON_RECEIVE_REDIRECT_ORDINAL = 1;
+    private static final int ON_RECEIVE_RESPONSE_ORDINAL = 1;
 
-    private static final int ON_UPLOAD_PROGRESS_ORDINAL = 2;
+    private static final int ON_RECEIVE_REDIRECT_ORDINAL = 2;
 
-    private static final int ON_RECEIVE_CACHED_METADATA_ORDINAL = 3;
+    private static final int ON_UPLOAD_PROGRESS_ORDINAL = 3;
 
-    private static final int ON_TRANSFER_SIZE_UPDATED_ORDINAL = 4;
+    private static final int ON_RECEIVE_CACHED_METADATA_ORDINAL = 4;
 
-    private static final int ON_START_LOADING_RESPONSE_BODY_ORDINAL = 5;
+    private static final int ON_TRANSFER_SIZE_UPDATED_ORDINAL = 5;
 
-    private static final int ON_COMPLETE_ORDINAL = 6;
+    private static final int ON_START_LOADING_RESPONSE_BODY_ORDINAL = 6;
+
+    private static final int ON_COMPLETE_ORDINAL = 7;
 
 
     static final class Proxy extends org.chromium.mojo.bindings.Interface.AbstractProxy implements UrlLoaderClient.Proxy {
@@ -67,6 +71,23 @@ class UrlLoaderClient_Internal {
         Proxy(org.chromium.mojo.system.Core core,
               org.chromium.mojo.bindings.MessageReceiverWithResponder messageReceiver) {
             super(core, messageReceiver);
+        }
+
+
+        @Override
+        public void onReceiveEarlyHints(
+EarlyHints earlyHints) {
+
+            UrlLoaderClientOnReceiveEarlyHintsParams _message = new UrlLoaderClientOnReceiveEarlyHintsParams();
+
+            _message.earlyHints = earlyHints;
+
+
+            getProxyHandler().getMessageReceiver().accept(
+                    _message.serializeWithHeader(
+                            getProxyHandler().getCore(),
+                            new org.chromium.mojo.bindings.MessageHeader(ON_RECEIVE_EARLY_HINTS_ORDINAL)));
+
         }
 
 
@@ -212,7 +233,11 @@ UrlLoaderCompletionStatus status) {
                 org.chromium.mojo.bindings.ServiceMessage messageWithHeader =
                         message.asServiceMessage();
                 org.chromium.mojo.bindings.MessageHeader header = messageWithHeader.getHeader();
-                if (!header.validateHeader(org.chromium.mojo.bindings.MessageHeader.NO_FLAG)) {
+                int flags = org.chromium.mojo.bindings.MessageHeader.NO_FLAG;
+                if (header.hasFlag(org.chromium.mojo.bindings.MessageHeader.MESSAGE_IS_SYNC_FLAG)) {
+                    flags = flags | org.chromium.mojo.bindings.MessageHeader.MESSAGE_IS_SYNC_FLAG;
+                }
+                if (!header.validateHeader(flags)) {
                     return false;
                 }
                 switch(header.getType()) {
@@ -220,6 +245,19 @@ UrlLoaderCompletionStatus status) {
                     case org.chromium.mojo.bindings.interfacecontrol.InterfaceControlMessagesConstants.RUN_OR_CLOSE_PIPE_MESSAGE_ID:
                         return org.chromium.mojo.bindings.InterfaceControlMessagesHelper.handleRunOrClosePipe(
                                 UrlLoaderClient_Internal.MANAGER, messageWithHeader);
+
+
+
+
+
+                    case ON_RECEIVE_EARLY_HINTS_ORDINAL: {
+
+                        UrlLoaderClientOnReceiveEarlyHintsParams data =
+                                UrlLoaderClientOnReceiveEarlyHintsParams.deserialize(messageWithHeader.getPayload());
+
+                        getImpl().onReceiveEarlyHints(data.earlyHints);
+                        return true;
+                    }
 
 
 
@@ -317,7 +355,11 @@ UrlLoaderCompletionStatus status) {
                 org.chromium.mojo.bindings.ServiceMessage messageWithHeader =
                         message.asServiceMessage();
                 org.chromium.mojo.bindings.MessageHeader header = messageWithHeader.getHeader();
-                if (!header.validateHeader(org.chromium.mojo.bindings.MessageHeader.MESSAGE_EXPECTS_RESPONSE_FLAG)) {
+                int flags = org.chromium.mojo.bindings.MessageHeader.MESSAGE_EXPECTS_RESPONSE_FLAG;
+                if (header.hasFlag(org.chromium.mojo.bindings.MessageHeader.MESSAGE_IS_SYNC_FLAG)) {
+                    flags = flags | org.chromium.mojo.bindings.MessageHeader.MESSAGE_IS_SYNC_FLAG;
+                }
+                if (!header.validateHeader(flags)) {
                     return false;
                 }
                 switch(header.getType()) {
@@ -325,6 +367,8 @@ UrlLoaderCompletionStatus status) {
                     case org.chromium.mojo.bindings.interfacecontrol.InterfaceControlMessagesConstants.RUN_MESSAGE_ID:
                         return org.chromium.mojo.bindings.InterfaceControlMessagesHelper.handleRun(
                                 getCore(), UrlLoaderClient_Internal.MANAGER, messageWithHeader, receiver);
+
+
 
 
 
@@ -363,6 +407,70 @@ UrlLoaderCompletionStatus status) {
             }
         }
     }
+
+
+    
+    static final class UrlLoaderClientOnReceiveEarlyHintsParams extends org.chromium.mojo.bindings.Struct {
+
+        private static final int STRUCT_SIZE = 16;
+        private static final org.chromium.mojo.bindings.DataHeader[] VERSION_ARRAY = new org.chromium.mojo.bindings.DataHeader[] {new org.chromium.mojo.bindings.DataHeader(16, 0)};
+        private static final org.chromium.mojo.bindings.DataHeader DEFAULT_STRUCT_INFO = VERSION_ARRAY[0];
+        public EarlyHints earlyHints;
+
+        private UrlLoaderClientOnReceiveEarlyHintsParams(int version) {
+            super(STRUCT_SIZE, version);
+        }
+
+        public UrlLoaderClientOnReceiveEarlyHintsParams() {
+            this(0);
+        }
+
+        public static UrlLoaderClientOnReceiveEarlyHintsParams deserialize(org.chromium.mojo.bindings.Message message) {
+            return decode(new org.chromium.mojo.bindings.Decoder(message));
+        }
+
+        /**
+         * Similar to the method above, but deserializes from a |ByteBuffer| instance.
+         *
+         * @throws org.chromium.mojo.bindings.DeserializationException on deserialization failure.
+         */
+        public static UrlLoaderClientOnReceiveEarlyHintsParams deserialize(java.nio.ByteBuffer data) {
+            return deserialize(new org.chromium.mojo.bindings.Message(
+                    data, new java.util.ArrayList<org.chromium.mojo.system.Handle>()));
+        }
+
+        @SuppressWarnings("unchecked")
+        public static UrlLoaderClientOnReceiveEarlyHintsParams decode(org.chromium.mojo.bindings.Decoder decoder0) {
+            if (decoder0 == null) {
+                return null;
+            }
+            decoder0.increaseStackDepth();
+            UrlLoaderClientOnReceiveEarlyHintsParams result;
+            try {
+                org.chromium.mojo.bindings.DataHeader mainDataHeader = decoder0.readAndValidateDataHeader(VERSION_ARRAY);
+                final int elementsOrVersion = mainDataHeader.elementsOrVersion;
+                result = new UrlLoaderClientOnReceiveEarlyHintsParams(elementsOrVersion);
+                    {
+                        
+                    org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(8, false);
+                    result.earlyHints = EarlyHints.decode(decoder1);
+                    }
+
+            } finally {
+                decoder0.decreaseStackDepth();
+            }
+            return result;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected final void encode(org.chromium.mojo.bindings.Encoder encoder) {
+            org.chromium.mojo.bindings.Encoder encoder0 = encoder.getEncoderAtDataOffset(DEFAULT_STRUCT_INFO);
+            
+            encoder0.encode(this.earlyHints, 8, false);
+        }
+    }
+
 
 
     

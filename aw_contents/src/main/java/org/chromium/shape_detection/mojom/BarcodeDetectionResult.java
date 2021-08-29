@@ -13,6 +13,8 @@
 
 package org.chromium.shape_detection.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public final class BarcodeDetectionResult extends org.chromium.mojo.bindings.Struct {
 
@@ -70,6 +72,7 @@ public final class BarcodeDetectionResult extends org.chromium.mojo.bindings.Str
                     
                 result.format = decoder0.readInt(24);
                     BarcodeFormat.validate(result.format);
+                    result.format = BarcodeFormat.toKnownValue(result.format);
                 }
                 {
                     

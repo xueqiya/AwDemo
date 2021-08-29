@@ -13,6 +13,8 @@
 
 package org.chromium.blink.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public final class RemoteInvocationResult extends org.chromium.mojo.bindings.Struct {
 
@@ -60,6 +62,7 @@ public final class RemoteInvocationResult extends org.chromium.mojo.bindings.Str
                     
                 result.error = decoder0.readInt(8);
                     RemoteInvocationError.validate(result.error);
+                    result.error = RemoteInvocationError.toKnownValue(result.error);
                 }
                 {
                     

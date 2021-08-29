@@ -13,6 +13,8 @@
 
 package org.chromium.device.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public final class BluetoothDeviceInfo extends org.chromium.mojo.bindings.Struct {
 
@@ -22,10 +24,18 @@ public final class BluetoothDeviceInfo extends org.chromium.mojo.bindings.Struct
 
     public static final class ConnectionState {
         private static final boolean IS_EXTENSIBLE = false;
+        @IntDef({
+
+            ConnectionState.NOT_CONNECTED,
+            ConnectionState.CONNECTING,
+            ConnectionState.CONNECTED})
+        public @interface EnumType {}
 
         public static final int NOT_CONNECTED = 0;
-        public static final int CONNECTING = 1; // NOT_CONNECTED + 1
-        public static final int CONNECTED = 2; // CONNECTING + 1
+        public static final int CONNECTING = 1;
+        public static final int CONNECTED = 2;
+        public static final int MIN_VALUE = 0;
+        public static final int MAX_VALUE = 2;
 
         public static boolean isKnownValue(int value) {
             return value >= 0 && value <= 2;
@@ -36,26 +46,49 @@ public final class BluetoothDeviceInfo extends org.chromium.mojo.bindings.Struct
             throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
         }
 
+        public static int toKnownValue(int value) {
+          return value;
+        }
+
         private ConnectionState() {}
     }
 
     public static final class DeviceType {
         private static final boolean IS_EXTENSIBLE = false;
+        @IntDef({
+
+            DeviceType.UNKNOWN,
+            DeviceType.COMPUTER,
+            DeviceType.PHONE,
+            DeviceType.MODEM,
+            DeviceType.AUDIO,
+            DeviceType.CAR_AUDIO,
+            DeviceType.VIDEO,
+            DeviceType.PERIPHERAL,
+            DeviceType.JOYSTICK,
+            DeviceType.GAMEPAD,
+            DeviceType.KEYBOARD,
+            DeviceType.MOUSE,
+            DeviceType.TABLET,
+            DeviceType.KEYBOARD_MOUSE_COMBO})
+        public @interface EnumType {}
 
         public static final int UNKNOWN = 0;
-        public static final int COMPUTER = 1; // UNKNOWN + 1
-        public static final int PHONE = 2; // COMPUTER + 1
-        public static final int MODEM = 3; // PHONE + 1
-        public static final int AUDIO = 4; // MODEM + 1
-        public static final int CAR_AUDIO = 5; // AUDIO + 1
-        public static final int VIDEO = 6; // CAR_AUDIO + 1
-        public static final int PERIPHERAL = 7; // VIDEO + 1
-        public static final int JOYSTICK = 8; // PERIPHERAL + 1
-        public static final int GAMEPAD = 9; // JOYSTICK + 1
-        public static final int KEYBOARD = 10; // GAMEPAD + 1
-        public static final int MOUSE = 11; // KEYBOARD + 1
-        public static final int TABLET = 12; // MOUSE + 1
-        public static final int KEYBOARD_MOUSE_COMBO = 13; // TABLET + 1
+        public static final int COMPUTER = 1;
+        public static final int PHONE = 2;
+        public static final int MODEM = 3;
+        public static final int AUDIO = 4;
+        public static final int CAR_AUDIO = 5;
+        public static final int VIDEO = 6;
+        public static final int PERIPHERAL = 7;
+        public static final int JOYSTICK = 8;
+        public static final int GAMEPAD = 9;
+        public static final int KEYBOARD = 10;
+        public static final int MOUSE = 11;
+        public static final int TABLET = 12;
+        public static final int KEYBOARD_MOUSE_COMBO = 13;
+        public static final int MIN_VALUE = 0;
+        public static final int MAX_VALUE = 13;
 
         public static boolean isKnownValue(int value) {
             return value >= 0 && value <= 13;
@@ -64,6 +97,10 @@ public final class BluetoothDeviceInfo extends org.chromium.mojo.bindings.Struct
         public static void validate(int value) {
             if (IS_EXTENSIBLE || isKnownValue(value)) return;
             throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+        }
+
+        public static int toKnownValue(int value) {
+          return value;
         }
 
         private DeviceType() {}
@@ -121,6 +158,7 @@ public final class BluetoothDeviceInfo extends org.chromium.mojo.bindings.Struct
                     
                 result.connectionState = decoder0.readInt(24);
                     BluetoothDeviceInfo.ConnectionState.validate(result.connectionState);
+                    result.connectionState = BluetoothDeviceInfo.ConnectionState.toKnownValue(result.connectionState);
                 }
                 {
                     
@@ -130,6 +168,7 @@ public final class BluetoothDeviceInfo extends org.chromium.mojo.bindings.Struct
                     
                 result.deviceType = decoder0.readInt(32);
                     BluetoothDeviceInfo.DeviceType.validate(result.deviceType);
+                    result.deviceType = BluetoothDeviceInfo.DeviceType.toKnownValue(result.deviceType);
                 }
                 {
                     

@@ -13,6 +13,8 @@
 
 package org.chromium.blink.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public final class RemoteInvocationResultValue extends org.chromium.mojo.bindings.Union {
 
@@ -150,6 +152,7 @@ public final class RemoteInvocationResultValue extends org.chromium.mojo.binding
                 
                 result.mSingletonValue = decoder0.readInt(offset + org.chromium.mojo.bindings.DataHeader.HEADER_SIZE);
                     SingletonJavaScriptValue.validate(result.mSingletonValue);
+                    result.mSingletonValue = SingletonJavaScriptValue.toKnownValue(result.mSingletonValue);
                 result.mTag = Tag.SingletonValue;
                 break;
             }

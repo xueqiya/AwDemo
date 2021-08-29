@@ -206,15 +206,19 @@ class ThreadedInputConnection extends BaseInputConnection implements ChromiumBas
             final ExtractedText extractedText = convertToExtractedText(textInputState);
             mImeAdapter.updateExtractedText(mCurrentExtractedTextRequestToken, extractedText);
         }
-        mImeAdapter.updateSelection(
-                selection.start(), selection.end(), composition.start(), composition.end());
+        // This leads to containerView#onCheckIsTextEditor(). Run it on UI thread.
+        // See https://crbug.com/1060361.
+        PostTask.postTask(UiThreadTaskTraits.DEFAULT, () -> {
+            mImeAdapter.updateSelection(
+                    selection.start(), selection.end(), composition.start(), composition.end());
+        });
     }
 
     private TextInputState requestAndWaitForTextInputState() {
         if (DEBUG_LOGS) Log.i(TAG, "requestAndWaitForTextInputState");
         if (runningOnUiThread()) {
             Log.w(TAG, "InputConnection API is not called on IME thread. Returning cached result.");
-            // Returning cached result is a workaround for existing webview apps. (crbug.com/643477)
+            // Returning cached result is a workaround for existing com.apkmatrix.components.webview apps. (crbug.com/643477)
             return mCachedTextInputState;
         }
         assertOnImeThread();

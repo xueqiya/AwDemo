@@ -13,6 +13,8 @@
 
 package org.chromium.media.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public interface AndroidOverlayClient extends org.chromium.mojo.bindings.Interface {
 
@@ -31,6 +33,14 @@ long surfaceKey);
 
     void onDestroyed(
 );
+
+
+
+    void onSynchronouslyDestroyed(
+
+OnSynchronouslyDestroyedResponse callback);
+
+    interface OnSynchronouslyDestroyedResponse extends org.chromium.mojo.bindings.Callbacks.Callback0 { }
 
 
 

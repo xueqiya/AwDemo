@@ -13,16 +13,30 @@
 
 package org.chromium.autofill.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class SubmissionSource {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        SubmissionSource.NONE,
+        SubmissionSource.SAME_DOCUMENT_NAVIGATION,
+        SubmissionSource.XHR_SUCCEEDED,
+        SubmissionSource.FRAME_DETACHED,
+        SubmissionSource.DOM_MUTATION_AFTER_XHR,
+        SubmissionSource.PROBABLY_FORM_SUBMITTED,
+        SubmissionSource.FORM_SUBMISSION})
+    public @interface EnumType {}
 
     public static final int NONE = 0;
-    public static final int SAME_DOCUMENT_NAVIGATION = 1; // NONE + 1
-    public static final int XHR_SUCCEEDED = 2; // SAME_DOCUMENT_NAVIGATION + 1
-    public static final int FRAME_DETACHED = 3; // XHR_SUCCEEDED + 1
-    public static final int DOM_MUTATION_AFTER_XHR = 4; // FRAME_DETACHED + 1
-    public static final int PROBABLY_FORM_SUBMITTED = 5; // DOM_MUTATION_AFTER_XHR + 1
-    public static final int FORM_SUBMISSION = 6; // PROBABLY_FORM_SUBMITTED + 1
+    public static final int SAME_DOCUMENT_NAVIGATION = 1;
+    public static final int XHR_SUCCEEDED = 2;
+    public static final int FRAME_DETACHED = 3;
+    public static final int DOM_MUTATION_AFTER_XHR = 4;
+    public static final int PROBABLY_FORM_SUBMITTED = 5;
+    public static final int FORM_SUBMISSION = 6;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 6;
 
     public static boolean isKnownValue(int value) {
         return value >= 0 && value <= 6;
@@ -31,6 +45,10 @@ public final class SubmissionSource {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private SubmissionSource() {}

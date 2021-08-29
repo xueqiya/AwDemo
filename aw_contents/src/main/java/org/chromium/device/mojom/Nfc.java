@@ -13,6 +13,8 @@
 
 package org.chromium.device.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public interface Nfc extends org.chromium.mojo.bindings.Interface {
 
@@ -38,15 +40,12 @@ PushResponse callback);
 
 
     void cancelPush(
-
-CancelPushResponse callback);
-
-    interface CancelPushResponse extends org.chromium.mojo.bindings.Callbacks.Callback1<NdefError> { }
+);
 
 
 
     void watch(
-NdefScanOptions options, int id, 
+int id, 
 WatchResponse callback);
 
     interface WatchResponse extends org.chromium.mojo.bindings.Callbacks.Callback1<NdefError> { }
@@ -54,28 +53,7 @@ WatchResponse callback);
 
 
     void cancelWatch(
-int id, 
-CancelWatchResponse callback);
-
-    interface CancelWatchResponse extends org.chromium.mojo.bindings.Callbacks.Callback1<NdefError> { }
-
-
-
-    void cancelAllWatches(
-
-CancelAllWatchesResponse callback);
-
-    interface CancelAllWatchesResponse extends org.chromium.mojo.bindings.Callbacks.Callback1<NdefError> { }
-
-
-
-    void suspendNfcOperations(
-);
-
-
-
-    void resumeNfcOperations(
-);
+int id);
 
 
 }

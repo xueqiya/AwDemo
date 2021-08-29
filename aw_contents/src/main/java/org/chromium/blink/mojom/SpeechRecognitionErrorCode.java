@@ -13,19 +13,36 @@
 
 package org.chromium.blink.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class SpeechRecognitionErrorCode {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        SpeechRecognitionErrorCode.NONE,
+        SpeechRecognitionErrorCode.NO_SPEECH,
+        SpeechRecognitionErrorCode.ABORTED,
+        SpeechRecognitionErrorCode.AUDIO_CAPTURE,
+        SpeechRecognitionErrorCode.NETWORK,
+        SpeechRecognitionErrorCode.NOT_ALLOWED,
+        SpeechRecognitionErrorCode.SERVICE_NOT_ALLOWED,
+        SpeechRecognitionErrorCode.BAD_GRAMMAR,
+        SpeechRecognitionErrorCode.LANGUAGE_NOT_SUPPORTED,
+        SpeechRecognitionErrorCode.NO_MATCH})
+    public @interface EnumType {}
 
     public static final int NONE = 0;
-    public static final int NO_SPEECH = 1; // NONE + 1
-    public static final int ABORTED = 2; // NO_SPEECH + 1
-    public static final int AUDIO_CAPTURE = 3; // ABORTED + 1
-    public static final int NETWORK = 4; // AUDIO_CAPTURE + 1
-    public static final int NOT_ALLOWED = 5; // NETWORK + 1
-    public static final int SERVICE_NOT_ALLOWED = 6; // NOT_ALLOWED + 1
-    public static final int BAD_GRAMMAR = 7; // SERVICE_NOT_ALLOWED + 1
-    public static final int LANGUAGE_NOT_SUPPORTED = 8; // BAD_GRAMMAR + 1
-    public static final int NO_MATCH = 9; // LANGUAGE_NOT_SUPPORTED + 1
+    public static final int NO_SPEECH = 1;
+    public static final int ABORTED = 2;
+    public static final int AUDIO_CAPTURE = 3;
+    public static final int NETWORK = 4;
+    public static final int NOT_ALLOWED = 5;
+    public static final int SERVICE_NOT_ALLOWED = 6;
+    public static final int BAD_GRAMMAR = 7;
+    public static final int LANGUAGE_NOT_SUPPORTED = 8;
+    public static final int NO_MATCH = 9;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 9;
 
     public static boolean isKnownValue(int value) {
         return value >= 0 && value <= 9;
@@ -34,6 +51,10 @@ public final class SpeechRecognitionErrorCode {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private SpeechRecognitionErrorCode() {}

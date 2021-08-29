@@ -13,12 +13,22 @@
 
 package org.chromium.gfx.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class SwapResult {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        SwapResult.ACK,
+        SwapResult.FAILED,
+        SwapResult.NAK_RECREATE_BUFFERS})
+    public @interface EnumType {}
 
     public static final int ACK = 0;
-    public static final int FAILED = 1; // ACK + 1
-    public static final int NAK_RECREATE_BUFFERS = 2; // FAILED + 1
+    public static final int FAILED = 1;
+    public static final int NAK_RECREATE_BUFFERS = 2;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 2;
 
     public static boolean isKnownValue(int value) {
         return value >= 0 && value <= 2;
@@ -27,6 +37,10 @@ public final class SwapResult {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private SwapResult() {}

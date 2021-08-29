@@ -13,6 +13,8 @@
 
 package org.chromium.service_manager.mojom;
 
+import androidx.annotation.IntDef;
+
 
 class Connector_Internal {
 
@@ -195,7 +197,11 @@ org.chromium.mojo.bindings.InterfaceRequest<Connector> receiver) {
                 org.chromium.mojo.bindings.ServiceMessage messageWithHeader =
                         message.asServiceMessage();
                 org.chromium.mojo.bindings.MessageHeader header = messageWithHeader.getHeader();
-                if (!header.validateHeader(org.chromium.mojo.bindings.MessageHeader.NO_FLAG)) {
+                int flags = org.chromium.mojo.bindings.MessageHeader.NO_FLAG;
+                if (header.hasFlag(org.chromium.mojo.bindings.MessageHeader.MESSAGE_IS_SYNC_FLAG)) {
+                    flags = flags | org.chromium.mojo.bindings.MessageHeader.MESSAGE_IS_SYNC_FLAG;
+                }
+                if (!header.validateHeader(flags)) {
                     return false;
                 }
                 switch(header.getType()) {
@@ -241,7 +247,11 @@ org.chromium.mojo.bindings.InterfaceRequest<Connector> receiver) {
                 org.chromium.mojo.bindings.ServiceMessage messageWithHeader =
                         message.asServiceMessage();
                 org.chromium.mojo.bindings.MessageHeader header = messageWithHeader.getHeader();
-                if (!header.validateHeader(org.chromium.mojo.bindings.MessageHeader.MESSAGE_EXPECTS_RESPONSE_FLAG)) {
+                int flags = org.chromium.mojo.bindings.MessageHeader.MESSAGE_EXPECTS_RESPONSE_FLAG;
+                if (header.hasFlag(org.chromium.mojo.bindings.MessageHeader.MESSAGE_IS_SYNC_FLAG)) {
+                    flags = flags | org.chromium.mojo.bindings.MessageHeader.MESSAGE_IS_SYNC_FLAG;
+                }
+                if (!header.validateHeader(flags)) {
                     return false;
                 }
                 switch(header.getType()) {
@@ -386,6 +396,7 @@ org.chromium.mojo.bindings.InterfaceRequest<Connector> receiver) {
                         
                     result.priority = decoder0.readInt(28);
                         BindInterfacePriority.validate(result.priority);
+                        result.priority = BindInterfacePriority.toKnownValue(result.priority);
                     }
 
             } finally {
@@ -457,6 +468,7 @@ org.chromium.mojo.bindings.InterfaceRequest<Connector> receiver) {
                         
                     result.result = decoder0.readInt(8);
                         ConnectResult.validate(result.result);
+                        result.result = ConnectResult.toKnownValue(result.result);
                     }
                     {
                         
@@ -844,6 +856,7 @@ org.chromium.mojo.bindings.InterfaceRequest<Connector> receiver) {
                         
                     result.result = decoder0.readInt(8);
                         ConnectResult.validate(result.result);
+                        result.result = ConnectResult.toKnownValue(result.result);
                     }
                     {
                         
@@ -1057,6 +1070,7 @@ org.chromium.mojo.bindings.InterfaceRequest<Connector> receiver) {
                         
                     result.result = decoder0.readInt(8);
                         ConnectResult.validate(result.result);
+                        result.result = ConnectResult.toKnownValue(result.result);
                     }
 
             } finally {

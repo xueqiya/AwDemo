@@ -13,17 +13,32 @@
 
 package org.chromium.gfx.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class OverlayTransform {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        OverlayTransform.OVERLAY_TRANSFORM_INVALID,
+        OverlayTransform.OVERLAY_TRANSFORM_NONE,
+        OverlayTransform.OVERLAY_TRANSFORM_FLIP_HORIZONTAL,
+        OverlayTransform.OVERLAY_TRANSFORM_FLIP_VERTICAL,
+        OverlayTransform.OVERLAY_TRANSFORM_ROTATE_90,
+        OverlayTransform.OVERLAY_TRANSFORM_ROTATE_180,
+        OverlayTransform.OVERLAY_TRANSFORM_ROTATE_270,
+        OverlayTransform.OVERLAY_TRANSFORM_LAST})
+    public @interface EnumType {}
 
     public static final int OVERLAY_TRANSFORM_INVALID = 0;
-    public static final int OVERLAY_TRANSFORM_NONE = 1; // OVERLAY_TRANSFORM_INVALID + 1
-    public static final int OVERLAY_TRANSFORM_FLIP_HORIZONTAL = 2; // OVERLAY_TRANSFORM_NONE + 1
-    public static final int OVERLAY_TRANSFORM_FLIP_VERTICAL = 3; // OVERLAY_TRANSFORM_FLIP_HORIZONTAL + 1
-    public static final int OVERLAY_TRANSFORM_ROTATE_90 = 4; // OVERLAY_TRANSFORM_FLIP_VERTICAL + 1
-    public static final int OVERLAY_TRANSFORM_ROTATE_180 = 5; // OVERLAY_TRANSFORM_ROTATE_90 + 1
-    public static final int OVERLAY_TRANSFORM_ROTATE_270 = 6; // OVERLAY_TRANSFORM_ROTATE_180 + 1
-    public static final int OVERLAY_TRANSFORM_LAST = OverlayTransform.OVERLAY_TRANSFORM_ROTATE_270;
+    public static final int OVERLAY_TRANSFORM_NONE = 1;
+    public static final int OVERLAY_TRANSFORM_FLIP_HORIZONTAL = 2;
+    public static final int OVERLAY_TRANSFORM_FLIP_VERTICAL = 3;
+    public static final int OVERLAY_TRANSFORM_ROTATE_90 = 4;
+    public static final int OVERLAY_TRANSFORM_ROTATE_180 = 5;
+    public static final int OVERLAY_TRANSFORM_ROTATE_270 = 6;
+    public static final int OVERLAY_TRANSFORM_LAST = 6;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 6;
 
     public static boolean isKnownValue(int value) {
         return value >= 0 && value <= 6;
@@ -32,6 +47,10 @@ public final class OverlayTransform {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private OverlayTransform() {}

@@ -13,6 +13,8 @@
 
 package org.chromium.service_manager.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public final class RunningServiceInfo extends org.chromium.mojo.bindings.Struct {
 
@@ -69,6 +71,7 @@ public final class RunningServiceInfo extends org.chromium.mojo.bindings.Struct 
                     
                 result.state = decoder0.readInt(20);
                     InstanceState.validate(result.state);
+                    result.state = InstanceState.toKnownValue(result.state);
                 }
 
         } finally {

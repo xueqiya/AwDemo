@@ -13,15 +13,28 @@
 
 package org.chromium.gfx.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class RRectFType {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        RRectFType.EMPTY,
+        RRectFType.RECT,
+        RRectFType.SINGLE,
+        RRectFType.SIMPLE,
+        RRectFType.OVAL,
+        RRectFType.COMPLEX})
+    public @interface EnumType {}
 
     public static final int EMPTY = 0;
-    public static final int RECT = 1; // EMPTY + 1
-    public static final int SINGLE = 2; // RECT + 1
-    public static final int SIMPLE = 3; // SINGLE + 1
-    public static final int OVAL = 4; // SIMPLE + 1
-    public static final int COMPLEX = 5; // OVAL + 1
+    public static final int RECT = 1;
+    public static final int SINGLE = 2;
+    public static final int SIMPLE = 3;
+    public static final int OVAL = 4;
+    public static final int COMPLEX = 5;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 5;
 
     public static boolean isKnownValue(int value) {
         return value >= 0 && value <= 5;
@@ -30,6 +43,10 @@ public final class RRectFType {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private RRectFType() {}

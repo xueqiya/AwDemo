@@ -16,7 +16,7 @@ import org.chromium.base.CommandLine;
 public class CommandLineUtil {
     protected CommandLineUtil() {}
 
-    public static final String WEBVIEW_COMMAND_LINE_FILE = "/data/local/tmp/webview-command-line";
+    public static final String WEBVIEW_COMMAND_LINE_FILE = "/data/local/tmp/com.apkmatrix.components.webview-command-line";
 
     private static final String COMMAND_LINE_UTIL_INTERNAL =
             "org.chromium.android_webview.common.CommandLineUtilInternal";

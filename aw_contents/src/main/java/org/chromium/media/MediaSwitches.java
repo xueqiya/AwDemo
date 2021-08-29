@@ -40,11 +40,8 @@ public abstract class MediaSwitches {
     // Set number of threads to use for video decoding.
     public static final String VIDEO_THREADS = "video-threads";
 
-    // Suspend media pipeline on background tabs.
-    public static final String ENABLE_MEDIA_SUSPEND = "enable-media-suspend";
-
-
-    public static final String DISABLE_MEDIA_SUSPEND = "disable-media-suspend";
+    // Do not immediately suspend media in background tabs.
+    public static final String DISABLE_BACKGROUND_MEDIA_SUSPEND = "disable-background-media-suspend";
 
     // Force to report VP9 as an unsupported MIME type.
     public static final String REPORT_VP9_AS_AN_UNSUPPORTED_MIME_TYPE = "report-vp9-as-an-unsupported-mime-type";
@@ -83,15 +80,18 @@ public abstract class MediaSwitches {
     // --enable-protected-video-buffers is also specified.
     public static final String FORCE_PROTECTED_VIDEO_OUTPUT_BUFFERS = "force-protected-video-output-buffers";
 
-    // Enables fuchsia.media.AudioConsumer to be used to render audio streams.
-    public static final String ENABLE_FUCHSIA_AUDIO_CONSUMER = "enable-fuchsia-audio-consumer";
+
+    public static final String DISABLE_AUDIO_INPUT = "disable-audio-input";
+
+    // Present video content as overlays.
+    public static final String USE_OVERLAYS_FOR_VIDEO = "use-overlays-for-video";
 
     // Use CRAS, the ChromeOS audio server.
     public static final String USE_CRAS = "use-cras";
 
     // For automated testing of protected content, this switch allows specific
-    // domains (e.g. example.com) to skip asking the user for permission to share
-    // the protected media identifier. In this context, domain does not include the
+    // domains (e.g. example.com) to always allow the permission to share the
+    // protected media identifier. In this context, domain does not include the
     // port number. User's content settings will not be affected by enabling this
     // switch.
     // Reference: http://crbug.com/718608
@@ -173,7 +173,8 @@ public abstract class MediaSwitches {
 
     // Overrides hardware secure codecs support for testing. If specified, real
     // platform hardware secure codecs check will be skipped. Codecs are separated
-    // by comma. Valid codecs are "vp8", "vp9" and "avc1". For example:
+    // by comma. Valid video codecs are "vp8", "vp9" and "avc1", and the only valid
+    // audio codec is "vorbis". For example:
     //  --override-hardware-secure-codecs-for-testing=vp8,vp9
     //  --override-hardware-secure-codecs-for-testing=avc1
     // CENC encryption scheme is assumed to be supported for the specified codecs.
@@ -181,6 +182,12 @@ public abstract class MediaSwitches {
     // can be used to disable hardware secure codecs support:
     //  --override-hardware-secure-codecs-for-testing
     public static final String OVERRIDE_HARDWARE_SECURE_CODECS_FOR_TESTING = "override-hardware-secure-codecs-for-testing";
+
+    // Sets the default value for the kLiveCaptionEnabled preference to true.
+    public static final String ENABLE_LIVE_CAPTION_PREF_FOR_TESTING = "enable-live-caption-pref-for-testing";
+
+    // Enables playback of clear (unencrypted) HEVC content for testing purposes.
+    public static final String ENABLE_CLEAR_HEVC_FOR_TESTING = "enable-clear-hevc-for-testing";
 
     // Autoplay policy that requires a document user activation.
     public static final String DOCUMENT_USER_ACTIVATION_REQUIRED_POLICY = "document-user-activation-required";

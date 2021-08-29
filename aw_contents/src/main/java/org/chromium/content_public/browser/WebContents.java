@@ -16,6 +16,7 @@ import org.chromium.ui.OverscrollRefreshHandler;
 import org.chromium.ui.base.EventForwarder;
 import org.chromium.ui.base.ViewAndroidDelegate;
 import org.chromium.ui.base.WindowAndroid;
+import org.chromium.url.GURL;
 
 import java.util.List;
 
@@ -82,7 +83,14 @@ public interface WebContents extends Parcelable {
     }
 
     /**
+     * TODO(ctzsm): Rename this method to setDelegates()
+     *
      * Initialize various content objects of {@link WebContents} lifetime.
+     *
+     * Note: This method is more of to set the {@link ViewAndroidDelegate} and {@link
+     * ViewEventSink.InternalAccessDelegate}, most of the embedder should only call this once during
+     * the whole lifecycle of the {@link WebContents}, but it is safe to call it multiple times.
+     *
      * @param productVersion Product version for accessibility.
      * @param viewDelegate Delegate to add/remove anchor views.
      * @param accessDelegate Handles dispatching all hidden or super methods to the containerView.
@@ -92,6 +100,16 @@ public interface WebContents extends Parcelable {
     void initialize(String productVersion, ViewAndroidDelegate viewDelegate,
             ViewEventSink.InternalAccessDelegate accessDelegate, WindowAndroid windowAndroid,
             @NonNull InternalsHolder internalsHolder);
+
+    /**
+     * Clear Java WebContentsObservers so we can put this WebContents to the background. Use this
+     * method only when the WebContents will not be destroyed shortly. Currently only used by Chrome
+     * for swapping WebContents in Tab.
+     *
+     * Note: This is a temporary workaround for Chrome until it can clean up Observers directly.
+     * Avoid new calls to this method.
+     */
+    void clearJavaWebContentsObservers();
 
     /**
      * @return The top level WindowAndroid associated with this WebContents.  This can be null.
@@ -128,6 +146,7 @@ public interface WebContents extends Parcelable {
      * Removes the native WebContents' reference to this object. This is used when we want to
      * destroy this object without destroying its native counterpart.
      */
+    @Deprecated
     void clearNativeReference();
 
     /**
@@ -148,6 +167,13 @@ public interface WebContents extends Parcelable {
     RenderFrameHost getFocusedFrame();
 
     /**
+     * @return The frame associated with the id. Will be null if the ID does not correspond to a
+     *         live RenderFrameHost.
+     */
+    @Nullable
+    RenderFrameHost getRenderFrameHostFromId(GlobalFrameRoutingId id);
+
+    /**
      * @return The root level view from the renderer, or {@code null} in some cases where there is
      *         none.
      */
@@ -160,6 +186,12 @@ public interface WebContents extends Parcelable {
     List<? extends WebContents> getInnerWebContents();
 
     /**
+     * @return The WebContents Visibility. See native WebContents::GetVisibility.
+     */
+    @Visibility
+    int getVisibility();
+
+    /**
      * @return The title for the current visible page.
      */
     String getTitle();
@@ -167,7 +199,7 @@ public interface WebContents extends Parcelable {
     /**
      * @return The URL for the current visible page.
      */
-    String getVisibleUrl();
+    GURL getVisibleUrl();
 
     /**
      * @return The character encoding for the current visible page.
@@ -184,6 +216,14 @@ public interface WebContents extends Parcelable {
      *         document (rather than being a navigation within the same document).
      */
     boolean isLoadingToDifferentDocument();
+
+    /**
+     * Runs the beforeunload handler, if any. The tab will be closed if there's no beforeunload
+     * handler or if the user accepts closing.
+     *
+     * @param autoCancel See C++ WebContents for explanation.
+     */
+    void dispatchBeforeUnload(boolean autoCancel);
 
     /**
      * Stop any pending navigation.
@@ -222,11 +262,6 @@ public interface WebContents extends Parcelable {
     void setAudioMuted(boolean mute);
 
     /**
-     * @return Whether the page is currently showing an interstitial, such as a bad HTTPS page.
-     */
-    boolean isShowingInterstitialPage();
-
-    /**
      * @return Whether the location bar should be focused by default for this page.
      */
     boolean focusLocationBarByDefault();
@@ -236,6 +271,11 @@ public interface WebContents extends Parcelable {
      * @param hasFocus Indicates if focus should be set or removed.
      */
     void setFocus(boolean hasFocus);
+
+    /**
+     * @return true if the renderer is in fullscreen mode.
+     */
+    boolean isFullscreenForCurrentTab();
 
     /**
      * Inform WebKit that Fullscreen mode has been exited by the user.
@@ -270,7 +310,7 @@ public interface WebContents extends Parcelable {
      *
      * @return The last committed URL.
      */
-    String getLastCommittedUrl();
+    GURL getLastCommittedUrl();
 
     /**
      * Get the InCognito state of WebContents.
@@ -429,7 +469,7 @@ public interface WebContents extends Parcelable {
      *                 renderer.
      * @return The unique id of the download request
      */
-    int downloadImage(String url, boolean isFavicon, int maxBitmapSize, boolean bypassCache,
+    int downloadImage(GURL url, boolean isFavicon, int maxBitmapSize, boolean bypassCache,
             ImageDownloadCallback callback);
 
     /**

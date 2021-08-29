@@ -8,7 +8,7 @@ import org.chromium.net.NetworkChangeNotifierAutoDetect;
 
 /**
  * Registration policy to make sure we only listen to network changes when
- * there are live webview instances.
+ * there are live com.apkmatrix.components.webview instances.
  */
 public class AwNetworkChangeNotifierRegistrationPolicy
         extends NetworkChangeNotifierAutoDetect.RegistrationPolicy

@@ -13,13 +13,14 @@
 
 package org.chromium.gfx.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public final class GpuFenceHandle extends org.chromium.mojo.bindings.Struct {
 
     private static final int STRUCT_SIZE = 16;
     private static final org.chromium.mojo.bindings.DataHeader[] VERSION_ARRAY = new org.chromium.mojo.bindings.DataHeader[] {new org.chromium.mojo.bindings.DataHeader(16, 0)};
     private static final org.chromium.mojo.bindings.DataHeader DEFAULT_STRUCT_INFO = VERSION_ARRAY[0];
-    public int type;
     public org.chromium.mojo.system.UntypedHandle nativeFd;
 
     private GpuFenceHandle(int version) {
@@ -58,12 +59,7 @@ public final class GpuFenceHandle extends org.chromium.mojo.bindings.Struct {
             result = new GpuFenceHandle(elementsOrVersion);
                 {
                     
-                result.type = decoder0.readInt(8);
-                    GpuFenceHandleType.validate(result.type);
-                }
-                {
-                    
-                result.nativeFd = decoder0.readUntypedHandle(12, true);
+                result.nativeFd = decoder0.readUntypedHandle(8, false);
                 }
 
         } finally {
@@ -77,8 +73,6 @@ public final class GpuFenceHandle extends org.chromium.mojo.bindings.Struct {
     protected final void encode(org.chromium.mojo.bindings.Encoder encoder) {
         org.chromium.mojo.bindings.Encoder encoder0 = encoder.getEncoderAtDataOffset(DEFAULT_STRUCT_INFO);
         
-        encoder0.encode(this.type, 8);
-        
-        encoder0.encode(this.nativeFd, 12, true);
+        encoder0.encode(this.nativeFd, 8, false);
     }
 }

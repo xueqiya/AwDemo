@@ -13,6 +13,8 @@
 
 package org.chromium.proxy_resolver.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public final class ProxyServer extends org.chromium.mojo.bindings.Struct {
 
@@ -60,6 +62,7 @@ public final class ProxyServer extends org.chromium.mojo.bindings.Struct {
                     
                 result.scheme = decoder0.readInt(8);
                     ProxyScheme.validate(result.scheme);
+                    result.scheme = ProxyScheme.toKnownValue(result.scheme);
                 }
                 {
                     

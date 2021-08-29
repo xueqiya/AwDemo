@@ -13,6 +13,8 @@
 
 package org.chromium.shape_detection.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public interface BarcodeDetection extends org.chromium.mojo.bindings.Interface {
 
@@ -25,7 +27,7 @@ public interface BarcodeDetection extends org.chromium.mojo.bindings.Interface {
 
 
     void detect(
-org.chromium.skia.mojom.Bitmap bitmapData, 
+org.chromium.skia.mojom.BitmapN32 bitmapData, 
 DetectResponse callback);
 
     interface DetectResponse extends org.chromium.mojo.bindings.Callbacks.Callback1<BarcodeDetectionResult[]> { }

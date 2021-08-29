@@ -35,10 +35,12 @@ import androidx.annotation.VisibleForTesting;
 
 import org.chromium.base.ApplicationState;
 import org.chromium.base.ApplicationStatus;
-import org.chromium.base.BuildConfig;
 import org.chromium.base.ContextUtils;
 import org.chromium.base.StrictModeContext;
 import org.chromium.base.compat.ApiHelperForM;
+import org.chromium.base.compat.ApiHelperForO;
+import org.chromium.base.compat.ApiHelperForP;
+import org.chromium.build.BuildConfig;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -122,6 +124,8 @@ public class NetworkChangeNotifierAutoDetect extends BroadcastReceiver {
                 case ConnectivityManager.TYPE_BLUETOOTH:
                     return ConnectionSubtype.SUBTYPE_UNKNOWN;
                 case ConnectivityManager.TYPE_MOBILE:
+                case ConnectivityManager.TYPE_MOBILE_DUN:
+                case ConnectivityManager.TYPE_MOBILE_HIPRI:
                     // Use information from TelephonyManager to classify the connection.
                     switch (getNetworkSubType()) {
                         case TelephonyManager.NETWORK_TYPE_GPRS:
@@ -273,7 +277,7 @@ public class NetworkChangeNotifierAutoDetect extends BroadcastReceiver {
         }
 
         // Fetches NetworkInfo and records UMA for NullPointerExceptions.
-        private NetworkInfo getNetworkInfo(Network network) {
+        public NetworkInfo getNetworkInfo(Network network) {
             try {
                 return mConnectivityManager.getNetworkInfo(network);
             } catch (NullPointerException firstException) {
@@ -356,7 +360,17 @@ public class NetworkChangeNotifierAutoDetect extends BroadcastReceiver {
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
         @VisibleForTesting
         protected NetworkCapabilities getNetworkCapabilities(Network network) {
-            return mConnectivityManager.getNetworkCapabilities(network);
+            final int retryCount = 2;
+            for (int i = 0; i < retryCount; ++i) {
+                // This try-catch is a workaround for https://crbug.com/1218536. We ignore
+                // the exception intentionally.
+                try {
+                    return mConnectivityManager.getNetworkCapabilities(network);
+                } catch (SecurityException e) {
+                    // Do nothing.
+                }
+            }
+            return null;
         }
 
         /**
@@ -369,8 +383,8 @@ public class NetworkChangeNotifierAutoDetect extends BroadcastReceiver {
                 NetworkRequest networkRequest, NetworkCallback networkCallback, Handler handler) {
             // Starting with Oreo specifying a Handler is allowed.  Use this to avoid thread-hops.
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                mConnectivityManager.registerNetworkCallback(
-                        networkRequest, networkCallback, handler);
+                ApiHelperForO.registerNetworkCallback(
+                        mConnectivityManager, networkRequest, networkCallback, handler);
             } else {
                 mConnectivityManager.registerNetworkCallback(networkRequest, networkCallback);
             }
@@ -382,7 +396,8 @@ public class NetworkChangeNotifierAutoDetect extends BroadcastReceiver {
          */
         @TargetApi(Build.VERSION_CODES.P)
         void registerDefaultNetworkCallback(NetworkCallback networkCallback, Handler handler) {
-            mConnectivityManager.registerDefaultNetworkCallback(networkCallback, handler);
+            ApiHelperForO.registerDefaultNetworkCallback(
+                    mConnectivityManager, networkCallback, handler);
         }
 
         /**
@@ -542,6 +557,96 @@ public class NetworkChangeNotifierAutoDetect extends BroadcastReceiver {
         }
     }
 
+    // NetworkCallback used for listening for changes to the default network.
+    // This version has two major bug fixes over the above DefaultNetworkCallback:
+    // 1. Avoids avoids calling synchronous ConnectivityManager methods which is prohibited inside
+    //    NetworkCallbacks see "Do NOT call" here:
+    //    https://developer.android.com/reference/android/net/ConnectivityManager.NetworkCallback#onAvailable(android.net.Network)
+    // 2. Catches onCapabilitiesChanged() which includes cellular connections transitioning to and
+    //    from SUSPENDED states.  Failing to catch this could leave the NetworkChangeNotifier in
+    //    an incorrect disconnected state, see crbug.com/1120144.
+    @TargetApi(Build.VERSION_CODES.P)
+    private class AndroidRDefaultNetworkCallback extends NetworkCallback {
+        LinkProperties mLinkProperties;
+        NetworkCapabilities mNetworkCapabilities;
+
+        @Override
+        public void onAvailable(Network network) {
+            // Clear accumulated state and wait for new state to be received.
+            // Android guarantees we receive onLinkPropertiesChanged and
+            // onNetworkCapabilities calls after onAvailable:
+            // https://developer.android.com/reference/android/net/ConnectivityManager.NetworkCallback#onCapabilitiesChanged(android.net.Network,%20android.net.NetworkCapabilities)
+            // so the call to connectionTypeChangedTo() is done when we have received the
+            // LinkProperties and NetworkCapabilities.
+            mLinkProperties = null;
+            mNetworkCapabilities = null;
+        }
+
+        @Override
+        public void onLost(final Network network) {
+            mLinkProperties = null;
+            mNetworkCapabilities = null;
+            if (mRegistered) {
+                connectionTypeChangedTo(new NetworkState(false, -1, -1, null, false, ""));
+            }
+        }
+
+        // LinkProperties changes include enabling/disabling DNS-over-TLS.
+        @Override
+        public void onLinkPropertiesChanged(Network network, LinkProperties linkProperties) {
+            mLinkProperties = linkProperties;
+            if (mRegistered && mLinkProperties != null && mNetworkCapabilities != null) {
+                connectionTypeChangedTo(getNetworkState(network));
+            }
+        }
+
+        // CapabilitiesChanged includes cellular connections switching in and out of SUSPENDED.
+        @Override
+        public void onCapabilitiesChanged(
+                Network network, NetworkCapabilities networkCapabilities) {
+            mNetworkCapabilities = networkCapabilities;
+            if (mRegistered && mLinkProperties != null && mNetworkCapabilities != null) {
+                connectionTypeChangedTo(getNetworkState(network));
+            }
+        }
+
+        // Calculate current NetworkState.  Unlike getNetworkState(), this method avoids calling
+        // synchronous ConnectivityManager methods which is prohibited inside NetworkCallbacks see
+        // "Do NOT call" here:
+        // https://developer.android.com/reference/android/net/ConnectivityManager.NetworkCallback#onAvailable(android.net.Network)
+        private NetworkState getNetworkState(Network network) {
+            // Initialize to unknown values then extract more accurate info
+            int type = -1;
+            int subtype = -1;
+            if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+                    || mNetworkCapabilities.hasTransport(
+                            NetworkCapabilities.TRANSPORT_WIFI_AWARE)) {
+                type = ConnectivityManager.TYPE_WIFI;
+            } else if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                type = ConnectivityManager.TYPE_MOBILE;
+                // To get the subtype we need to make a synchronous ConnectivityManager call
+                // unfortunately.  It's recommended to use TelephonyManager.getDataNetworkType()
+                // but that requires an additional permission.  Worst case this might be inaccurate
+                // but getting the correct subtype is much much less important than getting the
+                // correct type.  Incorrect type could make Chrome behave like it's offline,
+                // incorrect subtype will just make cellular bandwidth estimates incorrect.
+                NetworkInfo networkInfo = mConnectivityManagerDelegate.getNetworkInfo(network);
+                if (networkInfo != null) {
+                    subtype = networkInfo.getSubtype();
+                }
+            } else if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                type = ConnectivityManager.TYPE_ETHERNET;
+            } else if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH)) {
+                type = ConnectivityManager.TYPE_BLUETOOTH;
+            } else if (mNetworkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)) {
+                type = ConnectivityManager.TYPE_VPN;
+            }
+            return new NetworkState(true, type, subtype, String.valueOf(networkToNetId(network)),
+                    ApiHelperForP.isPrivateDnsActive(mLinkProperties),
+                    ApiHelperForP.getPrivateDnsServerName(mLinkProperties));
+        }
+    }
+
     // This class gets called back by ConnectivityManager whenever networks come
     // and go. It gets called back on a special handler thread
     // ConnectivityManager creates for making the callbacks. The callbacks in
@@ -613,7 +718,9 @@ public class NetworkChangeNotifierAutoDetect extends BroadcastReceiver {
             if (ignoreConnectedNetwork(network, capabilities)) {
                 return;
             }
-            final boolean makeVpnDefault = capabilities.hasTransport(TRANSPORT_VPN);
+            final boolean makeVpnDefault = capabilities.hasTransport(TRANSPORT_VPN) &&
+                    // Only make the VPN the default if it isn't already.
+                    (mVpnInPlace == null || !network.equals(mVpnInPlace));
             if (makeVpnDefault) {
                 mVpnInPlace = network;
             }
@@ -746,7 +853,7 @@ public class NetworkChangeNotifierAutoDetect extends BroadcastReceiver {
     private final Observer mObserver;
     private final RegistrationPolicy mRegistrationPolicy;
     // Starting with Android Pie, used to detect changes in default network.
-    private DefaultNetworkCallback mDefaultNetworkCallback;
+    private NetworkCallback mDefaultNetworkCallback;
 
     // mConnectivityManagerDelegates and mWifiManagerDelegate are only non-final for testing.
     private ConnectivityManagerDelegate mConnectivityManagerDelegate;
@@ -847,9 +954,18 @@ public class NetworkChangeNotifierAutoDetect extends BroadcastReceiver {
             mNetworkCallback = null;
             mNetworkRequest = null;
         }
-        mDefaultNetworkCallback = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
-                ? new DefaultNetworkCallback()
-                : null;
+        // Use AndroidRDefaultNetworkCallback to fix Android R issue crbug.com/1120144.
+        // This NetworkCallback could be used on O+ (where onCapabilitiesChanged and
+        // onLinkProperties callbacks are guaranteed to be called after onAvailable)
+        // but is only necessary on Android R+.  For now it's only used on R+ to reduce
+        // churn.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            mDefaultNetworkCallback = new AndroidRDefaultNetworkCallback();
+        } else {
+            mDefaultNetworkCallback = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+                    ? new DefaultNetworkCallback()
+                    : null;
+        }
         mNetworkState = getCurrentNetworkState();
         mIntentFilter = new NetworkConnectivityIntentFilter();
         mIgnoreNextBroadcast = false;
@@ -864,7 +980,7 @@ public class NetworkChangeNotifierAutoDetect extends BroadcastReceiver {
     }
 
     private void assertOnThread() {
-        if (BuildConfig.DCHECK_IS_ON && !onThread()) {
+        if (BuildConfig.ENABLE_ASSERTS && !onThread()) {
             throw new IllegalStateException(
                     "Must be called on NetworkChangeNotifierAutoDetect thread.");
         }
@@ -1097,6 +1213,8 @@ public class NetworkChangeNotifierAutoDetect extends BroadcastReceiver {
             case ConnectivityManager.TYPE_BLUETOOTH:
                 return ConnectionType.CONNECTION_BLUETOOTH;
             case ConnectivityManager.TYPE_MOBILE:
+            case ConnectivityManager.TYPE_MOBILE_DUN:
+            case ConnectivityManager.TYPE_MOBILE_HIPRI:
                 // Use information from TelephonyManager to classify the connection.
                 switch (subtype) {
                     case TelephonyManager.NETWORK_TYPE_GPRS:
@@ -1117,6 +1235,8 @@ public class NetworkChangeNotifierAutoDetect extends BroadcastReceiver {
                         return ConnectionType.CONNECTION_3G;
                     case TelephonyManager.NETWORK_TYPE_LTE:
                         return ConnectionType.CONNECTION_4G;
+                    case TelephonyManager.NETWORK_TYPE_NR:
+                        return ConnectionType.CONNECTION_5G;
                     default:
                         return ConnectionType.CONNECTION_UNKNOWN;
                 }
@@ -1146,7 +1266,10 @@ public class NetworkChangeNotifierAutoDetect extends BroadcastReceiver {
     }
 
     private void connectionTypeChanged() {
-        NetworkState networkState = getCurrentNetworkState();
+        connectionTypeChangedTo(getCurrentNetworkState());
+    }
+
+    private void connectionTypeChangedTo(NetworkState networkState) {
         if (networkState.getConnectionType() != mNetworkState.getConnectionType()
                 || !networkState.getNetworkIdentifier().equals(mNetworkState.getNetworkIdentifier())
                 || networkState.isPrivateDnsActive() != mNetworkState.isPrivateDnsActive()
@@ -1172,8 +1295,7 @@ public class NetworkChangeNotifierAutoDetect extends BroadcastReceiver {
      * Marshmallow and newer releases. Only available on Lollipop and newer releases.
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    @VisibleForTesting
-    static long networkToNetId(Network network) {
+    public static long networkToNetId(Network network) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return ApiHelperForM.getNetworkHandle(network);
         } else {

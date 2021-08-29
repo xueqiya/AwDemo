@@ -9,12 +9,13 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Region;
-import androidx.core.graphics.drawable.RoundedBitmapDrawable;
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 
 /**
  * A utility class that has helper methods for Android view.
@@ -191,5 +192,27 @@ public final class ViewUtils {
         RoundedBitmapDrawable roundedIcon = RoundedBitmapDrawableFactory.create(resources, icon);
         roundedIcon.setCornerRadius(cornerRadius);
         return roundedIcon;
+    }
+
+    /**
+     * Translates the canvas to ensure the specified view's coordinates are at 0, 0.
+     *
+     * @param from The view the canvas is currently translated to.
+     * @param to The view to translate to.
+     * @param canvas The canvas to be translated.
+     *
+     * @throws IllegalArgumentException if {@code from} is not an ancestor of {@code to}.
+     */
+    public static void translateCanvasToView(View from, View to, Canvas canvas)
+            throws IllegalArgumentException {
+        assert from != null;
+        assert to != null;
+        while (to != from) {
+            canvas.translate(to.getLeft(), to.getTop());
+            if (!(to.getParent() instanceof View)) {
+                throw new IllegalArgumentException("View 'to' was not a desendent of 'from'.");
+            }
+            to = (View) to.getParent();
+        }
     }
 }

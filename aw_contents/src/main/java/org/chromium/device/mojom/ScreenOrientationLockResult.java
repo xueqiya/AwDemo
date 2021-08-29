@@ -13,13 +13,24 @@
 
 package org.chromium.device.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class ScreenOrientationLockResult {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        ScreenOrientationLockResult.SCREEN_ORIENTATION_LOCK_RESULT_SUCCESS,
+        ScreenOrientationLockResult.SCREEN_ORIENTATION_LOCK_RESULT_ERROR_NOT_AVAILABLE,
+        ScreenOrientationLockResult.SCREEN_ORIENTATION_LOCK_RESULT_ERROR_FULLSCREEN_REQUIRED,
+        ScreenOrientationLockResult.SCREEN_ORIENTATION_LOCK_RESULT_ERROR_CANCELED})
+    public @interface EnumType {}
 
     public static final int SCREEN_ORIENTATION_LOCK_RESULT_SUCCESS = 0;
-    public static final int SCREEN_ORIENTATION_LOCK_RESULT_ERROR_NOT_AVAILABLE = 1; // SCREEN_ORIENTATION_LOCK_RESULT_SUCCESS + 1
-    public static final int SCREEN_ORIENTATION_LOCK_RESULT_ERROR_FULLSCREEN_REQUIRED = 2; // SCREEN_ORIENTATION_LOCK_RESULT_ERROR_NOT_AVAILABLE + 1
-    public static final int SCREEN_ORIENTATION_LOCK_RESULT_ERROR_CANCELED = 3; // SCREEN_ORIENTATION_LOCK_RESULT_ERROR_FULLSCREEN_REQUIRED + 1
+    public static final int SCREEN_ORIENTATION_LOCK_RESULT_ERROR_NOT_AVAILABLE = 1;
+    public static final int SCREEN_ORIENTATION_LOCK_RESULT_ERROR_FULLSCREEN_REQUIRED = 2;
+    public static final int SCREEN_ORIENTATION_LOCK_RESULT_ERROR_CANCELED = 3;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 3;
 
     public static boolean isKnownValue(int value) {
         return value >= 0 && value <= 3;
@@ -28,6 +39,10 @@ public final class ScreenOrientationLockResult {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private ScreenOrientationLockResult() {}

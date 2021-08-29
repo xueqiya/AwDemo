@@ -13,12 +13,22 @@
 
 package org.chromium.network.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class ContentSecurityPolicySource {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        ContentSecurityPolicySource.HTTP,
+        ContentSecurityPolicySource.META,
+        ContentSecurityPolicySource.ORIGIN_POLICY})
+    public @interface EnumType {}
 
     public static final int HTTP = 0;
-    public static final int META = 1; // HTTP + 1
-    public static final int ORIGIN_POLICY = 2; // META + 1
+    public static final int META = 1;
+    public static final int ORIGIN_POLICY = 2;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 2;
 
     public static boolean isKnownValue(int value) {
         return value >= 0 && value <= 2;
@@ -27,6 +37,10 @@ public final class ContentSecurityPolicySource {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private ContentSecurityPolicySource() {}

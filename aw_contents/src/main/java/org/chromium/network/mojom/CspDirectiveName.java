@@ -13,25 +13,88 @@
 
 package org.chromium.network.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class CspDirectiveName {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
 
-    public static final int DEFAULT_SRC = 0;
-    public static final int CHILD_SRC = 1; // DEFAULT_SRC + 1
-    public static final int FRAME_SRC = 2; // CHILD_SRC + 1
-    public static final int FORM_ACTION = 3; // FRAME_SRC + 1
-    public static final int UPGRADE_INSECURE_REQUESTS = 4; // FORM_ACTION + 1
-    public static final int NAVIGATE_TO = 5; // UPGRADE_INSECURE_REQUESTS + 1
-    public static final int FRAME_ANCESTORS = 6; // NAVIGATE_TO + 1
-    public static final int UNKNOWN = 7; // FRAME_ANCESTORS + 1
+        CspDirectiveName.UNKNOWN,
+        CspDirectiveName.BASE_URI,
+        CspDirectiveName.BLOCK_ALL_MIXED_CONTENT,
+        CspDirectiveName.CHILD_SRC,
+        CspDirectiveName.CONNECT_SRC,
+        CspDirectiveName.DEFAULT_SRC,
+        CspDirectiveName.FONT_SRC,
+        CspDirectiveName.FORM_ACTION,
+        CspDirectiveName.FRAME_ANCESTORS,
+        CspDirectiveName.FRAME_SRC,
+        CspDirectiveName.IMG_SRC,
+        CspDirectiveName.MANIFEST_SRC,
+        CspDirectiveName.MEDIA_SRC,
+        CspDirectiveName.NAVIGATE_TO,
+        CspDirectiveName.OBJECT_SRC,
+        CspDirectiveName.PREFETCH_SRC,
+        CspDirectiveName.REPORT_TO,
+        CspDirectiveName.REPORT_URI,
+        CspDirectiveName.REQUIRE_TRUSTED_TYPES_FOR,
+        CspDirectiveName.SANDBOX,
+        CspDirectiveName.SCRIPT_SRC,
+        CspDirectiveName.SCRIPT_SRC_ATTR,
+        CspDirectiveName.SCRIPT_SRC_ELEM,
+        CspDirectiveName.STYLE_SRC,
+        CspDirectiveName.STYLE_SRC_ATTR,
+        CspDirectiveName.STYLE_SRC_ELEM,
+        CspDirectiveName.TREAT_AS_PUBLIC_ADDRESS,
+        CspDirectiveName.TRUSTED_TYPES,
+        CspDirectiveName.UPGRADE_INSECURE_REQUESTS,
+        CspDirectiveName.WORKER_SRC})
+    public @interface EnumType {}
+
+    public static final int UNKNOWN = 0;
+    public static final int BASE_URI = 1;
+    public static final int BLOCK_ALL_MIXED_CONTENT = 2;
+    public static final int CHILD_SRC = 3;
+    public static final int CONNECT_SRC = 4;
+    public static final int DEFAULT_SRC = 5;
+    public static final int FONT_SRC = 6;
+    public static final int FORM_ACTION = 7;
+    public static final int FRAME_ANCESTORS = 8;
+    public static final int FRAME_SRC = 9;
+    public static final int IMG_SRC = 10;
+    public static final int MANIFEST_SRC = 11;
+    public static final int MEDIA_SRC = 12;
+    public static final int NAVIGATE_TO = 13;
+    public static final int OBJECT_SRC = 14;
+    public static final int PREFETCH_SRC = 15;
+    public static final int REPORT_TO = 16;
+    public static final int REPORT_URI = 17;
+    public static final int REQUIRE_TRUSTED_TYPES_FOR = 18;
+    public static final int SANDBOX = 19;
+    public static final int SCRIPT_SRC = 20;
+    public static final int SCRIPT_SRC_ATTR = 21;
+    public static final int SCRIPT_SRC_ELEM = 22;
+    public static final int STYLE_SRC = 23;
+    public static final int STYLE_SRC_ATTR = 24;
+    public static final int STYLE_SRC_ELEM = 25;
+    public static final int TREAT_AS_PUBLIC_ADDRESS = 26;
+    public static final int TRUSTED_TYPES = 27;
+    public static final int UPGRADE_INSECURE_REQUESTS = 28;
+    public static final int WORKER_SRC = 29;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 29;
 
     public static boolean isKnownValue(int value) {
-        return value >= 0 && value <= 7;
+        return value >= 0 && value <= 29;
     }
 
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private CspDirectiveName() {}

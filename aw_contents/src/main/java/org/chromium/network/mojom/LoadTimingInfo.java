@@ -13,11 +13,13 @@
 
 package org.chromium.network.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public final class LoadTimingInfo extends org.chromium.mojo.bindings.Struct {
 
-    private static final int STRUCT_SIZE = 120;
-    private static final org.chromium.mojo.bindings.DataHeader[] VERSION_ARRAY = new org.chromium.mojo.bindings.DataHeader[] {new org.chromium.mojo.bindings.DataHeader(120, 0)};
+    private static final int STRUCT_SIZE = 152;
+    private static final org.chromium.mojo.bindings.DataHeader[] VERSION_ARRAY = new org.chromium.mojo.bindings.DataHeader[] {new org.chromium.mojo.bindings.DataHeader(152, 0)};
     private static final org.chromium.mojo.bindings.DataHeader DEFAULT_STRUCT_INFO = VERSION_ARRAY[0];
     public boolean socketReused;
     public int socketLogId;
@@ -30,10 +32,14 @@ public final class LoadTimingInfo extends org.chromium.mojo.bindings.Struct {
     public org.chromium.mojo_base.mojom.TimeTicks sendEnd;
     public org.chromium.mojo_base.mojom.TimeTicks receiveHeadersStart;
     public org.chromium.mojo_base.mojom.TimeTicks receiveHeadersEnd;
+    public org.chromium.mojo_base.mojom.TimeTicks receiveNonInformationalHeadersStart;
+    public org.chromium.mojo_base.mojom.TimeTicks firstEarlyHintsTime;
     public org.chromium.mojo_base.mojom.TimeTicks pushStart;
     public org.chromium.mojo_base.mojom.TimeTicks pushEnd;
     public org.chromium.mojo_base.mojom.TimeTicks serviceWorkerStartTime;
     public org.chromium.mojo_base.mojom.TimeTicks serviceWorkerReadyTime;
+    public org.chromium.mojo_base.mojom.TimeTicks serviceWorkerFetchStart;
+    public org.chromium.mojo_base.mojom.TimeTicks serviceWorkerRespondWithSettled;
 
     private LoadTimingInfo(int version) {
         super(STRUCT_SIZE, version);
@@ -124,22 +130,42 @@ public final class LoadTimingInfo extends org.chromium.mojo.bindings.Struct {
                 {
                     
                 org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(88, false);
-                result.pushStart = org.chromium.mojo_base.mojom.TimeTicks.decode(decoder1);
+                result.receiveNonInformationalHeadersStart = org.chromium.mojo_base.mojom.TimeTicks.decode(decoder1);
                 }
                 {
                     
                 org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(96, false);
-                result.pushEnd = org.chromium.mojo_base.mojom.TimeTicks.decode(decoder1);
+                result.firstEarlyHintsTime = org.chromium.mojo_base.mojom.TimeTicks.decode(decoder1);
                 }
                 {
                     
                 org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(104, false);
-                result.serviceWorkerStartTime = org.chromium.mojo_base.mojom.TimeTicks.decode(decoder1);
+                result.pushStart = org.chromium.mojo_base.mojom.TimeTicks.decode(decoder1);
                 }
                 {
                     
                 org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(112, false);
+                result.pushEnd = org.chromium.mojo_base.mojom.TimeTicks.decode(decoder1);
+                }
+                {
+                    
+                org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(120, false);
+                result.serviceWorkerStartTime = org.chromium.mojo_base.mojom.TimeTicks.decode(decoder1);
+                }
+                {
+                    
+                org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(128, false);
                 result.serviceWorkerReadyTime = org.chromium.mojo_base.mojom.TimeTicks.decode(decoder1);
+                }
+                {
+                    
+                org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(136, false);
+                result.serviceWorkerFetchStart = org.chromium.mojo_base.mojom.TimeTicks.decode(decoder1);
+                }
+                {
+                    
+                org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(144, false);
+                result.serviceWorkerRespondWithSettled = org.chromium.mojo_base.mojom.TimeTicks.decode(decoder1);
                 }
 
         } finally {
@@ -175,12 +201,20 @@ public final class LoadTimingInfo extends org.chromium.mojo.bindings.Struct {
         
         encoder0.encode(this.receiveHeadersEnd, 80, false);
         
-        encoder0.encode(this.pushStart, 88, false);
+        encoder0.encode(this.receiveNonInformationalHeadersStart, 88, false);
         
-        encoder0.encode(this.pushEnd, 96, false);
+        encoder0.encode(this.firstEarlyHintsTime, 96, false);
         
-        encoder0.encode(this.serviceWorkerStartTime, 104, false);
+        encoder0.encode(this.pushStart, 104, false);
         
-        encoder0.encode(this.serviceWorkerReadyTime, 112, false);
+        encoder0.encode(this.pushEnd, 112, false);
+        
+        encoder0.encode(this.serviceWorkerStartTime, 120, false);
+        
+        encoder0.encode(this.serviceWorkerReadyTime, 128, false);
+        
+        encoder0.encode(this.serviceWorkerFetchStart, 136, false);
+        
+        encoder0.encode(this.serviceWorkerRespondWithSettled, 144, false);
     }
 }

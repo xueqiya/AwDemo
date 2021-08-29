@@ -1,5 +1,5 @@
 
-// Copyright 2020 The Chromium Authors. All rights reserved.
+// Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -19,7 +19,7 @@ import java.lang.annotation.RetentionPolicy;
     LibraryProcessType.PROCESS_UNINITIALIZED, LibraryProcessType.PROCESS_BROWSER,
     LibraryProcessType.PROCESS_CHILD, LibraryProcessType.PROCESS_WEBVIEW,
     LibraryProcessType.PROCESS_WEBVIEW_CHILD, LibraryProcessType.PROCESS_WEBLAYER,
-    LibraryProcessType.PROCESS_WEBLAYER_CHILD
+    LibraryProcessType.PROCESS_WEBLAYER_CHILD, LibraryProcessType.PROCESS_WEBVIEW_NONEMBEDDED
 })
 @Retention(RetentionPolicy.SOURCE)
 public @interface LibraryProcessType {
@@ -36,11 +36,11 @@ public @interface LibraryProcessType {
    */
   int PROCESS_CHILD = 2;
   /**
-   * Shared library is running in the app that uses webview.
+   * Shared library is running in the app that uses com.apkmatrix.components.webview.
    */
   int PROCESS_WEBVIEW = 3;
   /**
-   * Shared library is running in child process as part of webview.
+   * Shared library is running in child process as part of com.apkmatrix.components.webview.
    */
   int PROCESS_WEBVIEW_CHILD = 4;
   /**
@@ -51,4 +51,8 @@ public @interface LibraryProcessType {
    * Shared library is running in child process as part of weblayer.
    */
   int PROCESS_WEBLAYER_CHILD = 6;
+  /**
+   * Shared library is running in a non-embedded WebView process.
+   */
+  int PROCESS_WEBVIEW_NONEMBEDDED = 7;
 }

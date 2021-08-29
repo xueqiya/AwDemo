@@ -13,14 +13,26 @@
 
 package org.chromium.mojo_base.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class ApplicationState {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        ApplicationState.UNKNOWN,
+        ApplicationState.HAS_RUNNING_ACTIVITIES,
+        ApplicationState.HAS_PAUSED_ACTIVITIES,
+        ApplicationState.HAS_STOPPED_ACTIVITIES,
+        ApplicationState.HAS_DESTROYED_ACTIVITIES})
+    public @interface EnumType {}
 
     public static final int UNKNOWN = 0;
-    public static final int HAS_RUNNING_ACTIVITIES = 1; // UNKNOWN + 1
-    public static final int HAS_PAUSED_ACTIVITIES = 2; // HAS_RUNNING_ACTIVITIES + 1
-    public static final int HAS_STOPPED_ACTIVITIES = 3; // HAS_PAUSED_ACTIVITIES + 1
-    public static final int HAS_DESTROYED_ACTIVITIES = 4; // HAS_STOPPED_ACTIVITIES + 1
+    public static final int HAS_RUNNING_ACTIVITIES = 1;
+    public static final int HAS_PAUSED_ACTIVITIES = 2;
+    public static final int HAS_STOPPED_ACTIVITIES = 3;
+    public static final int HAS_DESTROYED_ACTIVITIES = 4;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 4;
 
     public static boolean isKnownValue(int value) {
         return value >= 0 && value <= 4;
@@ -29,6 +41,10 @@ public final class ApplicationState {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private ApplicationState() {}

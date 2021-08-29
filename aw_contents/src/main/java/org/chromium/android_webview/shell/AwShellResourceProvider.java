@@ -10,7 +10,7 @@ import org.chromium.android_webview.common.AwResource;
 import org.chromium.android_webview.R;
 
 /**
- * Registers resources for the Android webview shell.
+ * Registers resources for the Android com.apkmatrix.components.webview shell.
  */
 public class AwShellResourceProvider {
     private static boolean sInitialized;

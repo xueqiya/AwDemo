@@ -13,6 +13,8 @@
 
 package org.chromium.device.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public interface SerialPortManager extends org.chromium.mojo.bindings.Interface {
 
@@ -24,6 +26,11 @@ public interface SerialPortManager extends org.chromium.mojo.bindings.Interface 
     Manager<SerialPortManager, SerialPortManager.Proxy> MANAGER = SerialPortManager_Internal.MANAGER;
 
 
+    void setClient(
+SerialPortManagerClient client);
+
+
+
     void getDevices(
 
 GetDevicesResponse callback);
@@ -32,8 +39,11 @@ GetDevicesResponse callback);
 
 
 
-    void getPort(
-org.chromium.mojo_base.mojom.UnguessableToken token, org.chromium.mojo.bindings.InterfaceRequest<SerialPort> portReceiver, SerialPortConnectionWatcher watcher);
+    void openPort(
+org.chromium.mojo_base.mojom.UnguessableToken token, boolean useAlternatePath, SerialConnectionOptions options, SerialPortClient client, SerialPortConnectionWatcher watcher, 
+OpenPortResponse callback);
+
+    interface OpenPortResponse extends org.chromium.mojo.bindings.Callbacks.Callback1<SerialPort> { }
 
 
 }

@@ -13,6 +13,8 @@
 
 package org.chromium.gfx.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public final class BufferUsageAndFormat extends org.chromium.mojo.bindings.Struct {
 
@@ -59,11 +61,13 @@ public final class BufferUsageAndFormat extends org.chromium.mojo.bindings.Struc
                     
                 result.usage = decoder0.readInt(8);
                     BufferUsage.validate(result.usage);
+                    result.usage = BufferUsage.toKnownValue(result.usage);
                 }
                 {
                     
                 result.format = decoder0.readInt(12);
                     BufferFormat.validate(result.format);
+                    result.format = BufferFormat.toKnownValue(result.format);
                 }
 
         } finally {

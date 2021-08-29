@@ -1,5 +1,5 @@
 
-// Copyright 2020 The Chromium Authors. All rights reserved.
+// Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -27,7 +27,8 @@ import java.lang.annotation.RetentionPolicy;
     TaskIds.DEPRECATED_EXPLORE_SITES_REFRESH_JOB_ID, TaskIds.EXPLORE_SITES_REFRESH_JOB_ID,
     TaskIds.BACKGROUND_SYNC_ONE_SHOT_JOB_ID, TaskIds.NOTIFICATION_SCHEDULER_JOB_ID,
     TaskIds.NOTIFICATION_TRIGGER_JOB_ID, TaskIds.PERIODIC_BACKGROUND_SYNC_CHROME_WAKEUP_TASK_JOB_ID,
-    TaskIds.QUERY_TILE_JOB_ID, TaskIds.FEEDV2_REFRESH_JOB_ID
+    TaskIds.QUERY_TILE_JOB_ID, TaskIds.FEEDV2_REFRESH_JOB_ID, TaskIds.OFFLINE_MEASUREMENT_JOB_ID,
+    TaskIds.WEBFEEDS_REFRESH_JOB_ID, TaskIds.WEBVIEW_COMPONENT_UPDATE_JOB_ID
 })
 @Retention(RetentionPolicy.SOURCE)
 public @interface TaskIds {
@@ -57,4 +58,7 @@ public @interface TaskIds {
   int PERIODIC_BACKGROUND_SYNC_CHROME_WAKEUP_TASK_JOB_ID = 105;
   int QUERY_TILE_JOB_ID = 106;
   int FEEDV2_REFRESH_JOB_ID = 107;
+  int OFFLINE_MEASUREMENT_JOB_ID = 108;
+  int WEBFEEDS_REFRESH_JOB_ID = 109;
+  int WEBVIEW_COMPONENT_UPDATE_JOB_ID = 110;
 }

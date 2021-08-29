@@ -13,18 +13,34 @@
 
 package org.chromium.ui.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class SourceEventType {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        SourceEventType.UNKNOWN,
+        SourceEventType.WHEEL,
+        SourceEventType.MOUSE,
+        SourceEventType.TOUCH,
+        SourceEventType.INERTIAL,
+        SourceEventType.KEY_PRESS,
+        SourceEventType.TOUCHPAD,
+        SourceEventType.SCROLLBAR,
+        SourceEventType.OTHER})
+    public @interface EnumType {}
 
     public static final int UNKNOWN = 0;
-    public static final int WHEEL = 1; // UNKNOWN + 1
-    public static final int MOUSE = 2; // WHEEL + 1
-    public static final int TOUCH = 3; // MOUSE + 1
-    public static final int INERTIAL = 4; // TOUCH + 1
-    public static final int KEY_PRESS = 5; // INERTIAL + 1
-    public static final int TOUCHPAD = 6; // KEY_PRESS + 1
-    public static final int SCROLLBAR = 7; // TOUCHPAD + 1
-    public static final int OTHER = 8; // SCROLLBAR + 1
+    public static final int WHEEL = 1;
+    public static final int MOUSE = 2;
+    public static final int TOUCH = 3;
+    public static final int INERTIAL = 4;
+    public static final int KEY_PRESS = 5;
+    public static final int TOUCHPAD = 6;
+    public static final int SCROLLBAR = 7;
+    public static final int OTHER = 8;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 8;
 
     public static boolean isKnownValue(int value) {
         return value >= 0 && value <= 8;
@@ -33,6 +49,10 @@ public final class SourceEventType {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private SourceEventType() {}

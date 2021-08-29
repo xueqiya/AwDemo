@@ -13,6 +13,8 @@
 
 package org.chromium.device.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public interface HidManager extends org.chromium.mojo.bindings.Interface {
 
@@ -41,10 +43,15 @@ GetDevicesResponse callback);
 
 
     void connect(
-String deviceGuid, HidConnectionClient connectionClient, HidConnectionWatcher watcher, 
+String deviceGuid, HidConnectionClient connectionClient, HidConnectionWatcher watcher, boolean allowProtectedReports, 
 ConnectResponse callback);
 
     interface ConnectResponse extends org.chromium.mojo.bindings.Callbacks.Callback1<HidConnection> { }
+
+
+
+    void addReceiver(
+org.chromium.mojo.bindings.InterfaceRequest<HidManager> receiver);
 
 
 }

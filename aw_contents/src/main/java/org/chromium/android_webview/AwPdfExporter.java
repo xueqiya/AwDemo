@@ -16,7 +16,7 @@ import org.chromium.base.annotations.JNINamespace;
 import org.chromium.base.annotations.NativeMethods;
 
 /**
- * Export the android webview as a PDF.
+ * Export the android com.apkmatrix.components.webview as a PDF.
  * @TODO(sgurun) explain the ownership of this class and its native counterpart
  */
 @SuppressLint("NewApi")  // Printing requires API level 19.
@@ -31,7 +31,7 @@ public class AwPdfExporter {
     private PrintAttributes mAttributes;
     private ParcelFileDescriptor mFd;
     // Maintain a reference to the top level object (i.e. WebView) since in a common
-    // use case (offscreen webview) application may expect the framework's print manager
+    // use case (offscreen com.apkmatrix.components.webview) application may expect the framework's print manager
     // to own the Webview (via PrintDocumentAdapter).
     // NOTE: it looks unused, but please do not remove this reference. There is also a proguard
     // configuration to prevent this variable to be optimized away. Any name changes should

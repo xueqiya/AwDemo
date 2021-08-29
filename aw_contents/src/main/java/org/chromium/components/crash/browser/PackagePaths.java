@@ -7,7 +7,6 @@ package org.chromium.components.crash.browser;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.os.Build;
 import android.text.TextUtils;
 
 import org.chromium.base.BuildInfo;
@@ -29,14 +28,11 @@ public abstract class PackagePaths {
     private PackagePaths() {}
 
     /**
-     * @ Build paths for the chrome/webview package for the purpose of loading CrashpadMain via
+     * @ Build paths for the chrome/com.apkmatrix.components.webview package for the purpose of loading CrashpadMain via
      * /system/bin/app_process.
      */
     @CalledByNative
     public static String[] makePackagePaths(String arch) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            return new String[] {"", ""};
-        }
         try {
             PackageManager pm = ContextUtils.getApplicationContext().getPackageManager();
             PackageInfo pi = pm.getPackageInfo(BuildInfo.getInstance().packageName,

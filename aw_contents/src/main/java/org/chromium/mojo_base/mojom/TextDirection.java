@@ -13,12 +13,22 @@
 
 package org.chromium.mojo_base.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class TextDirection {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        TextDirection.UNKNOWN_DIRECTION,
+        TextDirection.RIGHT_TO_LEFT,
+        TextDirection.LEFT_TO_RIGHT})
+    public @interface EnumType {}
 
     public static final int UNKNOWN_DIRECTION = 0;
-    public static final int RIGHT_TO_LEFT = 1; // UNKNOWN_DIRECTION + 1
-    public static final int LEFT_TO_RIGHT = 2; // RIGHT_TO_LEFT + 1
+    public static final int RIGHT_TO_LEFT = 1;
+    public static final int LEFT_TO_RIGHT = 2;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 2;
 
     public static boolean isKnownValue(int value) {
         return value >= 0 && value <= 2;
@@ -27,6 +37,10 @@ public final class TextDirection {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private TextDirection() {}

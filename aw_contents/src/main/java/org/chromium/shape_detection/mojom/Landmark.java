@@ -13,6 +13,8 @@
 
 package org.chromium.shape_detection.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public final class Landmark extends org.chromium.mojo.bindings.Struct {
 
@@ -72,6 +74,7 @@ public final class Landmark extends org.chromium.mojo.bindings.Struct {
                     
                 result.type = decoder0.readInt(16);
                     LandmarkType.validate(result.type);
+                    result.type = LandmarkType.toKnownValue(result.type);
                 }
 
         } finally {

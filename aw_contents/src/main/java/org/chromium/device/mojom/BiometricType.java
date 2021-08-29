@@ -13,11 +13,20 @@
 
 package org.chromium.device.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class BiometricType {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        BiometricType.UNKNOWN,
+        BiometricType.FINGERPRINT})
+    public @interface EnumType {}
 
     public static final int UNKNOWN = 0;
     public static final int FINGERPRINT = 1;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 1;
 
     public static boolean isKnownValue(int value) {
         return value >= 0 && value <= 1;
@@ -26,6 +35,10 @@ public final class BiometricType {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private BiometricType() {}

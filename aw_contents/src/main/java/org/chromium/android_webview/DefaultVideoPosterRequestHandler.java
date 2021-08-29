@@ -9,6 +9,7 @@ import android.util.Log;
 
 import org.chromium.base.task.PostTask;
 import org.chromium.base.task.TaskTraits;
+import org.chromium.components.embedder_support.util.WebResourceResponseInfo;
 import org.chromium.content_public.browser.UiThreadTaskTraits;
 
 import java.io.IOException;
@@ -76,14 +77,14 @@ public class DefaultVideoPosterRequestHandler {
      * Used to get the image if the url is mDefaultVideoPosterURL.
      *
      * @param url the url requested
-     * @return AwWebResourceResponse which caller can get the image if the url is
+     * @return WebResourceResponseInfo which caller can get the image if the url is
      * the default video poster URL, otherwise null is returned.
      */
-    public AwWebResourceResponse shouldInterceptRequest(final String url) {
+    public WebResourceResponseInfo shouldInterceptRequest(final String url) {
         if (!mDefaultVideoPosterURL.equals(url)) return null;
 
         try {
-            return new AwWebResourceResponse("image/png", null, getInputStream(mContentClient));
+            return new WebResourceResponseInfo("image/png", null, getInputStream(mContentClient));
         } catch (IOException e) {
             Log.e(TAG, null, e);
             return null;
@@ -102,6 +103,6 @@ public class DefaultVideoPosterRequestHandler {
         String path = String.valueOf(randomGenerator.nextLong());
         // The scheme of this URL should be kept in sync with kAndroidWebViewVideoPosterScheme
         // on the native side (see android_webview/common/url_constants.h)
-        return "android-webview-video-poster:default_video_poster/" + path;
+        return "android-com.apkmatrix.components.webview-video-poster:default_video_poster/" + path;
     }
 }

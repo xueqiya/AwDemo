@@ -13,13 +13,24 @@
 
 package org.chromium.device.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class InputDeviceType {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        InputDeviceType.TYPE_BLUETOOTH,
+        InputDeviceType.TYPE_USB,
+        InputDeviceType.TYPE_SERIO,
+        InputDeviceType.TYPE_UNKNOWN})
+    public @interface EnumType {}
 
     public static final int TYPE_BLUETOOTH = 0;
     public static final int TYPE_USB = 1;
     public static final int TYPE_SERIO = 2;
     public static final int TYPE_UNKNOWN = 3;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 3;
 
     public static boolean isKnownValue(int value) {
         return value >= 0 && value <= 3;
@@ -28,6 +39,10 @@ public final class InputDeviceType {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private InputDeviceType() {}

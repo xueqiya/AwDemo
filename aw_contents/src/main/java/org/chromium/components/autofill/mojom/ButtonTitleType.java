@@ -13,8 +13,21 @@
 
 package org.chromium.autofill.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class ButtonTitleType {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        ButtonTitleType.NONE,
+        ButtonTitleType.BUTTON_ELEMENT_SUBMIT_TYPE,
+        ButtonTitleType.BUTTON_ELEMENT_BUTTON_TYPE,
+        ButtonTitleType.INPUT_ELEMENT_SUBMIT_TYPE,
+        ButtonTitleType.INPUT_ELEMENT_BUTTON_TYPE,
+        ButtonTitleType.HYPERLINK,
+        ButtonTitleType.DIV,
+        ButtonTitleType.SPAN})
+    public @interface EnumType {}
 
     public static final int NONE = 0;
     public static final int BUTTON_ELEMENT_SUBMIT_TYPE = 1;
@@ -24,6 +37,8 @@ public final class ButtonTitleType {
     public static final int HYPERLINK = 5;
     public static final int DIV = 6;
     public static final int SPAN = 7;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 7;
 
     public static boolean isKnownValue(int value) {
         return value >= 0 && value <= 7;
@@ -32,6 +47,10 @@ public final class ButtonTitleType {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private ButtonTitleType() {}

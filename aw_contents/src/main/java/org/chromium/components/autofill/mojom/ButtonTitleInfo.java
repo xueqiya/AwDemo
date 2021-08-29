@@ -13,6 +13,8 @@
 
 package org.chromium.autofill.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public final class ButtonTitleInfo extends org.chromium.mojo.bindings.Struct {
 
@@ -64,6 +66,7 @@ public final class ButtonTitleInfo extends org.chromium.mojo.bindings.Struct {
                     
                 result.type = decoder0.readInt(16);
                     ButtonTitleType.validate(result.type);
+                    result.type = ButtonTitleType.toKnownValue(result.type);
                 }
 
         } finally {

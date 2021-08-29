@@ -1,7 +1,6 @@
 package com.example.awdemo
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +8,12 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.apkmatrix.components.webview.WebView
 import com.example.awdemo.utils.LogUtils
+import org.chromium.android_webview.JsPromptResultReceiver
+import org.chromium.android_webview.JsResultReceiver
+import org.chromium.android_webview.permission.AwPermissionRequest
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     private var url = "https://www.google.com"
@@ -19,6 +22,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     companion object {
         @SuppressLint("StaticFieldLeak")
         private lateinit var urlView: EditText
+
         @SuppressLint("StaticFieldLeak")
         private lateinit var progressView: TextView
     }
@@ -92,7 +96,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    class WebViewClient : com.apkmatrix.components.webview.WebViewClient() {
+    class WebViewClient() : com.apkmatrix.components.webview.WebViewClient() {
         override fun onProgressChanged(progress: Int) {
             super.onProgressChanged(progress)
             LogUtils.d("onProgressChanged:$progress")
@@ -104,6 +108,30 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             url?.let {
                 urlView.setText(url)
             }
+        }
+
+        override fun onPermissionRequest(awPermissionRequest: AwPermissionRequest?) {
+            awPermissionRequest?.grant()
+        }
+
+        override fun handleJsAlert(url: String?, message: String?, receiver: JsResultReceiver?) {
+            receiver?.confirm()
+        }
+
+        override fun handleJsBeforeUnload(url: String?, message: String?, receiver: JsResultReceiver?) {
+            receiver?.confirm()
+        }
+
+        override fun handleJsConfirm(url: String?, message: String?, receiver: JsResultReceiver?) {
+            receiver?.confirm()
+        }
+
+        override fun handleJsPrompt(url: String?, message: String?, defaultValue: String?, receiver: JsPromptResultReceiver?) {
+            receiver?.confirm("aaaa")
+        }
+
+        override fun onCreateWindow(isDialog: Boolean, isUserGesture: Boolean): Boolean {
+            return true
         }
     }
 

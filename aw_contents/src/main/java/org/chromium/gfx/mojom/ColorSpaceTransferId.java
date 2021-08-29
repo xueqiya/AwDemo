@@ -13,34 +13,66 @@
 
 package org.chromium.gfx.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class ColorSpaceTransferId {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        ColorSpaceTransferId.INVALID,
+        ColorSpaceTransferId.BT709,
+        ColorSpaceTransferId.BT709_APPLE,
+        ColorSpaceTransferId.GAMMA18,
+        ColorSpaceTransferId.GAMMA22,
+        ColorSpaceTransferId.GAMMA24,
+        ColorSpaceTransferId.GAMMA28,
+        ColorSpaceTransferId.SMPTE170M,
+        ColorSpaceTransferId.SMPTE240M,
+        ColorSpaceTransferId.LINEAR,
+        ColorSpaceTransferId.LOG,
+        ColorSpaceTransferId.LOG_SQRT,
+        ColorSpaceTransferId.IEC61966_2_4,
+        ColorSpaceTransferId.BT1361_ECG,
+        ColorSpaceTransferId.IEC61966_2_1,
+        ColorSpaceTransferId.BT2020_10,
+        ColorSpaceTransferId.BT2020_12,
+        ColorSpaceTransferId.SMPTEST2084,
+        ColorSpaceTransferId.SMPTEST428_1,
+        ColorSpaceTransferId.ARIB_STD_B67,
+        ColorSpaceTransferId.IEC61966_2_1_HDR,
+        ColorSpaceTransferId.LINEAR_HDR,
+        ColorSpaceTransferId.CUSTOM,
+        ColorSpaceTransferId.CUSTOM_HDR,
+        ColorSpaceTransferId.PIECEWISE_HDR})
+    public @interface EnumType {}
 
     public static final int INVALID = 0;
-    public static final int BT709 = 1; // INVALID + 1
-    public static final int BT709_APPLE = 2; // BT709 + 1
-    public static final int GAMMA18 = 3; // BT709_APPLE + 1
-    public static final int GAMMA22 = 4; // GAMMA18 + 1
-    public static final int GAMMA24 = 5; // GAMMA22 + 1
-    public static final int GAMMA28 = 6; // GAMMA24 + 1
-    public static final int SMPTE170M = 7; // GAMMA28 + 1
-    public static final int SMPTE240M = 8; // SMPTE170M + 1
-    public static final int LINEAR = 9; // SMPTE240M + 1
-    public static final int LOG = 10; // LINEAR + 1
-    public static final int LOG_SQRT = 11; // LOG + 1
-    public static final int IEC61966_2_4 = 12; // LOG_SQRT + 1
-    public static final int BT1361_ECG = 13; // IEC61966_2_4 + 1
-    public static final int IEC61966_2_1 = 14; // BT1361_ECG + 1
-    public static final int BT2020_10 = 15; // IEC61966_2_1 + 1
-    public static final int BT2020_12 = 16; // BT2020_10 + 1
-    public static final int SMPTEST2084 = 17; // BT2020_12 + 1
-    public static final int SMPTEST428_1 = 18; // SMPTEST2084 + 1
-    public static final int ARIB_STD_B67 = 19; // SMPTEST428_1 + 1
-    public static final int IEC61966_2_1_HDR = 20; // ARIB_STD_B67 + 1
-    public static final int LINEAR_HDR = 21; // IEC61966_2_1_HDR + 1
-    public static final int CUSTOM = 22; // LINEAR_HDR + 1
-    public static final int CUSTOM_HDR = 23; // CUSTOM + 1
-    public static final int PIECEWISE_HDR = 24; // CUSTOM_HDR + 1
+    public static final int BT709 = 1;
+    public static final int BT709_APPLE = 2;
+    public static final int GAMMA18 = 3;
+    public static final int GAMMA22 = 4;
+    public static final int GAMMA24 = 5;
+    public static final int GAMMA28 = 6;
+    public static final int SMPTE170M = 7;
+    public static final int SMPTE240M = 8;
+    public static final int LINEAR = 9;
+    public static final int LOG = 10;
+    public static final int LOG_SQRT = 11;
+    public static final int IEC61966_2_4 = 12;
+    public static final int BT1361_ECG = 13;
+    public static final int IEC61966_2_1 = 14;
+    public static final int BT2020_10 = 15;
+    public static final int BT2020_12 = 16;
+    public static final int SMPTEST2084 = 17;
+    public static final int SMPTEST428_1 = 18;
+    public static final int ARIB_STD_B67 = 19;
+    public static final int IEC61966_2_1_HDR = 20;
+    public static final int LINEAR_HDR = 21;
+    public static final int CUSTOM = 22;
+    public static final int CUSTOM_HDR = 23;
+    public static final int PIECEWISE_HDR = 24;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 24;
 
     public static boolean isKnownValue(int value) {
         return value >= 0 && value <= 24;
@@ -49,6 +81,10 @@ public final class ColorSpaceTransferId {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private ColorSpaceTransferId() {}

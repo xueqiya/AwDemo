@@ -1,5 +1,5 @@
 
-// Copyright 2020 The Chromium Authors. All rights reserved.
+// Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -16,7 +16,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @IntDef({
-    MemoryPressureLevel.NONE, MemoryPressureLevel.MODERATE, MemoryPressureLevel.CRITICAL
+    MemoryPressureLevel.NONE, MemoryPressureLevel.MODERATE, MemoryPressureLevel.CRITICAL,
+    MemoryPressureLevel.MAX_VALUE
 })
 @Retention(RetentionPolicy.SOURCE)
 public @interface MemoryPressureLevel {
@@ -35,4 +36,9 @@ public @interface MemoryPressureLevel {
    * cold start.
    */
   int CRITICAL = 2;
+  /**
+   * This must be the last value in the enum. The casing is different from the other values to make
+   * this enum work well with the UMA_HISTOGRAM_ENUMERATION macro.
+   */
+  int MAX_VALUE = CRITICAL;
 }

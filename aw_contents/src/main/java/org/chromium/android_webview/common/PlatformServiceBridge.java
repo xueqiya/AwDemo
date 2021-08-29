@@ -11,8 +11,10 @@ import android.os.HandlerThread;
 import androidx.annotation.NonNull;
 
 import org.chromium.base.Callback;
+import org.chromium.base.Consumer;
 import org.chromium.base.ThreadUtils;
 import org.chromium.components.metrics.AndroidMetricsLogUploader;
+import org.chromium.content_public.browser.trusttokens.TrustTokenFulfillerManager;
 
 /**
  * This class manages platform-specific services. (i.e. Google Services) The platform
@@ -29,7 +31,12 @@ public abstract class PlatformServiceBridge {
     private static final Object sHandlerLock = new Object();
 
     protected PlatformServiceBridge() {
-        AndroidMetricsLogUploader.setUploader(new MetricsLogUploaderAdapter(this));
+        AndroidMetricsLogUploader.setUploader(new Consumer<byte[]>() {
+            @Override
+            public void accept(byte[] data) {
+                logMetrics(data);
+            }
+        });
     }
 
     @SuppressWarnings("unused")
@@ -96,4 +103,9 @@ public abstract class PlatformServiceBridge {
 
     // Takes an uncompressed, serialized UMA proto and logs it via a platform-specific mechanism.
     public void logMetrics(byte[] data) {}
+
+    // Returns a TrustTokenFulfillerManager.Factory if appropriate, else returns null.
+    public TrustTokenFulfillerManager.Factory getLocalTrustTokenFulfillerFactory() {
+        return null;
+    }
 }

@@ -13,6 +13,8 @@
 
 package org.chromium.blink.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public interface RemoteObject extends org.chromium.mojo.bindings.Interface {
 
@@ -45,6 +47,11 @@ String name, RemoteInvocationArgument[] arguments,
 InvokeMethodResponse callback);
 
     interface InvokeMethodResponse extends org.chromium.mojo.bindings.Callbacks.Callback1<RemoteInvocationResult> { }
+
+
+
+    void notifyReleasedObject(
+);
 
 
 }

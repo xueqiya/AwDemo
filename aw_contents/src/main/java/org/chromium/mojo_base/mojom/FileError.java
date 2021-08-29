@@ -13,8 +13,30 @@
 
 package org.chromium.mojo_base.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class FileError {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        FileError.OK,
+        FileError.FAILED,
+        FileError.IN_USE,
+        FileError.EXISTS,
+        FileError.NOT_FOUND,
+        FileError.ACCESS_DENIED,
+        FileError.TOO_MANY_OPENED,
+        FileError.NO_MEMORY,
+        FileError.NO_SPACE,
+        FileError.NOT_A_DIRECTORY,
+        FileError.INVALID_OPERATION,
+        FileError.SECURITY,
+        FileError.ABORT,
+        FileError.NOT_A_FILE,
+        FileError.NOT_EMPTY,
+        FileError.INVALID_URL,
+        FileError.IO})
+    public @interface EnumType {}
 
     public static final int OK = 0;
     public static final int FAILED = -1;
@@ -33,6 +55,8 @@ public final class FileError {
     public static final int NOT_EMPTY = -14;
     public static final int INVALID_URL = -15;
     public static final int IO = -16;
+    public static final int MIN_VALUE = -16;
+    public static final int MAX_VALUE = 0;
 
     public static boolean isKnownValue(int value) {
         return value >= -16 && value <= 0;
@@ -41,6 +65,10 @@ public final class FileError {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private FileError() {}

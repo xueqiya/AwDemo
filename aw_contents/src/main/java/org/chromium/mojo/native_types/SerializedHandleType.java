@@ -13,14 +13,26 @@
 
 package org.chromium.mojo.native_types;
 
+import androidx.annotation.IntDef;
+
 public final class SerializedHandleType {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        SerializedHandleType.MOJO_HANDLE,
+        SerializedHandleType.PLATFORM_FILE,
+        SerializedHandleType.WIN_HANDLE,
+        SerializedHandleType.MACH_PORT,
+        SerializedHandleType.FUCHSIA_HANDLE})
+    public @interface EnumType {}
 
     public static final int MOJO_HANDLE = 0;
-    public static final int PLATFORM_FILE = 1; // MOJO_HANDLE + 1
-    public static final int WIN_HANDLE = 2; // PLATFORM_FILE + 1
-    public static final int MACH_PORT = 3; // WIN_HANDLE + 1
-    public static final int FUCHSIA_HANDLE = 4; // MACH_PORT + 1
+    public static final int PLATFORM_FILE = 1;
+    public static final int WIN_HANDLE = 2;
+    public static final int MACH_PORT = 3;
+    public static final int FUCHSIA_HANDLE = 4;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 4;
 
     public static boolean isKnownValue(int value) {
         return value >= 0 && value <= 4;
@@ -29,6 +41,10 @@ public final class SerializedHandleType {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private SerializedHandleType() {}

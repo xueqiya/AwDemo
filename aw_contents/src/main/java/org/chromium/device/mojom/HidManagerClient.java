@@ -13,6 +13,8 @@
 
 package org.chromium.device.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public interface HidManagerClient extends org.chromium.mojo.bindings.Interface {
 
@@ -30,6 +32,11 @@ HidDeviceInfo deviceInfo);
 
 
     void deviceRemoved(
+HidDeviceInfo deviceInfo);
+
+
+
+    void deviceChanged(
 HidDeviceInfo deviceInfo);
 
 

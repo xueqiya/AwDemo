@@ -13,8 +13,22 @@
 
 package org.chromium.autofill.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class SubmissionIndicatorEvent {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        SubmissionIndicatorEvent.NONE,
+        SubmissionIndicatorEvent.HTML_FORM_SUBMISSION,
+        SubmissionIndicatorEvent.SAME_DOCUMENT_NAVIGATION,
+        SubmissionIndicatorEvent.XHR_SUCCEEDED,
+        SubmissionIndicatorEvent.FRAME_DETACHED,
+        SubmissionIndicatorEvent.DOM_MUTATION_AFTER_XHR,
+        SubmissionIndicatorEvent.PROVISIONALLY_SAVED_FORM_ON_START_PROVISIONAL_LOAD,
+        SubmissionIndicatorEvent.PROBABLE_FORM_SUBMISSION,
+        SubmissionIndicatorEvent.CHANGE_PASSWORD_FORM_CLEARED})
+    public @interface EnumType {}
 
     public static final int NONE = 0;
     public static final int HTML_FORM_SUBMISSION = 1;
@@ -24,6 +38,9 @@ public final class SubmissionIndicatorEvent {
     public static final int DOM_MUTATION_AFTER_XHR = 6;
     public static final int PROVISIONALLY_SAVED_FORM_ON_START_PROVISIONAL_LOAD = 7;
     public static final int PROBABLE_FORM_SUBMISSION = 10;
+    public static final int CHANGE_PASSWORD_FORM_CLEARED = 11;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 11;
 
     public static boolean isKnownValue(int value) {
         switch (value) {
@@ -35,6 +52,7 @@ public final class SubmissionIndicatorEvent {
             case 6:
             case 7:
             case 10:
+            case 11:
                 return true;
         }
         return false;
@@ -43,6 +61,10 @@ public final class SubmissionIndicatorEvent {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private SubmissionIndicatorEvent() {}

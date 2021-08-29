@@ -13,12 +13,22 @@
 
 package org.chromium.device.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class WakeLockReason {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        WakeLockReason.AUDIO_PLAYBACK,
+        WakeLockReason.VIDEO_PLAYBACK,
+        WakeLockReason.OTHER})
+    public @interface EnumType {}
 
     public static final int AUDIO_PLAYBACK = 0;
     public static final int VIDEO_PLAYBACK = 1;
     public static final int OTHER = 2;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 2;
 
     public static boolean isKnownValue(int value) {
         return value >= 0 && value <= 2;
@@ -27,6 +37,10 @@ public final class WakeLockReason {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private WakeLockReason() {}

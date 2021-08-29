@@ -13,12 +13,22 @@
 
 package org.chromium.shape_detection.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class LandmarkType {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        LandmarkType.MOUTH,
+        LandmarkType.EYE,
+        LandmarkType.NOSE})
+    public @interface EnumType {}
 
     public static final int MOUTH = 0;
-    public static final int EYE = 1; // MOUTH + 1
-    public static final int NOSE = 2; // EYE + 1
+    public static final int EYE = 1;
+    public static final int NOSE = 2;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 2;
 
     public static boolean isKnownValue(int value) {
         return value >= 0 && value <= 2;
@@ -27,6 +37,10 @@ public final class LandmarkType {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private LandmarkType() {}

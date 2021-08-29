@@ -13,6 +13,8 @@
 
 package org.chromium.blink.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public final class SpeechRecognitionError extends org.chromium.mojo.bindings.Struct {
 
@@ -59,11 +61,13 @@ public final class SpeechRecognitionError extends org.chromium.mojo.bindings.Str
                     
                 result.code = decoder0.readInt(8);
                     SpeechRecognitionErrorCode.validate(result.code);
+                    result.code = SpeechRecognitionErrorCode.toKnownValue(result.code);
                 }
                 {
                     
                 result.details = decoder0.readInt(12);
                     SpeechAudioErrorDetails.validate(result.details);
+                    result.details = SpeechAudioErrorDetails.toKnownValue(result.details);
                 }
 
         } finally {

@@ -13,17 +13,16 @@
 
 package org.chromium.gfx.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public final class DisplayColorSpaces extends org.chromium.mojo.bindings.Struct {
 
-    private static final int STRUCT_SIZE = 56;
-    private static final org.chromium.mojo.bindings.DataHeader[] VERSION_ARRAY = new org.chromium.mojo.bindings.DataHeader[] {new org.chromium.mojo.bindings.DataHeader(56, 0)};
+    private static final int STRUCT_SIZE = 32;
+    private static final org.chromium.mojo.bindings.DataHeader[] VERSION_ARRAY = new org.chromium.mojo.bindings.DataHeader[] {new org.chromium.mojo.bindings.DataHeader(32, 0)};
     private static final org.chromium.mojo.bindings.DataHeader DEFAULT_STRUCT_INFO = VERSION_ARRAY[0];
-    public ColorSpace srgb;
-    public ColorSpace wcgOpaque;
-    public ColorSpace wcgTransparent;
-    public ColorSpace hdrOpaque;
-    public ColorSpace hdrTransparent;
+    public ColorSpace[] colorSpaces;
+    public int[] bufferFormats;
     public float sdrWhiteLevel;
 
     private DisplayColorSpaces(int version) {
@@ -62,31 +61,28 @@ public final class DisplayColorSpaces extends org.chromium.mojo.bindings.Struct 
                 {
                     
                 org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(8, false);
-                result.srgb = ColorSpace.decode(decoder1);
+                {
+                    org.chromium.mojo.bindings.DataHeader si1 = decoder1.readDataHeaderForPointerArray(6);
+                    result.colorSpaces = new ColorSpace[si1.elementsOrVersion];
+                    for (int i1 = 0; i1 < si1.elementsOrVersion; ++i1) {
+                        
+                        org.chromium.mojo.bindings.Decoder decoder2 = decoder1.readPointer(org.chromium.mojo.bindings.DataHeader.HEADER_SIZE + org.chromium.mojo.bindings.BindingsHelper.POINTER_SIZE * i1, false);
+                        result.colorSpaces[i1] = ColorSpace.decode(decoder2);
+                    }
+                }
                 }
                 {
                     
-                org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(16, false);
-                result.wcgOpaque = ColorSpace.decode(decoder1);
+                result.bufferFormats = decoder0.readInts(16, org.chromium.mojo.bindings.BindingsHelper.NOTHING_NULLABLE, 6);
+                {
+                    for (int i1 = 0; i1 < result.bufferFormats.length; ++i1) {
+                        BufferFormat.validate(result.bufferFormats[i1]);
+                    }
+                }
                 }
                 {
                     
-                org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(24, false);
-                result.wcgTransparent = ColorSpace.decode(decoder1);
-                }
-                {
-                    
-                org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(32, false);
-                result.hdrOpaque = ColorSpace.decode(decoder1);
-                }
-                {
-                    
-                org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(40, false);
-                result.hdrTransparent = ColorSpace.decode(decoder1);
-                }
-                {
-                    
-                result.sdrWhiteLevel = decoder0.readFloat(48);
+                result.sdrWhiteLevel = decoder0.readFloat(24);
                 }
 
         } finally {
@@ -100,16 +96,18 @@ public final class DisplayColorSpaces extends org.chromium.mojo.bindings.Struct 
     protected final void encode(org.chromium.mojo.bindings.Encoder encoder) {
         org.chromium.mojo.bindings.Encoder encoder0 = encoder.getEncoderAtDataOffset(DEFAULT_STRUCT_INFO);
         
-        encoder0.encode(this.srgb, 8, false);
+        if (this.colorSpaces == null) {
+            encoder0.encodeNullPointer(8, false);
+        } else {
+            org.chromium.mojo.bindings.Encoder encoder1 = encoder0.encodePointerArray(this.colorSpaces.length, 8, 6);
+            for (int i0 = 0; i0 < this.colorSpaces.length; ++i0) {
+                
+                encoder1.encode(this.colorSpaces[i0], org.chromium.mojo.bindings.DataHeader.HEADER_SIZE + org.chromium.mojo.bindings.BindingsHelper.POINTER_SIZE * i0, false);
+            }
+        }
         
-        encoder0.encode(this.wcgOpaque, 16, false);
+        encoder0.encode(this.bufferFormats, 16, org.chromium.mojo.bindings.BindingsHelper.NOTHING_NULLABLE, 6);
         
-        encoder0.encode(this.wcgTransparent, 24, false);
-        
-        encoder0.encode(this.hdrOpaque, 32, false);
-        
-        encoder0.encode(this.hdrTransparent, 40, false);
-        
-        encoder0.encode(this.sdrWhiteLevel, 48);
+        encoder0.encode(this.sdrWhiteLevel, 24);
     }
 }

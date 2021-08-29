@@ -13,6 +13,8 @@
 
 package org.chromium.device.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public interface SerialPort extends org.chromium.mojo.bindings.Interface {
 
@@ -24,29 +26,29 @@ public interface SerialPort extends org.chromium.mojo.bindings.Interface {
     Manager<SerialPort, SerialPort.Proxy> MANAGER = SerialPort_Internal.MANAGER;
 
 
-    void open(
-SerialConnectionOptions options, org.chromium.mojo.system.DataPipe.ConsumerHandle inStream, org.chromium.mojo.system.DataPipe.ProducerHandle outStream, SerialPortClient client, 
-OpenResponse callback);
-
-    interface OpenResponse extends org.chromium.mojo.bindings.Callbacks.Callback1<Boolean> { }
-
-
-
-    void clearSendError(
+    void startWriting(
 org.chromium.mojo.system.DataPipe.ConsumerHandle consumer);
 
 
 
-    void clearReadError(
+    void startReading(
 org.chromium.mojo.system.DataPipe.ProducerHandle producer);
 
 
 
     void flush(
-
+int mode, 
 FlushResponse callback);
 
-    interface FlushResponse extends org.chromium.mojo.bindings.Callbacks.Callback1<Boolean> { }
+    interface FlushResponse extends org.chromium.mojo.bindings.Callbacks.Callback0 { }
+
+
+
+    void drain(
+
+DrainResponse callback);
+
+    interface DrainResponse extends org.chromium.mojo.bindings.Callbacks.Callback0 { }
 
 
 

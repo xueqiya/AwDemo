@@ -13,6 +13,8 @@
 
 package org.chromium.blink.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public final class CloneableMessage extends org.chromium.mojo.bindings.Struct {
 
@@ -27,7 +29,7 @@ public final class CloneableMessage extends org.chromium.mojo.bindings.Struct {
     public long stackTraceDebuggerIdSecond;
     public boolean stackTraceShouldPause;
     public org.chromium.mojo_base.mojom.UnguessableToken lockedAgentClusterId;
-    public NativeFileSystemTransferToken[] nativeFileSystemTokens;
+    public FileSystemAccessTransferToken[] fileSystemAccessTokens;
 
     private CloneableMessage(int version) {
         super(STRUCT_SIZE, version);
@@ -107,7 +109,7 @@ public final class CloneableMessage extends org.chromium.mojo.bindings.Struct {
                 }
                 {
                     
-                result.nativeFileSystemTokens = decoder0.readServiceInterfaces(80, org.chromium.mojo.bindings.BindingsHelper.NOTHING_NULLABLE, org.chromium.mojo.bindings.BindingsHelper.UNSPECIFIED_ARRAY_LENGTH, NativeFileSystemTransferToken.MANAGER);
+                result.fileSystemAccessTokens = decoder0.readServiceInterfaces(80, org.chromium.mojo.bindings.BindingsHelper.NOTHING_NULLABLE, org.chromium.mojo.bindings.BindingsHelper.UNSPECIFIED_ARRAY_LENGTH, FileSystemAccessTransferToken.MANAGER);
                 }
 
         } finally {
@@ -145,6 +147,6 @@ public final class CloneableMessage extends org.chromium.mojo.bindings.Struct {
         
         encoder0.encode(this.lockedAgentClusterId, 72, true);
         
-        encoder0.encode(this.nativeFileSystemTokens, 80, org.chromium.mojo.bindings.BindingsHelper.NOTHING_NULLABLE, org.chromium.mojo.bindings.BindingsHelper.UNSPECIFIED_ARRAY_LENGTH, NativeFileSystemTransferToken.MANAGER);
+        encoder0.encode(this.fileSystemAccessTokens, 80, org.chromium.mojo.bindings.BindingsHelper.NOTHING_NULLABLE, org.chromium.mojo.bindings.BindingsHelper.UNSPECIFIED_ARRAY_LENGTH, FileSystemAccessTransferToken.MANAGER);
     }
 }

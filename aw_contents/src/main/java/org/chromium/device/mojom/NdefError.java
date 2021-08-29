@@ -13,6 +13,8 @@
 
 package org.chromium.device.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public final class NdefError extends org.chromium.mojo.bindings.Struct {
 
@@ -59,6 +61,7 @@ public final class NdefError extends org.chromium.mojo.bindings.Struct {
                     
                 result.errorType = decoder0.readInt(8);
                     NdefErrorType.validate(result.errorType);
+                    result.errorType = NdefErrorType.toKnownValue(result.errorType);
                 }
                 {
                     

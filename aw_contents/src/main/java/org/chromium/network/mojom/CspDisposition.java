@@ -13,11 +13,20 @@
 
 package org.chromium.network.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class CspDisposition {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        CspDisposition.CHECK,
+        CspDisposition.DO_NOT_CHECK})
+    public @interface EnumType {}
 
     public static final int CHECK = 0;
-    public static final int DO_NOT_CHECK = 1; // CHECK + 1
+    public static final int DO_NOT_CHECK = 1;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 1;
 
     public static boolean isKnownValue(int value) {
         return value >= 0 && value <= 1;
@@ -26,6 +35,10 @@ public final class CspDisposition {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private CspDisposition() {}

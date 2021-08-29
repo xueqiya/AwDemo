@@ -1,5 +1,5 @@
 
-// Copyright 2020 The Chromium Authors. All rights reserved.
+// Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -21,7 +21,7 @@ import java.lang.annotation.RetentionPolicy;
     VideoCaptureApi.MACOSX_AVFOUNDATION, VideoCaptureApi.MACOSX_DECKLINK,
     VideoCaptureApi.ANDROID_API1, VideoCaptureApi.ANDROID_API2_LEGACY,
     VideoCaptureApi.ANDROID_API2_FULL, VideoCaptureApi.ANDROID_API2_LIMITED,
-    VideoCaptureApi.VIRTUAL_DEVICE, VideoCaptureApi.UNKNOWN
+    VideoCaptureApi.FUCHSIA_CAMERA3, VideoCaptureApi.VIRTUAL_DEVICE, VideoCaptureApi.UNKNOWN
 })
 @Retention(RetentionPolicy.SOURCE)
 public @interface VideoCaptureApi {
@@ -35,6 +35,7 @@ public @interface VideoCaptureApi {
   int ANDROID_API2_LEGACY = 7;
   int ANDROID_API2_FULL = 8;
   int ANDROID_API2_LIMITED = 9;
-  int VIRTUAL_DEVICE = 10;
-  int UNKNOWN = 11;
+  int FUCHSIA_CAMERA3 = 10;
+  int VIRTUAL_DEVICE = 11;
+  int UNKNOWN = 12;
 }

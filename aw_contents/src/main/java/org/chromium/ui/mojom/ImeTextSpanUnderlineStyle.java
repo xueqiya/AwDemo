@@ -13,21 +13,38 @@
 
 package org.chromium.ui.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class ImeTextSpanUnderlineStyle {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        ImeTextSpanUnderlineStyle.NONE,
+        ImeTextSpanUnderlineStyle.SOLID,
+        ImeTextSpanUnderlineStyle.DOT,
+        ImeTextSpanUnderlineStyle.DASH,
+        ImeTextSpanUnderlineStyle.SQUIGGLE})
+    public @interface EnumType {}
 
     public static final int NONE = 0;
-    public static final int SOLID = 1; // NONE + 1
-    public static final int DOT = 2; // SOLID + 1
-    public static final int DASH = 3; // DOT + 1
+    public static final int SOLID = 1;
+    public static final int DOT = 2;
+    public static final int DASH = 3;
+    public static final int SQUIGGLE = 4;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 4;
 
     public static boolean isKnownValue(int value) {
-        return value >= 0 && value <= 3;
+        return value >= 0 && value <= 4;
     }
 
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private ImeTextSpanUnderlineStyle() {}

@@ -13,31 +13,54 @@
 
 package org.chromium.ui.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class LatencyComponentType {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        LatencyComponentType.INPUT_EVENT_LATENCY_BEGIN_RWH_COMPONENT,
+        LatencyComponentType.INPUT_EVENT_LATENCY_SCROLL_UPDATE_ORIGINAL_COMPONENT,
+        LatencyComponentType.INPUT_EVENT_LATENCY_FIRST_SCROLL_UPDATE_ORIGINAL_COMPONENT,
+        LatencyComponentType.INPUT_EVENT_LATENCY_ORIGINAL_COMPONENT,
+        LatencyComponentType.INPUT_EVENT_LATENCY_UI_COMPONENT,
+        LatencyComponentType.INPUT_EVENT_LATENCY_RENDERER_MAIN_COMPONENT,
+        LatencyComponentType.INPUT_EVENT_LATENCY_RENDERING_SCHEDULED_MAIN_COMPONENT,
+        LatencyComponentType.INPUT_EVENT_LATENCY_RENDERING_SCHEDULED_IMPL_COMPONENT,
+        LatencyComponentType.INPUT_EVENT_LATENCY_SCROLL_UPDATE_LAST_EVENT_COMPONENT,
+        LatencyComponentType.INPUT_EVENT_LATENCY_RENDERER_SWAP_COMPONENT,
+        LatencyComponentType.DISPLAY_COMPOSITOR_RECEIVED_FRAME_COMPONENT,
+        LatencyComponentType.INPUT_EVENT_GPU_SWAP_BUFFER_COMPONENT,
+        LatencyComponentType.INPUT_EVENT_LATENCY_FRAME_SWAP_COMPONENT})
+    public @interface EnumType {}
 
     public static final int INPUT_EVENT_LATENCY_BEGIN_RWH_COMPONENT = 0;
-    public static final int INPUT_EVENT_LATENCY_SCROLL_UPDATE_ORIGINAL_COMPONENT = 1; // INPUT_EVENT_LATENCY_BEGIN_RWH_COMPONENT + 1
-    public static final int INPUT_EVENT_LATENCY_FIRST_SCROLL_UPDATE_ORIGINAL_COMPONENT = 2; // INPUT_EVENT_LATENCY_SCROLL_UPDATE_ORIGINAL_COMPONENT + 1
-    public static final int INPUT_EVENT_LATENCY_ORIGINAL_COMPONENT = 3; // INPUT_EVENT_LATENCY_FIRST_SCROLL_UPDATE_ORIGINAL_COMPONENT + 1
-    public static final int INPUT_EVENT_LATENCY_UI_COMPONENT = 4; // INPUT_EVENT_LATENCY_ORIGINAL_COMPONENT + 1
-    public static final int INPUT_EVENT_LATENCY_RENDERER_MAIN_COMPONENT = 5; // INPUT_EVENT_LATENCY_UI_COMPONENT + 1
-    public static final int INPUT_EVENT_LATENCY_RENDERING_SCHEDULED_MAIN_COMPONENT = 6; // INPUT_EVENT_LATENCY_RENDERER_MAIN_COMPONENT + 1
-    public static final int INPUT_EVENT_LATENCY_RENDERING_SCHEDULED_IMPL_COMPONENT = 7; // INPUT_EVENT_LATENCY_RENDERING_SCHEDULED_MAIN_COMPONENT + 1
-    public static final int INPUT_EVENT_LATENCY_SCROLL_UPDATE_LAST_EVENT_COMPONENT = 8; // INPUT_EVENT_LATENCY_RENDERING_SCHEDULED_IMPL_COMPONENT + 1
-    public static final int INPUT_EVENT_LATENCY_ACK_RWH_COMPONENT = 9; // INPUT_EVENT_LATENCY_SCROLL_UPDATE_LAST_EVENT_COMPONENT + 1
-    public static final int INPUT_EVENT_LATENCY_RENDERER_SWAP_COMPONENT = 10; // INPUT_EVENT_LATENCY_ACK_RWH_COMPONENT + 1
-    public static final int DISPLAY_COMPOSITOR_RECEIVED_FRAME_COMPONENT = 11; // INPUT_EVENT_LATENCY_RENDERER_SWAP_COMPONENT + 1
-    public static final int INPUT_EVENT_GPU_SWAP_BUFFER_COMPONENT = 12; // DISPLAY_COMPOSITOR_RECEIVED_FRAME_COMPONENT + 1
-    public static final int INPUT_EVENT_LATENCY_FRAME_SWAP_COMPONENT = 13; // INPUT_EVENT_GPU_SWAP_BUFFER_COMPONENT + 1
+    public static final int INPUT_EVENT_LATENCY_SCROLL_UPDATE_ORIGINAL_COMPONENT = 1;
+    public static final int INPUT_EVENT_LATENCY_FIRST_SCROLL_UPDATE_ORIGINAL_COMPONENT = 2;
+    public static final int INPUT_EVENT_LATENCY_ORIGINAL_COMPONENT = 3;
+    public static final int INPUT_EVENT_LATENCY_UI_COMPONENT = 4;
+    public static final int INPUT_EVENT_LATENCY_RENDERER_MAIN_COMPONENT = 5;
+    public static final int INPUT_EVENT_LATENCY_RENDERING_SCHEDULED_MAIN_COMPONENT = 6;
+    public static final int INPUT_EVENT_LATENCY_RENDERING_SCHEDULED_IMPL_COMPONENT = 7;
+    public static final int INPUT_EVENT_LATENCY_SCROLL_UPDATE_LAST_EVENT_COMPONENT = 8;
+    public static final int INPUT_EVENT_LATENCY_RENDERER_SWAP_COMPONENT = 9;
+    public static final int DISPLAY_COMPOSITOR_RECEIVED_FRAME_COMPONENT = 10;
+    public static final int INPUT_EVENT_GPU_SWAP_BUFFER_COMPONENT = 11;
+    public static final int INPUT_EVENT_LATENCY_FRAME_SWAP_COMPONENT = 12;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 12;
 
     public static boolean isKnownValue(int value) {
-        return value >= 0 && value <= 13;
+        return value >= 0 && value <= 12;
     }
 
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private LatencyComponentType() {}

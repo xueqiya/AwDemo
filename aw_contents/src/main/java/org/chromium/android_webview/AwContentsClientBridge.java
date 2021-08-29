@@ -7,7 +7,6 @@ package org.chromium.android_webview;
 import android.content.Context;
 import android.net.http.SslCertificate;
 import android.net.http.SslError;
-import android.os.Handler;
 import android.util.Log;
 
 import org.chromium.android_webview.safe_browsing.AwSafeBrowsingConversionHelper;
@@ -19,6 +18,7 @@ import org.chromium.base.annotations.JNINamespace;
 import org.chromium.base.annotations.NativeMethods;
 import org.chromium.base.metrics.RecordHistogram;
 import org.chromium.base.task.PostTask;
+import org.chromium.components.embedder_support.util.WebResourceResponseInfo;
 import org.chromium.content_public.browser.UiThreadTaskTraits;
 import org.chromium.net.NetError;
 
@@ -152,7 +152,7 @@ public class AwContentsClientBridge {
     // If returns false, the request is immediately canceled, and any call to proceedSslError
     // has no effect. If returns true, the request should be canceled or proceeded using
     // proceedSslError().
-    // Unlike the webview classic, we do not keep keep a database of certificates that
+    // Unlike the com.apkmatrix.components.webview classic, we do not keep keep a database of certificates that
     // are allowed by the user, because this functionality is already handled via
     // ssl_policy in native layers.
     @CalledByNative
@@ -171,12 +171,7 @@ public class AwContentsClientBridge {
         // callback is executed without any native code on the stack. This so that any exception
         // thrown by the application callback won't have to be propagated through a native call
         // stack.
-        new Handler().post(() -> mClient.onReceivedSslError(callback, sslError));
-
-        // Record UMA on ssl error
-        // Use sparse histogram in case new values are added in future releases
-        RecordHistogram.recordSparseHistogram(
-                "Android.WebView.onReceivedSslError.ErrorCode", sslError.getPrimaryError());
+        AwThreadUtils.postToCurrentLooper(() -> mClient.onReceivedSslError(callback, sslError));
         return true;
     }
 
@@ -236,7 +231,7 @@ public class AwContentsClientBridge {
         // callback is executed without any native code on the stack. This so that any exception
         // thrown by the application callback won't have to be propagated through a native call
         // stack.
-        new Handler().post(() -> {
+        AwThreadUtils.postToCurrentLooper(() -> {
             JsResultHandler handler = new JsResultHandler(AwContentsClientBridge.this, id);
             mClient.handleJsAlert(url, message, handler);
         });
@@ -248,7 +243,7 @@ public class AwContentsClientBridge {
         // callback is executed without any native code on the stack. This so that any exception
         // thrown by the application callback won't have to be propagated through a native call
         // stack.
-        new Handler().post(() -> {
+        AwThreadUtils.postToCurrentLooper(() -> {
             JsResultHandler handler = new JsResultHandler(AwContentsClientBridge.this, id);
             mClient.handleJsConfirm(url, message, handler);
         });
@@ -261,7 +256,7 @@ public class AwContentsClientBridge {
         // callback is executed without any native code on the stack. This so that any exception
         // thrown by the application callback won't have to be propagated through a native call
         // stack.
-        new Handler().post(() -> {
+        AwThreadUtils.postToCurrentLooper(() -> {
             JsResultHandler handler = new JsResultHandler(AwContentsClientBridge.this, id);
             mClient.handleJsPrompt(url, message, defaultValue, handler);
         });
@@ -273,7 +268,7 @@ public class AwContentsClientBridge {
         // callback is executed without any native code on the stack. This so that any exception
         // thrown by the application callback won't have to be propagated through a native call
         // stack.
-        new Handler().post(() -> {
+        AwThreadUtils.postToCurrentLooper(() -> {
             JsResultHandler handler = new JsResultHandler(AwContentsClientBridge.this, id);
             mClient.handleJsBeforeUnload(url, message, handler);
         });
@@ -310,14 +305,14 @@ public class AwContentsClientBridge {
         AwContentsClient.AwWebResourceRequest request = new AwContentsClient.AwWebResourceRequest(
                 url, isMainFrame, hasUserGesture, method, requestHeaderNames, requestHeaderValues);
         AwContentsClient.AwWebResourceError error = new AwContentsClient.AwWebResourceError();
-        error.errorCode = errorCode;
+        error.errorCode = ErrorCodeConversionHelper.convertErrorCode(errorCode);
         error.description = description;
 
         String unreachableWebDataUrl = AwContentsStatics.getUnreachableWebDataUrl();
         boolean isErrorUrl =
                 unreachableWebDataUrl != null && unreachableWebDataUrl.equals(request.url);
 
-        if ((!isErrorUrl && error.errorCode != NetError.ERR_ABORTED) || safebrowsingHit) {
+        if ((!isErrorUrl && errorCode != NetError.ERR_ABORTED) || safebrowsingHit) {
             // NetError.ERR_ABORTED error code is generated for the following reasons:
             // - WebView.stopLoading is called;
             // - the navigation is intercepted by the embedder via shouldOverrideUrlLoading;
@@ -326,18 +321,14 @@ public class AwContentsClientBridge {
             // Android WebView does not notify the embedder of these situations using
             // this error code with the WebViewClient.onReceivedError callback.
             if (safebrowsingHit) {
-                if (shouldOmitNotificationsForSafeBrowsingHit
-                        && AwFeatureList.isEnabled(
-                                AwFeatures.SAFE_BROWSING_COMMITTED_INTERSTITIALS)) {
+                if (shouldOmitNotificationsForSafeBrowsingHit) {
                     // With committed interstitials we don't fire these notifications when the
                     // interstitial shows, we instead handle them once the interstitial is
                     // dismissed.
                     return;
                 } else {
-                    error.errorCode = ErrorCodeConversionHelper.ERROR_UNSAFE_RESOURCE;
+                    error.errorCode = WebviewErrorCode.ERROR_UNSAFE_RESOURCE;
                 }
-            } else {
-                error.errorCode = ErrorCodeConversionHelper.convertErrorCode(error.errorCode);
             }
             if (request.isMainFrame
                     && AwFeatureList.pageStartedOnCommitEnabled(isRendererInitiated)) {
@@ -346,7 +337,7 @@ public class AwContentsClientBridge {
             mClient.getCallbackHelper().postOnReceivedError(request, error);
             if (request.isMainFrame) {
                 // Need to call onPageFinished after onReceivedError for backwards compatibility
-                // with the classic webview. See also AwWebContentsObserver.didFailLoad which is
+                // with the classic com.apkmatrix.components.webview. See also AwWebContentsObserver.didFailLoad which is
                 // used when we want to send onPageFinished alone.
                 mClient.getCallbackHelper().postOnPageFinished(request.url);
             }
@@ -373,10 +364,6 @@ public class AwContentsClientBridge {
 
         int webViewThreatType = AwSafeBrowsingConversionHelper.convertThreatType(threatType);
         mClient.getCallbackHelper().postOnSafeBrowsingHit(request, webViewThreatType, callback);
-
-        // Record UMA on threat type
-        RecordHistogram.recordEnumeratedHistogram("Android.WebView.onSafeBrowsingHit.ThreatType",
-                webViewThreatType, AwSafeBrowsingConversionHelper.SAFE_BROWSING_THREAT_BOUNDARY);
     }
 
     @CalledByNative
@@ -404,7 +391,7 @@ public class AwContentsClientBridge {
                 responseHeaders.put(responseHeaderNames[i], currentValue + responseHeaderValues[i]);
             }
         }
-        AwWebResourceResponse response = new AwWebResourceResponse(
+        WebResourceResponseInfo response = new WebResourceResponseInfo(
                 mimeType, encoding, null, statusCode, reasonPhrase, responseHeaders);
         mClient.getCallbackHelper().postOnReceivedHttpError(request, response);
 

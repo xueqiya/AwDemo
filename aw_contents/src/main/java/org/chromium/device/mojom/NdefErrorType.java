@@ -13,25 +13,40 @@
 
 package org.chromium.device.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class NdefErrorType {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        NdefErrorType.NOT_ALLOWED,
+        NdefErrorType.NOT_SUPPORTED,
+        NdefErrorType.NOT_READABLE,
+        NdefErrorType.INVALID_MESSAGE,
+        NdefErrorType.OPERATION_CANCELLED,
+        NdefErrorType.IO_ERROR})
+    public @interface EnumType {}
 
     public static final int NOT_ALLOWED = 0;
-    public static final int NOT_SUPPORTED = 1; // NOT_ALLOWED + 1
-    public static final int NOT_READABLE = 2; // NOT_SUPPORTED + 1
-    public static final int NOT_FOUND = 3; // NOT_READABLE + 1
-    public static final int INVALID_MESSAGE = 4; // NOT_FOUND + 1
-    public static final int OPERATION_CANCELLED = 5; // INVALID_MESSAGE + 1
-    public static final int CANNOT_CANCEL = 6; // OPERATION_CANCELLED + 1
-    public static final int IO_ERROR = 7; // CANNOT_CANCEL + 1
+    public static final int NOT_SUPPORTED = 1;
+    public static final int NOT_READABLE = 2;
+    public static final int INVALID_MESSAGE = 3;
+    public static final int OPERATION_CANCELLED = 4;
+    public static final int IO_ERROR = 5;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 5;
 
     public static boolean isKnownValue(int value) {
-        return value >= 0 && value <= 7;
+        return value >= 0 && value <= 5;
     }
 
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private NdefErrorType() {}

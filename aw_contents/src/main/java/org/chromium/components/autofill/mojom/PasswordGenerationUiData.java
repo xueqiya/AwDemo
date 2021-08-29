@@ -13,16 +13,18 @@
 
 package org.chromium.autofill.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public final class PasswordGenerationUiData extends org.chromium.mojo.bindings.Struct {
 
-    private static final int STRUCT_SIZE = 48;
-    private static final org.chromium.mojo.bindings.DataHeader[] VERSION_ARRAY = new org.chromium.mojo.bindings.DataHeader[] {new org.chromium.mojo.bindings.DataHeader(48, 0)};
+    private static final int STRUCT_SIZE = 56;
+    private static final org.chromium.mojo.bindings.DataHeader[] VERSION_ARRAY = new org.chromium.mojo.bindings.DataHeader[] {new org.chromium.mojo.bindings.DataHeader(56, 0)};
     private static final org.chromium.mojo.bindings.DataHeader DEFAULT_STRUCT_INFO = VERSION_ARRAY[0];
     public org.chromium.gfx.mojom.RectF bounds;
     public int maxLength;
     public org.chromium.mojo_base.mojom.String16 generationElement;
-    public int generationElementId;
+    public FieldRendererId generationElementId;
     public boolean isGenerationElementPasswordType;
     public int textDirection;
     public FormData formData;
@@ -71,7 +73,7 @@ public final class PasswordGenerationUiData extends org.chromium.mojo.bindings.S
                 }
                 {
                     
-                result.generationElementId = decoder0.readInt(20);
+                result.isGenerationElementPasswordType = decoder0.readBoolean(20, 0);
                 }
                 {
                     
@@ -80,16 +82,18 @@ public final class PasswordGenerationUiData extends org.chromium.mojo.bindings.S
                 }
                 {
                     
-                result.isGenerationElementPasswordType = decoder0.readBoolean(32, 0);
+                org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(32, false);
+                result.generationElementId = FieldRendererId.decode(decoder1);
                 }
                 {
                     
-                result.textDirection = decoder0.readInt(36);
+                result.textDirection = decoder0.readInt(40);
                     org.chromium.mojo_base.mojom.TextDirection.validate(result.textDirection);
+                    result.textDirection = org.chromium.mojo_base.mojom.TextDirection.toKnownValue(result.textDirection);
                 }
                 {
                     
-                org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(40, false);
+                org.chromium.mojo.bindings.Decoder decoder1 = decoder0.readPointer(48, false);
                 result.formData = FormData.decode(decoder1);
                 }
 
@@ -108,14 +112,14 @@ public final class PasswordGenerationUiData extends org.chromium.mojo.bindings.S
         
         encoder0.encode(this.maxLength, 16);
         
-        encoder0.encode(this.generationElementId, 20);
+        encoder0.encode(this.isGenerationElementPasswordType, 20, 0);
         
         encoder0.encode(this.generationElement, 24, false);
         
-        encoder0.encode(this.isGenerationElementPasswordType, 32, 0);
+        encoder0.encode(this.generationElementId, 32, false);
         
-        encoder0.encode(this.textDirection, 36);
+        encoder0.encode(this.textDirection, 40);
         
-        encoder0.encode(this.formData, 40, false);
+        encoder0.encode(this.formData, 48, false);
     }
 }

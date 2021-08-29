@@ -13,11 +13,20 @@
 
 package org.chromium.blink.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class SingletonJavaScriptValue {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        SingletonJavaScriptValue.NULL,
+        SingletonJavaScriptValue.UNDEFINED})
+    public @interface EnumType {}
 
     public static final int NULL = 0;
-    public static final int UNDEFINED = 1; // NULL + 1
+    public static final int UNDEFINED = 1;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 1;
 
     public static boolean isKnownValue(int value) {
         return value >= 0 && value <= 1;
@@ -26,6 +35,10 @@ public final class SingletonJavaScriptValue {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private SingletonJavaScriptValue() {}

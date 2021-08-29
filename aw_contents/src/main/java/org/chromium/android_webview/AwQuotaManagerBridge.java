@@ -13,13 +13,13 @@ import org.chromium.base.annotations.JNINamespace;
 import org.chromium.base.annotations.NativeMethods;
 
 /**
- * Bridge between android.webview.WebStorage and native QuotaManager. This object is owned by Java
+ * Bridge between android.com.apkmatrix.components.webview.WebStorage and native QuotaManager. This object is owned by Java
  * AwBrowserContext and the native side is owned by the native AwBrowserContext.
  */
 @JNINamespace("android_webview")
 public class AwQuotaManagerBridge {
     /**
-     * This class represent the callback value of android.webview.WebStorage.getOrigins. The values
+     * This class represent the callback value of android.com.apkmatrix.components.webview.WebStorage.getOrigins. The values
      * are optimized for JNI convenience and need to be converted.
      */
     public static class Origins {

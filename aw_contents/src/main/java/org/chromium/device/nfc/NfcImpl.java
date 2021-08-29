@@ -5,7 +5,6 @@
 package org.chromium.device.nfc;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -15,10 +14,8 @@ import android.nfc.NfcAdapter.ReaderCallback;
 import android.nfc.NfcManager;
 import android.nfc.Tag;
 import android.nfc.TagLostException;
-import android.os.Build;
 import android.os.Process;
 import android.os.Vibrator;
-import android.util.SparseArray;
 
 import org.chromium.base.Callback;
 import org.chromium.base.ContextUtils;
@@ -27,8 +24,6 @@ import org.chromium.device.mojom.NdefError;
 import org.chromium.device.mojom.NdefErrorType;
 import org.chromium.device.mojom.NdefMessage;
 import org.chromium.device.mojom.NdefRecord;
-import org.chromium.device.mojom.NdefRecordTypeCategory;
-import org.chromium.device.mojom.NdefScanOptions;
 import org.chromium.device.mojom.NdefWriteOptions;
 import org.chromium.device.mojom.Nfc;
 import org.chromium.device.mojom.NfcClient;
@@ -76,6 +71,12 @@ public class NfcImpl implements Nfc {
     private final boolean mHasPermission;
 
     /**
+     * Flag that indicates whether NFC operations are suspended. Is updated when
+     * suspendNfcOperations() and resumeNfcOperations() are called.
+     */
+    private boolean mOperationsSuspended;
+
+    /**
      * Implementation of android.nfc.NfcAdapter.ReaderCallback. @see ReaderCallbackHandler
      */
     private ReaderCallbackHandler mReaderCallbackHandler;
@@ -99,19 +100,7 @@ public class NfcImpl implements Nfc {
      */
     private NfcClient mClient;
 
-    /**
-     * Watcher id that is incremented for each #watch call.
-     */
-    private int mWatcherId;
-
-    /**
-     * Map of watchId <-> NdefScanOptions. All NdefScanOptions are matched against tag that is in
-     * proximity, when match algorithm (@see #matchesWatchOptions) returns true, watcher with
-     * corresponding ID would be notified using NfcClient interface.
-     * @see NfcClient#onWatch(int[] id, String serial_number, NdefMessage message)
-     */
-    private final SparseArray<NdefScanOptions> mWatchers = new SparseArray<>();
-
+    private final List<Integer> mWatchIds = new ArrayList<Integer>();
     /**
      * Vibrator. @see android.os.Vibrator
      */
@@ -120,6 +109,7 @@ public class NfcImpl implements Nfc {
     public NfcImpl(int hostId, NfcDelegate delegate, InterfaceRequest<Nfc> request) {
         mHostId = hostId;
         mDelegate = delegate;
+        mOperationsSuspended = false;
 
         // |request| may be null in tests.
         if (request != null) {
@@ -180,8 +170,8 @@ public class NfcImpl implements Nfc {
 
     /**
      * Sets NfcClient. NfcClient interface is used to notify mojo NFC service client when NFC
-     * device is in proximity and has NdefMessage that matches NdefScanOptions criteria.
-     * @see Nfc#watch(NdefScanOptions options, int id, WatchResponse callback)
+     * device is in proximity and has NdefMessage.
+     * @see Nfc#watch(int id, WatchResponse callback)
      *
      * @param client @see NfcClient
      */
@@ -200,6 +190,11 @@ public class NfcImpl implements Nfc {
     @Override
     public void push(NdefMessage message, NdefWriteOptions options, PushResponse callback) {
         if (!checkIfReady(callback)) return;
+
+        if (mOperationsSuspended) {
+            callback.call(createError(NdefErrorType.OPERATION_CANCELLED,
+                    "Cannot push the message because NFC operations are suspended."));
+        }
 
         if (!NdefMessageValidator.isValid(message)) {
             callback.call(createError(NdefErrorType.INVALID_MESSAGE,
@@ -221,44 +216,33 @@ public class NfcImpl implements Nfc {
 
     /**
      * Cancels pending push operation.
-     *
-     * @param callback that is used to notify caller when cancelPush() is completed.
      */
     @Override
-    public void cancelPush(CancelPushResponse callback) {
-        if (!checkIfReady(callback)) return;
-
-        if (mPendingPushOperation == null) {
-            callback.call(createError(
-                    NdefErrorType.CANNOT_CANCEL, "No pending push operation to cancel."));
-        } else {
-            completePendingPushOperation(createError(
-                    NdefErrorType.OPERATION_CANCELLED, "The push operation is already cancelled."));
-            callback.call(null);
-        }
+    public void cancelPush() {
+        completePendingPushOperation(createError(
+                NdefErrorType.OPERATION_CANCELLED, "The push operation is already cancelled."));
     }
 
     /**
-     * Watch method allows to set filtering criteria for NdefMessages that are found when NFC device
-     * is within proximity. When NdefMessage that matches NdefScanOptions is found, it is passed to
-     * NfcClient interface together with corresponding watch ID.
+     * When NdefMessages that are found when NFC device is within proximity, it
+     * is passed to NfcClient interface together with corresponding watch ID.
      * @see NfcClient#onWatch(int[] id, String serial_number, NdefMessage message)
      *
-     * @param options used to filter NdefMessages, @see NdefScanOptions.
+     * @param id request ID from Blink which will be the watch ID if succeeded.
      * @param callback that is used to notify caller when watch() is completed.
      */
     @Override
-    public void watch(NdefScanOptions options, int id, WatchResponse callback) {
+    public void watch(int id, WatchResponse callback) {
         if (!checkIfReady(callback)) return;
         // We received a duplicate |id| here that should never happen, in such a case we should
         // report a bad message to Mojo but unfortunately Mojo bindings for Java does not support
         // this feature yet. So, we just passes back a generic error instead.
-        if (mWatchers.indexOfKey(id) >= 0) {
+        if (mWatchIds.contains(id)) {
             callback.call(createError(NdefErrorType.NOT_READABLE,
                     "Cannot start because the received scan request is duplicate."));
             return;
         }
-        mWatchers.put(id, options);
+        mWatchIds.add(id);
         callback.call(null);
         enableReaderModeIfNeeded();
         processPendingWatchOperations();
@@ -268,55 +252,13 @@ public class NfcImpl implements Nfc {
      * Cancels NFC watch operation.
      *
      * @param id of watch operation.
-     * @param callback that is used to notify caller when cancelWatch() is completed.
      */
     @Override
-    public void cancelWatch(int id, CancelWatchResponse callback) {
-        if (!checkIfReady(callback)) return;
-
-        if (mWatchers.indexOfKey(id) < 0) {
-            callback.call(
-                    createError(NdefErrorType.NOT_FOUND, "No pending scan operation to cancel."));
-        } else {
-            mWatchers.remove(id);
-            callback.call(null);
+    public void cancelWatch(int id) {
+        if (mWatchIds.contains(id)) {
+            mWatchIds.remove(mWatchIds.indexOf(id));
             disableReaderModeIfNeeded();
         }
-    }
-
-    /**
-     * Cancels all NFC watch operations.
-     *
-     * @param callback that is used to notify caller when cancelAllWatches() is completed.
-     */
-    @Override
-    public void cancelAllWatches(CancelAllWatchesResponse callback) {
-        if (!checkIfReady(callback)) return;
-
-        if (mWatchers.size() == 0) {
-            callback.call(
-                    createError(NdefErrorType.NOT_FOUND, "No pending scan operation to cancel."));
-        } else {
-            mWatchers.clear();
-            callback.call(null);
-            disableReaderModeIfNeeded();
-        }
-    }
-
-    /**
-     * Suspends all pending operations. Should be called when web page visibility is lost.
-     */
-    @Override
-    public void suspendNfcOperations() {
-        disableReaderMode();
-    }
-
-    /**
-     * Resumes all pending watch / push operations. Should be called when web page becomes visible.
-     */
-    @Override
-    public void resumeNfcOperations() {
-        enableReaderModeIfNeeded();
     }
 
     @Override
@@ -329,6 +271,23 @@ public class NfcImpl implements Nfc {
     public void onConnectionError(MojoException e) {
         // We do nothing here since close() is always called no matter the connection gets closed
         // normally or abnormally.
+    }
+
+    /**
+     * Suspends all pending watch operations and cancel push operations.
+     */
+    public void suspendNfcOperations() {
+        mOperationsSuspended = true;
+        disableReaderMode();
+        cancelPush();
+    }
+
+    /**
+     * Resumes all pending watch / push operations.
+     */
+    public void resumeNfcOperations() {
+        mOperationsSuspended = false;
+        enableReaderModeIfNeeded();
     }
 
     /**
@@ -371,7 +330,7 @@ public class NfcImpl implements Nfc {
     }
 
     /**
-     * Checks if NFC funcionality can be used by the mojo service. If permission to use NFC is
+     * Checks if NFC functionality can be used by the mojo service. If permission to use NFC is
      * granted and hardware is enabled, returns null.
      */
     private NdefError checkIfReady() {
@@ -388,22 +347,7 @@ public class NfcImpl implements Nfc {
     /**
      * Uses checkIfReady() method and if NFC cannot be used, calls mojo callback with NdefError.
      *
-     * @param WatchResponse Callback that is provided to watch() method.
-     * @return boolean true if NFC functionality can be used, false otherwise.
-     */
-    private boolean checkIfReady(WatchResponse callback) {
-        NdefError error = checkIfReady();
-        if (error == null) return true;
-
-        callback.call(error);
-        return false;
-    }
-
-    /**
-     * Uses checkIfReady() method and if NFC cannot be used, calls mojo callback with NdefError.
-     *
-     * @param callback Generic callback that is provided to push(), cancelPush(),
-     * cancelWatch() and cancelAllWatches() methods.
+     * @param callback Generic callback that is provided to watch() and push() methods.
      * @return boolean true if NFC functionality can be used, false otherwise.
      */
     private boolean checkIfReady(Callbacks.Callback1<NdefError> callback) {
@@ -419,7 +363,6 @@ public class NfcImpl implements Nfc {
      * discovered, Tag object is delegated to mojo service implementation method
      * NfcImpl.onTagDiscovered().
      */
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     private static class ReaderCallbackHandler implements ReaderCallback {
         private final NfcImpl mNfcImpl;
 
@@ -441,7 +384,7 @@ public class NfcImpl implements Nfc {
         if (mReaderCallbackHandler != null || mActivity == null || mNfcAdapter == null) return;
 
         // Do not enable reader mode, if there are no active push / watch operations.
-        if (mPendingPushOperation == null && mWatchers.size() == 0) return;
+        if (mPendingPushOperation == null && mWatchIds.size() == 0) return;
 
         mReaderCallbackHandler = new ReaderCallbackHandler(this);
         mNfcAdapter.enableReaderMode(mActivity, mReaderCallbackHandler,
@@ -455,7 +398,6 @@ public class NfcImpl implements Nfc {
      * Disables reader mode.
      * @see android.nfc.NfcAdapter#disableReaderMode
      */
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     private void disableReaderMode() {
         // There is no API that could query whether reader mode is enabled for adapter.
         // If mReaderCallbackHandler is null, reader mode is not enabled.
@@ -472,7 +414,7 @@ public class NfcImpl implements Nfc {
      * whenever necessary.
      */
     private void disableReaderModeIfNeeded() {
-        if (mPendingPushOperation == null && mWatchers.size() == 0) {
+        if (mPendingPushOperation == null && mWatchIds.size() == 0) {
             disableReaderMode();
         }
     }
@@ -541,10 +483,8 @@ public class NfcImpl implements Nfc {
      * Reads NdefMessage from a tag and forwards message to matching method.
      */
     private void processPendingWatchOperations() {
-        if (mTagHandler == null || mClient == null || mWatchers.size() == 0) return;
-
-        // Skip reading if there is a pending push operation and ignoreRead flag is set.
-        if (mPendingPushOperation != null && mPendingPushOperation.ndefWriteOptions.ignoreRead) {
+        if (mTagHandler == null || mClient == null || mWatchIds.size() == 0
+                || mOperationsSuspended) {
             return;
         }
 
@@ -561,15 +501,11 @@ public class NfcImpl implements Nfc {
                 // Let's create one with no records so that watchers can be notified.
                 NdefMessage webNdefMessage = new NdefMessage();
                 webNdefMessage.data = new NdefRecord[0];
-                notifyMatchingWatchers(webNdefMessage);
-                return;
-            }
-            if (message.getByteArrayLength() > NdefMessage.MAX_SIZE) {
-                Log.w(TAG, "Cannot read data from NFC tag. NdefMessage exceeds allowed size.");
+                notifyWatchers(webNdefMessage);
                 return;
             }
             NdefMessage webNdefMessage = NdefMessageUtils.toNdefMessage(message);
-            notifyMatchingWatchers(webNdefMessage);
+            notifyWatchers(webNdefMessage);
         } catch (UnsupportedEncodingException e) {
             Log.w(TAG,
                     "Cannot read data from NFC tag. Cannot convert to NdefMessage:"
@@ -591,68 +527,20 @@ public class NfcImpl implements Nfc {
      * Notify all active watchers that an error happened when trying to read the tag coming nearby.
      */
     private void notifyErrorToAllWatchers(NdefError error) {
-        for (int i = 0; i < mWatchers.size(); i++) {
-            mClient.onError(error);
-        }
+        if (mWatchIds.size() != 0) mClient.onError(error);
     }
 
     /**
-     * Iterates through active watchers and if any of those match NdefScanOptions criteria,
-     * delivers NdefMessage to the client.
+     * Iterates through active watchers and delivers NdefMessage to the client.
      */
-    private void notifyMatchingWatchers(NdefMessage message) {
-        List<Integer> watchIds = new ArrayList<Integer>();
-        for (int i = 0; i < mWatchers.size(); i++) {
-            NdefScanOptions options = mWatchers.valueAt(i);
-            if (matchesWatchOptions(message, options)) {
-                watchIds.add(mWatchers.keyAt(i));
-            }
-        }
-
-        if (watchIds.size() != 0) {
-            int[] ids = new int[watchIds.size()];
-            for (int i = 0; i < watchIds.size(); ++i) {
-                ids[i] = watchIds.get(i).intValue();
+    private void notifyWatchers(NdefMessage message) {
+        if (mWatchIds.size() != 0) {
+            int[] ids = new int[mWatchIds.size()];
+            for (int i = 0; i < mWatchIds.size(); ++i) {
+                ids[i] = mWatchIds.get(i).intValue();
             }
             mClient.onWatch(ids, mTagHandler.serialNumber(), message);
         }
-    }
-
-    /**
-     * Implements matching algorithm.
-     * https://w3c.github.io/web-nfc/#dispatching-nfc-content
-     */
-    private boolean matchesWatchOptions(NdefMessage message, NdefScanOptions options) {
-        // A message with no records is to notify that the tag is already formatted to support NDEF
-        // but does not contain a message yet. We always dispatch it for all options.
-        if (message.data.length == 0) return true;
-
-        for (int i = 0; i < message.data.length; i++) {
-            if (options.id != null && !options.id.equals(message.data[i].id)) {
-                continue;
-            }
-            if (options.recordType != null) {
-                if (message.data[i].category == NdefRecordTypeCategory.EXTERNAL) {
-                    // The spec https://w3c.github.io/web-nfc/#the-record-type-string says "Two
-                    // external types MUST be compared character by character, in case-insensitive
-                    // manner".
-                    if (options.recordType.compareToIgnoreCase(message.data[i].recordType) != 0) {
-                        continue;
-                    }
-                    // All other types should be compared in case-sensitive manner.
-                } else if (!options.recordType.equals(message.data[i].recordType)) {
-                    continue;
-                }
-            }
-            if (options.mediaType != null && !options.mediaType.equals(message.data[i].mediaType)) {
-                continue;
-            }
-
-            // Found one record matches, means the message matches.
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -669,13 +557,13 @@ public class NfcImpl implements Nfc {
     protected void processPendingOperations(NfcTagHandler tagHandler) {
         mTagHandler = tagHandler;
 
-        // This tag is not NDEF compatible.
+        // This tag is not supported.
         if (mTagHandler == null) {
-            Log.w(TAG, "This tag is not NDEF compatible.");
+            Log.w(TAG, "This tag is not supported.");
             notifyErrorToAllWatchers(
-                    createError(NdefErrorType.NOT_SUPPORTED, "This tag is not NDEF compatible."));
+                    createError(NdefErrorType.NOT_SUPPORTED, "This tag is not supported."));
             pendingPushOperationCompleted(
-                    createError(NdefErrorType.NOT_SUPPORTED, "This tag is not NDEF compatible."));
+                    createError(NdefErrorType.NOT_SUPPORTED, "This tag is not supported."));
             return;
         }
 

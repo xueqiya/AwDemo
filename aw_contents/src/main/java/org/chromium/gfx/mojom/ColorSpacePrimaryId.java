@@ -13,25 +13,48 @@
 
 package org.chromium.gfx.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class ColorSpacePrimaryId {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        ColorSpacePrimaryId.INVALID,
+        ColorSpacePrimaryId.BT709,
+        ColorSpacePrimaryId.BT470M,
+        ColorSpacePrimaryId.BT470BG,
+        ColorSpacePrimaryId.SMPTE170M,
+        ColorSpacePrimaryId.SMPTE240M,
+        ColorSpacePrimaryId.FILM,
+        ColorSpacePrimaryId.BT2020,
+        ColorSpacePrimaryId.SMPTEST428_1,
+        ColorSpacePrimaryId.SMPTEST431_2,
+        ColorSpacePrimaryId.SMPTEST432_1,
+        ColorSpacePrimaryId.XYZ_D50,
+        ColorSpacePrimaryId.ADOBE_RGB,
+        ColorSpacePrimaryId.APPLE_GENERIC_RGB,
+        ColorSpacePrimaryId.WIDE_GAMUT_COLOR_SPIN,
+        ColorSpacePrimaryId.CUSTOM})
+    public @interface EnumType {}
 
     public static final int INVALID = 0;
-    public static final int BT709 = 1; // INVALID + 1
-    public static final int BT470M = 2; // BT709 + 1
-    public static final int BT470BG = 3; // BT470M + 1
-    public static final int SMPTE170M = 4; // BT470BG + 1
-    public static final int SMPTE240M = 5; // SMPTE170M + 1
-    public static final int FILM = 6; // SMPTE240M + 1
-    public static final int BT2020 = 7; // FILM + 1
-    public static final int SMPTEST428_1 = 8; // BT2020 + 1
-    public static final int SMPTEST431_2 = 9; // SMPTEST428_1 + 1
-    public static final int SMPTEST432_1 = 10; // SMPTEST431_2 + 1
-    public static final int XYZ_D50 = 11; // SMPTEST432_1 + 1
-    public static final int ADOBE_RGB = 12; // XYZ_D50 + 1
-    public static final int APPLE_GENERIC_RGB = 13; // ADOBE_RGB + 1
-    public static final int WIDE_GAMUT_COLOR_SPIN = 14; // APPLE_GENERIC_RGB + 1
-    public static final int CUSTOM = 15; // WIDE_GAMUT_COLOR_SPIN + 1
+    public static final int BT709 = 1;
+    public static final int BT470M = 2;
+    public static final int BT470BG = 3;
+    public static final int SMPTE170M = 4;
+    public static final int SMPTE240M = 5;
+    public static final int FILM = 6;
+    public static final int BT2020 = 7;
+    public static final int SMPTEST428_1 = 8;
+    public static final int SMPTEST431_2 = 9;
+    public static final int SMPTEST432_1 = 10;
+    public static final int XYZ_D50 = 11;
+    public static final int ADOBE_RGB = 12;
+    public static final int APPLE_GENERIC_RGB = 13;
+    public static final int WIDE_GAMUT_COLOR_SPIN = 14;
+    public static final int CUSTOM = 15;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 15;
 
     public static boolean isKnownValue(int value) {
         return value >= 0 && value <= 15;
@@ -40,6 +63,10 @@ public final class ColorSpacePrimaryId {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private ColorSpacePrimaryId() {}

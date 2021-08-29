@@ -13,6 +13,8 @@
 
 package org.chromium.blink.mojom;
 
+import androidx.annotation.IntDef;
+
 
 public interface Blob extends org.chromium.mojo.bindings.Interface {
 
@@ -41,6 +43,11 @@ org.chromium.mojo.system.DataPipe.ProducerHandle pipe, BlobReaderClient client);
 
     void readRange(
 long offset, long length, org.chromium.mojo.system.DataPipe.ProducerHandle pipe, BlobReaderClient client);
+
+
+
+    void load(
+org.chromium.mojo.bindings.InterfaceRequest<org.chromium.network.mojom.UrlLoader> loader, String requestMethod, org.chromium.network.mojom.HttpRequestHeaders headers, org.chromium.network.mojom.UrlLoaderClient client);
 
 
 

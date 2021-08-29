@@ -13,37 +13,72 @@
 
 package org.chromium.blink.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class AuthenticatorStatus {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        AuthenticatorStatus.SUCCESS,
+        AuthenticatorStatus.PENDING_REQUEST,
+        AuthenticatorStatus.NOT_ALLOWED_ERROR,
+        AuthenticatorStatus.INVALID_DOMAIN,
+        AuthenticatorStatus.INVALID_ICON_URL,
+        AuthenticatorStatus.CREDENTIAL_EXCLUDED,
+        AuthenticatorStatus.CREDENTIAL_NOT_RECOGNIZED,
+        AuthenticatorStatus.NOT_IMPLEMENTED,
+        AuthenticatorStatus.NOT_FOCUSED,
+        AuthenticatorStatus.RESIDENT_CREDENTIALS_UNSUPPORTED,
+        AuthenticatorStatus.USER_VERIFICATION_UNSUPPORTED,
+        AuthenticatorStatus.ALGORITHM_UNSUPPORTED,
+        AuthenticatorStatus.EMPTY_ALLOW_CREDENTIALS,
+        AuthenticatorStatus.ANDROID_NOT_SUPPORTED_ERROR,
+        AuthenticatorStatus.PROTECTION_POLICY_INCONSISTENT,
+        AuthenticatorStatus.ABORT_ERROR,
+        AuthenticatorStatus.OPAQUE_DOMAIN,
+        AuthenticatorStatus.INVALID_PROTOCOL,
+        AuthenticatorStatus.BAD_RELYING_PARTY_ID,
+        AuthenticatorStatus.CANNOT_READ_AND_WRITE_LARGE_BLOB,
+        AuthenticatorStatus.INVALID_ALLOW_CREDENTIALS_FOR_LARGE_BLOB,
+        AuthenticatorStatus.UNKNOWN_ERROR})
+    public @interface EnumType {}
 
     public static final int SUCCESS = 0;
-    public static final int PENDING_REQUEST = 1; // SUCCESS + 1
-    public static final int NOT_ALLOWED_ERROR = 2; // PENDING_REQUEST + 1
-    public static final int INVALID_DOMAIN = 3; // NOT_ALLOWED_ERROR + 1
-    public static final int INVALID_ICON_URL = 4; // INVALID_DOMAIN + 1
-    public static final int CREDENTIAL_EXCLUDED = 5; // INVALID_ICON_URL + 1
-    public static final int CREDENTIAL_NOT_RECOGNIZED = 6; // CREDENTIAL_EXCLUDED + 1
-    public static final int NOT_IMPLEMENTED = 7; // CREDENTIAL_NOT_RECOGNIZED + 1
-    public static final int NOT_FOCUSED = 8; // NOT_IMPLEMENTED + 1
-    public static final int RESIDENT_CREDENTIALS_UNSUPPORTED = 9; // NOT_FOCUSED + 1
-    public static final int USER_VERIFICATION_UNSUPPORTED = 10; // RESIDENT_CREDENTIALS_UNSUPPORTED + 1
-    public static final int ALGORITHM_UNSUPPORTED = 11; // USER_VERIFICATION_UNSUPPORTED + 1
-    public static final int EMPTY_ALLOW_CREDENTIALS = 12; // ALGORITHM_UNSUPPORTED + 1
-    public static final int ANDROID_NOT_SUPPORTED_ERROR = 13; // EMPTY_ALLOW_CREDENTIALS + 1
-    public static final int PROTECTION_POLICY_INCONSISTENT = 14; // ANDROID_NOT_SUPPORTED_ERROR + 1
-    public static final int ABORT_ERROR = 15; // PROTECTION_POLICY_INCONSISTENT + 1
-    public static final int OPAQUE_DOMAIN = 16; // ABORT_ERROR + 1
-    public static final int INVALID_PROTOCOL = 17; // OPAQUE_DOMAIN + 1
-    public static final int BAD_RELYING_PARTY_ID = 18; // INVALID_PROTOCOL + 1
-    public static final int UNKNOWN_ERROR = 19; // BAD_RELYING_PARTY_ID + 1
+    public static final int PENDING_REQUEST = 1;
+    public static final int NOT_ALLOWED_ERROR = 2;
+    public static final int INVALID_DOMAIN = 3;
+    public static final int INVALID_ICON_URL = 4;
+    public static final int CREDENTIAL_EXCLUDED = 5;
+    public static final int CREDENTIAL_NOT_RECOGNIZED = 6;
+    public static final int NOT_IMPLEMENTED = 7;
+    public static final int NOT_FOCUSED = 8;
+    public static final int RESIDENT_CREDENTIALS_UNSUPPORTED = 9;
+    public static final int USER_VERIFICATION_UNSUPPORTED = 10;
+    public static final int ALGORITHM_UNSUPPORTED = 11;
+    public static final int EMPTY_ALLOW_CREDENTIALS = 12;
+    public static final int ANDROID_NOT_SUPPORTED_ERROR = 13;
+    public static final int PROTECTION_POLICY_INCONSISTENT = 14;
+    public static final int ABORT_ERROR = 15;
+    public static final int OPAQUE_DOMAIN = 16;
+    public static final int INVALID_PROTOCOL = 17;
+    public static final int BAD_RELYING_PARTY_ID = 18;
+    public static final int CANNOT_READ_AND_WRITE_LARGE_BLOB = 19;
+    public static final int INVALID_ALLOW_CREDENTIALS_FOR_LARGE_BLOB = 20;
+    public static final int UNKNOWN_ERROR = 21;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 21;
 
     public static boolean isKnownValue(int value) {
-        return value >= 0 && value <= 19;
+        return value >= 0 && value <= 21;
     }
 
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private AuthenticatorStatus() {}

@@ -13,16 +13,30 @@
 
 package org.chromium.autofill.mojom;
 
+import androidx.annotation.IntDef;
+
 public final class FocusedFieldType {
     private static final boolean IS_EXTENSIBLE = false;
+    @IntDef({
+
+        FocusedFieldType.UNKNOWN,
+        FocusedFieldType.UNFILLABLE_ELEMENT,
+        FocusedFieldType.FILLABLE_TEXT_AREA,
+        FocusedFieldType.FILLABLE_SEARCH_FIELD,
+        FocusedFieldType.FILLABLE_NON_SEARCH_FIELD,
+        FocusedFieldType.FILLABLE_USERNAME_FIELD,
+        FocusedFieldType.FILLABLE_PASSWORD_FIELD})
+    public @interface EnumType {}
 
     public static final int UNKNOWN = 0;
-    public static final int UNFILLABLE_ELEMENT = 1; // UNKNOWN + 1
-    public static final int FILLABLE_TEXT_AREA = 2; // UNFILLABLE_ELEMENT + 1
-    public static final int FILLABLE_SEARCH_FIELD = 3; // FILLABLE_TEXT_AREA + 1
-    public static final int FILLABLE_NON_SEARCH_FIELD = 4; // FILLABLE_SEARCH_FIELD + 1
-    public static final int FILLABLE_USERNAME_FIELD = 5; // FILLABLE_NON_SEARCH_FIELD + 1
-    public static final int FILLABLE_PASSWORD_FIELD = 6; // FILLABLE_USERNAME_FIELD + 1
+    public static final int UNFILLABLE_ELEMENT = 1;
+    public static final int FILLABLE_TEXT_AREA = 2;
+    public static final int FILLABLE_SEARCH_FIELD = 3;
+    public static final int FILLABLE_NON_SEARCH_FIELD = 4;
+    public static final int FILLABLE_USERNAME_FIELD = 5;
+    public static final int FILLABLE_PASSWORD_FIELD = 6;
+    public static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 6;
 
     public static boolean isKnownValue(int value) {
         return value >= 0 && value <= 6;
@@ -31,6 +45,10 @@ public final class FocusedFieldType {
     public static void validate(int value) {
         if (IS_EXTENSIBLE || isKnownValue(value)) return;
         throw new org.chromium.mojo.bindings.DeserializationException("Invalid enum value.");
+    }
+
+    public static int toKnownValue(int value) {
+      return value;
     }
 
     private FocusedFieldType() {}
