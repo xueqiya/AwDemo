@@ -135,6 +135,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+
+    override fun onResume() {
+        super.onResume()
+        currentWebView.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        currentWebView.onPause()
+    }
+
     override fun onBackPressed() {
         if (currentWebView.canGoBack()) {
             currentWebView.goBack()
