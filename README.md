@@ -30,6 +30,8 @@ use_debug_fission=false
 clang_use_chrome_plugins=false
 proprietary_codecs=true
 ffmpeg_branding="Chrome"
+fatal_linker_warnings = false
+treat_warnings_as_errors = false
 
 ninja -C out/arm webview_instrumentation_apk
 
@@ -46,6 +48,8 @@ use_debug_fission=false
 clang_use_chrome_plugins=false
 proprietary_codecs=true
 ffmpeg_branding="Chrome"
+fatal_linker_warnings = false
+treat_warnings_as_errors = false
 
 ninja -C out/arm64 webview_instrumentation_apk
 # It takes about 1.5 hours. (Intel i7-10700k, RAM 16GB, ubuntu, arm/arm64 target)
