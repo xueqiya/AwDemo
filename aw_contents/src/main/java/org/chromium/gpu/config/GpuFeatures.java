@@ -21,7 +21,7 @@ public final class GpuFeatures {
     public static final String USE_GLES2_FOR_OOP_R = "UseGles2ForOopR";
 
     // Use android SurfaceControl API for managing display compositor's buffer queue
-    // and using overlays on Android. Also used by com.apkmatrix.components.webview to disable surface
+    // and using overlays on Android. Also used by webview to disable surface
     // SurfaceControl.
     public static final String ANDROID_SURFACE_CONTROL = "AndroidSurfaceControl";
 
@@ -31,11 +31,11 @@ public final class GpuFeatures {
     // Use AImageReader for MediaCodec and MediaPlyer on android.
     public static final String A_IMAGE_READER = "AImageReader";
 
-    // If com.apkmatrix.components.webview-draw-functor-uses-vulkan is set, use vulkan for composite and
+    // If webview-draw-functor-uses-vulkan is set, use vulkan for composite and
     // raster.
     public static final String WEBVIEW_VULKAN = "WebViewVulkan";
 
-    // Used to enable/disable zero copy video path on com.apkmatrix.components.webview for MCVD.
+    // Used to enable/disable zero copy video path on webview for MCVD.
     public static final String WEBVIEW_ZERO_COPY_VIDEO = "WebViewZeroCopyVideo";
 
     // Used to limit AImageReader max queue size to 1 since many devices especially

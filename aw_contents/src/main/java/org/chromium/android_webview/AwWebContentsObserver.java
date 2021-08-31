@@ -88,7 +88,7 @@ public class AwWebContentsObserver extends WebContentsObserver {
                 unreachableWebDataUrl != null && unreachableWebDataUrl.equals(failingUrl);
         if (isMainFrame && !isErrorUrl) {
             if (errorCode == NetError.ERR_ABORTED) {
-                // Need to call onPageFinished for backwards compatibility with the classic com.apkmatrix.components.webview.
+                // Need to call onPageFinished for backwards compatibility with the classic webview.
                 // See also AwContentsClientBridge.onReceivedError.
                 client.getCallbackHelper().postOnPageFinished(failingUrl);
             } else if (errorCode == NetError.ERR_HTTP_RESPONSE_CODE_FAILURE) {

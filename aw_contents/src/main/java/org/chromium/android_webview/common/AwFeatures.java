@@ -70,7 +70,7 @@ public final class AwFeatures {
     // A Feature used for WebView variations tests. Not used in production.
     public static final String WEBVIEW_TEST_FEATURE = "WebViewTestFeature";
 
-    // Enable raster in wide color gamut for apps that use com.apkmatrix.components.webview in a wide color
+    // Enable raster in wide color gamut for apps that use webview in a wide color
     // gamut activity.
     public static final String WEBVIEW_WIDE_COLOR_GAMUT_SUPPORT = "WebViewWideColorGamutSupport";
 

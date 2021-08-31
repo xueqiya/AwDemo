@@ -23,8 +23,8 @@ public class AwShellApplication extends Application {
     protected void attachBaseContext(Context context) {
         super.attachBaseContext(context);
         ContextUtils.initApplicationContext(this);
-        PathUtils.setPrivateDataDirectorySuffix("com.apkmatrix.components.webview", "WebView");
-        CommandLine.initFromFile("/data/local/tmp/android-com.apkmatrix.components.webview-command-line");
+        PathUtils.setPrivateDataDirectorySuffix("webview", "WebView");
+        CommandLine.initFromFile("/data/local/tmp/android-webview-command-line");
         ResourceBundle.setAvailablePakLocales(AwLocaleConfig.getWebViewSupportedPakLocales());
     }
 }

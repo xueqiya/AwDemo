@@ -18,17 +18,17 @@ public final class AwSwitches {
     //     ../../android_webview/java/src/org/chromium/android_webview/common/AwSwitches.java.tmpl
 
 
-    public static final String WEBVIEW_LOG_JS_CONSOLE_MESSAGES = "com.apkmatrix.components.webview-log-js-console-messages";
+    public static final String WEBVIEW_LOG_JS_CONSOLE_MESSAGES = "webview-log-js-console-messages";
 
 
-    public static final String WEBVIEW_SANDBOXED_RENDERER = "com.apkmatrix.components.webview-sandboxed-renderer";
+    public static final String WEBVIEW_SANDBOXED_RENDERER = "webview-sandboxed-renderer";
 
-    // used to disable safebrowsing functionality in com.apkmatrix.components.webview
-    public static final String WEBVIEW_DISABLE_SAFEBROWSING_SUPPORT = "com.apkmatrix.components.webview-disable-safebrowsing-support";
+    // used to disable safebrowsing functionality in webview
+    public static final String WEBVIEW_DISABLE_SAFEBROWSING_SUPPORT = "webview-disable-safebrowsing-support";
 
     // Enables SafeBrowsing and causes WebView to treat all resources as malicious.
     // Use care: this will block all resources from loading.
-    public static final String WEBVIEW_SAFEBROWSING_BLOCK_ALL_RESOURCES = "com.apkmatrix.components.webview-safebrowsing-block-all-resources";
+    public static final String WEBVIEW_SAFEBROWSING_BLOCK_ALL_RESOURCES = "webview-safebrowsing-block-all-resources";
 
     // Highlight the contents (including web contents) of all WebViews with a yellow
     // tint. This is useful for identifying WebViews in an Android application.
@@ -36,7 +36,7 @@ public final class AwSwitches {
 
     // WebView will log additional debugging information to logcat, such as
     // variations and commandline state.
-    public static final String WEBVIEW_VERBOSE_LOGGING = "com.apkmatrix.components.webview-verbose-logging";
+    public static final String WEBVIEW_VERBOSE_LOGGING = "webview-verbose-logging";
 
     // The length of time in seconds that an app's copy of the variations seed
     // should be considered fresh. If an app's seed is older than this, a new seed
@@ -60,7 +60,7 @@ public final class AwSwitches {
     // is used for WebView versions prior to when the modern behavior will be
     // enabled by default. This enables the same-site-by-default-cookies,
     // cookies-without-SameSite-must-be-secure, and schemeful-same-site features.
-    public static final String WEBVIEW_ENABLE_MODERN_COOKIE_SAME_SITE = "com.apkmatrix.components.webview-enable-modern-cookie-same-site";
+    public static final String WEBVIEW_ENABLE_MODERN_COOKIE_SAME_SITE = "webview-enable-modern-cookie-same-site";
 
     // Do not instantiate this class.
     private AwSwitches() {}

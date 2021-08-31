@@ -171,7 +171,7 @@ public class TraceEvent implements AutoCloseable {
             // Since each app-specific config is limited to 91 characters, multiple
             // entries can be used to work around the limit.
             //
-            // If either the "com.apkmatrix.components.webview" trace tag (0x10) is enabled (for WebView)
+            // If either the "webview" trace tag (0x10) is enabled (for WebView)
             // or our package name is found in the list of configs, trace events
             // will be written into ATrace. However, if "-atrace" appears as a
             // category in any of the app-specific configs, events will only be

@@ -66,13 +66,13 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Wrapper for the steps needed to initialize the java and native sides of com.apkmatrix.components.webview chromium.
+ * Wrapper for the steps needed to initialize the java and native sides of webview chromium.
  */
 @JNINamespace("android_webview")
 public final class AwBrowserProcess {
     private static final String TAG = "AwBrowserProcess";
 
-    private static final String WEBVIEW_DIR_BASENAME = "com.apkmatrix.components.webview";
+    private static final String WEBVIEW_DIR_BASENAME = "webview";
 
     private static final int MINUTES_PER_DAY =
             (int) TimeUnit.SECONDS.toMinutes(TimeUtils.SECONDS_PER_DAY);
@@ -87,7 +87,7 @@ public final class AwBrowserProcess {
 
     /**
      * Loads the native library, and performs basic static construction of objects needed
-     * to run com.apkmatrix.components.webview in this process. Does not create threads; safe to call from zygote.
+     * to run webview in this process. Does not create threads; safe to call from zygote.
      * Note: it is up to the caller to ensure this is only called once.
      *
      * @param processDataDirSuffix The suffix to use when setting the data directory for this

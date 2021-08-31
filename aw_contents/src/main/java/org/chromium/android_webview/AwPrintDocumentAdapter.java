@@ -31,7 +31,7 @@ public class AwPrintDocumentAdapter extends PrintDocumentAdapter {
      * Constructor.
      * TODO(sgurun) remove in favor of constructor below once the AOSP changes are in.
      *
-     * @param pdfExporter The PDF exporter to export the com.apkmatrix.components.webview contents to a PDF file.
+     * @param pdfExporter The PDF exporter to export the webview contents to a PDF file.
      */
     public AwPrintDocumentAdapter(AwPdfExporter pdfExporter) {
         this(pdfExporter, "default");
@@ -40,7 +40,7 @@ public class AwPrintDocumentAdapter extends PrintDocumentAdapter {
     /**
      * Constructor.
      *
-     * @param pdfExporter The PDF exporter to export the com.apkmatrix.components.webview contents to a PDF file.
+     * @param pdfExporter The PDF exporter to export the webview contents to a PDF file.
      * @param documentName  The name of the pdf document.
      */
     public AwPrintDocumentAdapter(AwPdfExporter pdfExporter, String documentName) {

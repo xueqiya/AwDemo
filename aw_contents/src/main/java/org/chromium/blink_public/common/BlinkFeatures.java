@@ -350,7 +350,7 @@ public final class BlinkFeatures {
     // Enables Dawn-accelerated 2D canvas.
     public static final String DAWN2D_CANVAS = "Dawn2dCanvas";
 
-    // Enables small accelerated canvases for com.apkmatrix.components.webview (crbug.com/1004304)
+    // Enables small accelerated canvases for webview (crbug.com/1004304)
     public static final String WEBVIEW_ACCELERATE_SMALL_CANVASES = "WebviewAccelerateSmallCanvases";
 
     // When enabled, frees up CachedMetadata after consumption by script resources

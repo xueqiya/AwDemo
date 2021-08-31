@@ -9,7 +9,7 @@ package org.chromium.android_webview.shell;
  * the android_webview glue layer.
  */
 public abstract class AwShellSwitches {
-    // Deprecated: instead, run "atrace com.apkmatrix.components.webview".
+    // Deprecated: instead, run "atrace webview".
     public static final String ENABLE_ATRACE = "enable-atrace";
 
     // Prevent instantiation.

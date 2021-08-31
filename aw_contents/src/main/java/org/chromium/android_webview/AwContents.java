@@ -2953,7 +2953,7 @@ public class AwContents implements SmartClipProvider {
             structure.setChildCount(0);
             return;
         }
-        // for com.apkmatrix.components.webview, the platform already calculates the scroll (as it is a view) in
+        // for webview, the platform already calculates the scroll (as it is a view) in
         // ViewStructure tree. Do not offset for it in the snapshop x,y position calculations.
         getWebContentsAccessibility().onProvideVirtualStructure(structure, true);
     }

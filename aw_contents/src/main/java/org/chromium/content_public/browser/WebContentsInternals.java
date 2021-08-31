@@ -10,7 +10,7 @@ package org.chromium.content_public.browser;
  * an implementation of the interface {@link WebContents#InterfaceHolder} to
  * get the instance from {@link WebContents}. They don't have to know what's
  * inside the instance. This is necessary only for WebView so far, in order to
- * address the requirements that there not be any gc root to com.apkmatrix.components.webview in content
- * layer after com.apkmatrix.components.webview gets detached from view tree. See https://crbug.com/755174.
+ * address the requirements that there not be any gc root to webview in content
+ * layer after webview gets detached from view tree. See https://crbug.com/755174.
  */
 public interface WebContentsInternals {}

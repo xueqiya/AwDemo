@@ -38,7 +38,7 @@ public class AwContentsStatics {
     private static boolean sRecordFullDocument;
 
     private static final String sSafeBrowsingWarmUpHelper =
-            "com.android.com.apkmatrix.components.webview.chromium.SafeBrowsingWarmUpHelper";
+            "com.android.webview.chromium.SafeBrowsingWarmUpHelper";
 
     /**
      * Return the client certificate lookup table.

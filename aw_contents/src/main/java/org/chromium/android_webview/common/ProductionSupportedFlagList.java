@@ -111,7 +111,7 @@ public final class ProductionSupportedFlagList {
                             + "WebViewCpuAffinityRestrictToLittleCores, if set, takes precedence "
                             + "over this flag."),
             Flag.baseFeature(BlinkFeatures.WEBVIEW_ACCELERATE_SMALL_CANVASES,
-                    "Accelerate all canvases in com.apkmatrix.components.webview."),
+                    "Accelerate all canvases in webview."),
             Flag.baseFeature(AwFeatures.WEBVIEW_MIXED_CONTENT_AUTOUPGRADES,
                     "Enables autoupgrades for audio/video/image mixed content when mixed content "
                             + "mode is set to MIXED_CONTENT_COMPATIBILITY_MODE"),

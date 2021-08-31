@@ -15,7 +15,7 @@ import org.chromium.url.Origin;
  */
 public class NavigationParams {
     /**
-     * Target URL of the navigation. Note that this URL is possibly invalid for com.apkmatrix.components.webview, but
+     * Target URL of the navigation. Note that this URL is possibly invalid for webview, but
      * otherwise should always be valid.
      */
     public final GURL url;

@@ -74,7 +74,7 @@ public class AwShellActivity extends Activity {
 
         // This flag is deprecated. Print a hint instead.
         if (CommandLine.getInstance().hasSwitch(AwShellSwitches.ENABLE_ATRACE)) {
-            Log.e(TAG, "To trace the test shell, run \"atrace com.apkmatrix.components.webview\"");
+            Log.e(TAG, "To trace the test shell, run \"atrace webview\"");
         }
         TraceEvent.maybeEnableEarlyTracing(
                 TraceEvent.ATRACE_TAG_WEBVIEW, /*readCommandLine=*/false);

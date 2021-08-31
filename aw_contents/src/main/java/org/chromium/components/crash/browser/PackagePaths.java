@@ -28,7 +28,7 @@ public abstract class PackagePaths {
     private PackagePaths() {}
 
     /**
-     * @ Build paths for the chrome/com.apkmatrix.components.webview package for the purpose of loading CrashpadMain via
+     * @ Build paths for the chrome/webview package for the purpose of loading CrashpadMain via
      * /system/bin/app_process.
      */
     @CalledByNative

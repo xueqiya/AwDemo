@@ -19,7 +19,7 @@ import org.chromium.base.annotations.JNINamespace;
 public class AwContentsLifecycleNotifier {
 
     /**
-     * Observer interface to be implemented by deriving com.apkmatrix.components.webview lifecycle observers.
+     * Observer interface to be implemented by deriving webview lifecycle observers.
      */
     public static interface Observer {
         public void onFirstWebViewCreated();
@@ -49,7 +49,7 @@ public class AwContentsLifecycleNotifier {
     private static void onFirstWebViewCreated() {
         ThreadUtils.assertOnUiThread();
         sHasWebViewInstances = true;
-        // first com.apkmatrix.components.webview created, notify observers.
+        // first webview created, notify observers.
         for (Observer observer : sLifecycleObservers) {
             observer.onFirstWebViewCreated();
         }
@@ -60,7 +60,7 @@ public class AwContentsLifecycleNotifier {
     private static void onLastWebViewDestroyed() {
         ThreadUtils.assertOnUiThread();
         sHasWebViewInstances = false;
-        // last com.apkmatrix.components.webview destroyed, notify observers.
+        // last webview destroyed, notify observers.
         for (Observer observer : sLifecycleObservers) {
             observer.onLastWebViewDestroyed();
         }

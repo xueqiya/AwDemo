@@ -152,7 +152,7 @@ public class AwContentsClientBridge {
     // If returns false, the request is immediately canceled, and any call to proceedSslError
     // has no effect. If returns true, the request should be canceled or proceeded using
     // proceedSslError().
-    // Unlike the com.apkmatrix.components.webview classic, we do not keep keep a database of certificates that
+    // Unlike the webview classic, we do not keep keep a database of certificates that
     // are allowed by the user, because this functionality is already handled via
     // ssl_policy in native layers.
     @CalledByNative
@@ -337,7 +337,7 @@ public class AwContentsClientBridge {
             mClient.getCallbackHelper().postOnReceivedError(request, error);
             if (request.isMainFrame) {
                 // Need to call onPageFinished after onReceivedError for backwards compatibility
-                // with the classic com.apkmatrix.components.webview. See also AwWebContentsObserver.didFailLoad which is
+                // with the classic webview. See also AwWebContentsObserver.didFailLoad which is
                 // used when we want to send onPageFinished alone.
                 mClient.getCallbackHelper().postOnPageFinished(request.url);
             }

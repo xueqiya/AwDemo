@@ -73,7 +73,7 @@ public class AwDisplayModeController {
                             + sCachedDisplayRect + ", window rect: " + sCachedWindowRect);
         }
 
-        // Display is in fullscreen only when com.apkmatrix.components.webview is occupying the entire window and display.
+        // Display is in fullscreen only when webview is occupying the entire window and display.
         // Checking the window rect is more complicated and therefore not doing it for now, but
         // there can still be cases where the window is a bit off.
         if (!sCachedViewRect.equals(sCachedDisplayRect)) {

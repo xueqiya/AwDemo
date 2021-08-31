@@ -101,7 +101,7 @@ public final class GpuSwitches {
 
     // Indicate that the this is being used by Android WebView and its draw functor
     // is using vulkan.
-    public static final String WEBVIEW_DRAW_FUNCTOR_USES_VULKAN = "com.apkmatrix.components.webview-draw-functor-uses-vulkan";
+    public static final String WEBVIEW_DRAW_FUNCTOR_USES_VULKAN = "webview-draw-functor-uses-vulkan";
 
     // Enables using protected memory for vulkan resources.
     public static final String ENABLE_VULKAN_PROTECTED_MEMORY = "enable-vulkan-protected-memory";

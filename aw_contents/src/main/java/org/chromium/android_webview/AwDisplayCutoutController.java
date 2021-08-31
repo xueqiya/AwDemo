@@ -191,7 +191,7 @@ public class AwDisplayCutoutController {
     @VisibleForTesting
     public void onApplyWindowInsetsInternal(final Insets displayCutoutInsets) {
         float dipScale = mDelegate.getDipScale();
-        // We only apply this logic when com.apkmatrix.components.webview is occupying the entire screen.
+        // We only apply this logic when webview is occupying the entire screen.
         adjustInsetsForScale(displayCutoutInsets, dipScale);
 
         if (DEBUG) {

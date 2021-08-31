@@ -35,7 +35,7 @@ public class AwCrashReporterClient {
     public static boolean stackTraceContainsWebViewCode(Throwable t) {
         for (StackTraceElement frame : t.getStackTrace()) {
             if (frame.getClassName().startsWith("android.webkit.")
-                    || frame.getClassName().startsWith("com.android.com.apkmatrix.components.webview.")
+                    || frame.getClassName().startsWith("com.android.webview.")
                     || frame.getClassName().startsWith("org.chromium.")
                     || (frame.getFileName() != null
                             && frame.getFileName().startsWith(CHROMIUM_PREFIX))) {

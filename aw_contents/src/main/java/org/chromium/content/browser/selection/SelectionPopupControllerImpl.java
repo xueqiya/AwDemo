@@ -301,7 +301,7 @@ public class SelectionPopupControllerImpl extends ActionModeCallbackHelper
         PopupController.hideAll(mWebContents);
         // Clear the selection. The selection is cleared on destroying IME
         // and also here since we may receive destroy first, for example
-        // when focus is lost in com.apkmatrix.components.webview.
+        // when focus is lost in webview.
         clearSelection();
     }
 
@@ -757,7 +757,7 @@ public class SelectionPopupControllerImpl extends ActionModeCallbackHelper
      */
     public static void initializeMenu(Context context, ActionMode mode, Menu menu) {
         if (!sMustUseWebContentsContext) {
-            // For WebView the correct choice is to use the actionMode context because com.apkmatrix.components.webview
+            // For WebView the correct choice is to use the actionMode context because webview
             // assets have been added to its asset path. However we need to fall back to
             // using the web contents context in the case where the AssetManager associated with
             // the actionMode context does not contain our assets, because not doing so will cause a

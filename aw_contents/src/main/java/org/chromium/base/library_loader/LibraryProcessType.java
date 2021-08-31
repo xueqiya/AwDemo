@@ -36,11 +36,11 @@ public @interface LibraryProcessType {
    */
   int PROCESS_CHILD = 2;
   /**
-   * Shared library is running in the app that uses com.apkmatrix.components.webview.
+   * Shared library is running in the app that uses webview.
    */
   int PROCESS_WEBVIEW = 3;
   /**
-   * Shared library is running in child process as part of com.apkmatrix.components.webview.
+   * Shared library is running in child process as part of webview.
    */
   int PROCESS_WEBVIEW_CHILD = 4;
   /**
