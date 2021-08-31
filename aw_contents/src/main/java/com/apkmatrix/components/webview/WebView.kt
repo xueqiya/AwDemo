@@ -148,9 +148,13 @@ class WebView(context: Context, webViewClient: AwContentsClient = NullContentsCl
             ContextUtils.initApplicationContext(application)
             AwBrowserProcess.loadLibrary("AwDemo")
             AwBrowserProcess.start()
-
             if (BuildConfig.DEBUG) {
                 AwDevToolsServer().setRemoteDebuggingEnabled(true)
+            }
+            try {
+                WebView(application, WebViewClient())
+            } catch (e: Exception) {
+                e.printStackTrace();
             }
         }
     }
