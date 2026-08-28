@@ -1,3 +1,5 @@
+
+
 # AwDemo
 基于Chromium AwContents的简单浏览器demo
 
@@ -11,7 +13,7 @@ fetch --nohooks android
 cd src
 gclient sync
 
-git checkout tags/92.0.4515.115
+git checkout 92.0.4515.115
 gclient sync
 
 build/install-build-deps-android.sh
